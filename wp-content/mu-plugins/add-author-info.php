@@ -39,7 +39,7 @@ $author_details = '<h5 class="author_name">About ' . $display_name . '</h5>';*/
 if ( ! empty( $user_description ) && ( ! empty( $display_name ) ) )
 // Author avatar and bio
  
-$author_details .= '<div class="author_details">' . get_avatar( get_the_author_meta('user_email') , 90 ) . nl2br( '<div class="authtext"><h5 class="author_name">About ' . $display_name . '</h5><p>'.$user_description.'</p>' );
+$author_details = '<div class="author_details">' . get_avatar( get_the_author_meta('user_email') , 90 ) . nl2br( '<div class="authtext"><h5 class="author_name">About ' . $display_name . '</h5><p>'.$user_description.'</p>' );
  
 $author_details .= '<p class="author_links"><a href="'. $user_posts .'">View all posts by ' . $display_name . '</a>';  
  
