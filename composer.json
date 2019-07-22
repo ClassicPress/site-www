@@ -17,5 +17,6 @@
         "issues": "https://github.com/ClassicPress/ClassicPress-www/issues"
     },
     "require": {
+        "vlucas/phpdotenv": "^3.4"
     }
 }
