@@ -1,0 +1,4 @@
+/* CSS Document */
+
+.acf-field-wysiwyg.shortbox textarea.wp-editor-area { height:60px!important; max-height:60px!important; }
+.acf-field-wysiwyg.shortbox iframe { height:150px!important; max-height:150px!important; }
