@@ -39,9 +39,9 @@ get_header();
 		
 	echo '</div>';
 	}
+	// (conditional opening <section> tag in header.php template)
 	?>
 </section>
-<!--- conditional opening <section> tag in header.php template --->
 
 <section class="homepanel1">
 	<article class="community-home">
