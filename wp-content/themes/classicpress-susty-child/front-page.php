@@ -45,7 +45,7 @@ get_header();
 
 <section class="homepanel1">
 	<article class="community-home">
-	<?php echo get_post_field('post_content', $post_id); ?>
+	<?php echo get_post_field('post_content'); ?>
 	<?php
 		$commlink = get_field('main_buttonlink');
 		$commlinktext = get_field('main_buttonlinktext');
