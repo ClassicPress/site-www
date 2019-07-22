@@ -67,6 +67,7 @@ add_action( 'wp_enqueue_scripts', 'enqueue_load_fa' );
 /****Add widgets to blog sidebar***/
 if ( function_exists('register_sidebar') )
   register_sidebar(array(
+    'id' => 'blog-sidebar',
     'name' => 'Blog Sidebar',
     'before_widget' => '<div class = "widget-container">',
     'after_widget' => '</div>',
