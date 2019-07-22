@@ -98,7 +98,7 @@
 			
 		</div>
 	</header>
-	<? if(!is_front_page()) { 
+	<?php if(!is_front_page()) {
 			echo '<header id="page-title">';
 			if (is_blog()) {
 			echo '<h1>';
@@ -112,6 +112,6 @@
 			the_title( '<h1>', '</h1>' );
 			}
 			echo '</header><!-- .entry-header -->';
-		} 
+		}
 	?>
 	<div id="content" role="main">
