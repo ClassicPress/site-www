@@ -4,7 +4,7 @@
  * Stylesheet version (cache buster)
  */
 function cp_susty_get_asset_version() {
-	return '20181112';
+	return '20190727';
 }
 
 /**
@@ -61,8 +61,14 @@ register_nav_menus( array(
 /***load Font Awesome scripts***/
 function enqueue_load_fa() {
 wp_enqueue_script( 'load-fa', 'https://kit.fontawesome.com/6152c16332.js' );
+//wp_enqueue_script( 'load-fa', 'https://use.fontawesome.com/releases/latest/js/all.js');
 }
 add_action( 'wp_enqueue_scripts', 'enqueue_load_fa' );
+
+function enqueue_fa() {
+    wp_enqueue_style('font-awesome-v5', '/wp-content/themes/classicpress-susty-child/font-awesome-v5/css/fontawesome-all.min.css');
+}
+add_action('wp_enqueue_scripts', 'enqueue_fa');
 
 /****Add widgets to blog sidebar***/
 if ( function_exists('register_sidebar') )

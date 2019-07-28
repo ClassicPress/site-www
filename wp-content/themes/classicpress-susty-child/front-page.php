@@ -116,10 +116,11 @@ get_header();
 	</article>
 	<div class="getcp">
 		<?php
-			$switch = get_field('migration_plugin', 'option');
-			$getcp = get_field('get_classicpress', 'option');
-			echo '<p class="button purple migrate">'.$switch.'</p>';
-			echo '<p class="button blue download">'.$getcp.'</p>';
+			$featurelink = get_field('feature_link');
+			$featurelinktext = get_field('feature_link_text');
+			if (($featurelink) && ($featurelinktext)) {
+			echo '<p class="button purple migrate"><a href="'.$featurelink.'">'.$featurelinktext.'</a></p>';
+			}
 		?>
 	</div>
 </section>

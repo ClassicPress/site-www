@@ -18,3 +18,56 @@ RewriteRule . /index.php [L]
 </IfModule>
 
 # END ClassicPress
+
+# BEGIN 301 Redirects
+Redirect 301 /blog/2019/07/02/meet-the-community-simone-fioravanti/ https://www.classicpress.net/blog/meet-the-community-simone-fioravanti/
+Redirect 301 /blog/2019/06/27/classicpress-development-update/ https://www.classicpress.net/blog/classicpress-development-update/
+Redirect 301 /blog/2019/06/27/creating-a-child-theme/ https://www.classicpress.net/blog/creating-a-child-theme/
+Redirect 301 /blog/2019/06/19/meet-the-community-pete-thomas/ https://www.classicpress.net/blog/meet-the-community-pete-thomas/
+Redirect 301 /blog/2019/06/05/meet-the-community-zulfikar-gani/ https://www.classicpress.net/blog/meet-the-community-zulfikar-gani/
+Redirect 301 /blog/2019/05/29/meet-the-community-michelle-coe/ https://www.classicpress.net/blog/meet-the-community-michelle-coe/
+Redirect 301 /blog/2019/05/20/meet-the-community-tommy-thanasi/ https://www.classicpress.net/blog/meet-the-community-tommy-thanasi/
+Redirect 301 /blog/2019/05/15/meet-the-community-earle-davies/ https://www.classicpress.net/blog/meet-the-community-earle-davies/
+Redirect 301 /blog/2019/05/08/meet-the-community-dick-metcalf/ https://www.classicpress.net/blog/meet-the-community-dick-metcalf/
+Redirect 301 /blog/2019/05/01/meet-the-community-daniele-scasciafratte/ https://www.classicpress.net/blog/meet-the-community-daniele-scasciafratte/
+Redirect 301 /blog/2019/04/24/meet-the-community-laurence-bahiirwa/ https://www.classicpress.net/blog/meet-the-community-laurence-bahiirwa/
+Redirect 301 /blog/2019/04/17/meet-the-community-nerissa-mccanmore/ https://www.classicpress.net/blog/meet-the-community-nerissa-mccanmore/
+Redirect 301 /blog/2019/04/10/meet-the-community-lesley-jones/ https://www.classicpress.net/blog/meet-the-community-lesley-jones/
+Redirect 301 /blog/2019/04/08/directors-added-to-classicpress-limited/ https://www.classicpress.net/blog/directors-added-to-classicpress-limited/
+Redirect 301 /blog/2019/04/04/what-is-missing-in-the-classicpress-project-that-you-could-contribute-to/ https://www.classicpress.net/blog/what-is-missing-in-the-classicpress-project-that-you-could-contribute-to/
+Redirect 301 /blog/2019/04/01/meet-the-community-wade-striebel/ https://www.classicpress.net/blog/meet-the-community-wade-striebel/
+Redirect 301 /blog/2019/03/27/meet-the-community-ian-grieve/ https://www.classicpress.net/blog/meet-the-community-ian-grieve/
+Redirect 301 /blog/2019/03/22/meet-the-community-patrick-van-noort/ https://www.classicpress.net/blog/meet-the-community-patrick-van-noort/
+Redirect 301 /blog/2019/03/19/meet-the-community-andy-towler/ https://www.classicpress.net/blog/meet-the-community-andy-towler/
+Redirect 301 /blog/2019/03/12/upgrade-your-site-to-classicpress-1-0-1/ https://www.classicpress.net/blog/upgrade-your-site-to-classicpress-1-0-1/
+Redirect 301 /blog/2019/03/11/meet-the-community-alan-coggins/ https://www.classicpress.net/blog/meet-the-community-alan-coggins/
+Redirect 301 /blog/2019/03/06/meet-the-community-james-nylen/ https://www.classicpress.net/blog/meet-the-community-james-nylen/
+Redirect 301 /blog/2019/03/05/introducing-classicpress-1-0-0-aurora/ https://www.classicpress.net/blog/introducing-classicpress-1-0-0-aurora/
+Redirect 301 /blog/2019/03/04/meet-the-community-elisabetta-carrara/ https://www.classicpress.net/blog/meet-the-community-elisabetta-carrara/
+Redirect 301 /blog/2019/02/27/classicpress-1-0-0-rc2-is-live/ https://www.classicpress.net/blog/classicpress-1-0-0-rc2-is-live/
+Redirect 301 /blog/2019/02/25/what-does-community-led-mean-anyway/ https://www.classicpress.net/blog/what-does-community-led-mean-anyway/
+Redirect 301 /blog/2019/02/24/classicpress-1-0-0-release-update/ https://www.classicpress.net/blog/classicpress-1-0-0-release-update/
+Redirect 301 /blog/2019/02/22/meet-the-community-john-alarcon/ https://www.classicpress.net/blog/meet-the-community-john-alarcon/
+Redirect 301 /blog/2019/02/20/classicpress-1-0-0-rc1-is-live/ https://www.classicpress.net/blog/classicpress-1-0-0-rc1-is-live/
+Redirect 301 /blog/2019/02/18/where-is-classicpress-headed/ https://www.classicpress.net/blog/where-is-classicpress-headed/
+Redirect 301 /blog/2019/02/11/why-choose-classicpress-for-your-business-professional-website-cms/ https://www.classicpress.net/blog/why-choose-classicpress-for-your-business-professional-website-cms/
+Redirect 301 /blog/2019/02/07/classicpress-core-development-update/ https://www.classicpress.net/blog/classicpress-core-development-update/
+Redirect 301 /blog/2019/02/03/classicpress-a-six-month-review/ https://www.classicpress.net/blog/classicpress-a-six-month-review/
+Redirect 301 /blog/2019/01/29/classicpress-localization/ https://www.classicpress.net/blog/classicpress-localization/
+Redirect 301 /blog/2018/12/18/upgrade-your-site-to-1-0-0-beta2-now/ https://www.classicpress.net/blog/upgrade-your-site-to-1-0-0-beta2-now/
+Redirect 301 /blog/2018/12/06/can-i-use-the-classicpress-beta-on-live-website/ https://www.classicpress.net/blog/can-i-use-the-classicpress-beta-on-live-website/
+Redirect 301 /blog/2018/11/27/how-to-support-classicpress-on-giving-tuesday/ https://www.classicpress.net/blog/how-to-support-classicpress-on-giving-tuesday/
+Redirect 301 /blog/2018/11/21/classicpress-beta-release/ https://www.classicpress.net/blog/classicpress-beta-release/
+Redirect 301 /blog/2018/11/05/michelle-coe-joins-the-classicpress-founding-committee/ https://www.classicpress.net/blog/michelle-coe-joins-the-classicpress-founding-committee/
+Redirect 301 /blog/2018/11/03/accessibility-and-universal-design-core-features-of-classicpress/ https://www.classicpress.net/blog/accessibility-and-universal-design-core-features-of-classicpress/
+Redirect 301 /blog/2018/10/29/classicpress-for-business-professional-organization-websites/ https://www.classicpress.net/blog/classicpress-for-business-professional-organization-websites/
+Redirect 301 /blog/2018/10/25/a-new-dawn-announcing-sunrise-the-first-alpha-release-of-classicpress/ https://www.classicpress.net/blog/a-new-dawn-announcing-sunrise-the-first-alpha-release-of-classicpress/
+Redirect 301 /blog/2018/10/18/theme-and-plugin-compatibility-with-classicpress/ https://www.classicpress.net/blog/theme-and-plugin-compatibility-with-classicpress/
+Redirect 301 /blog/2018/10/17/project-management-planning-initial-meeting/ https://www.classicpress.net/blog/project-management-planning-initial-meeting/
+Redirect 301 /blog/2018/10/09/committee-meeting-the-one-with-the-orange/ https://www.classicpress.net/blog/committee-meeting-the-one-with-the-orange/
+Redirect 301 /blog/2018/09/26/committee-meeting/ https://www.classicpress.net/blog/committee-meeting/
+Redirect 301 /blog/2018/09/11/tutorial-resolving-merge-conflicts-on-the-classicpress-github/ https://www.classicpress.net/blog/tutorial-resolving-merge-conflicts-on-the-classicpress-github/
+Redirect 301 /blog/2018/09/08/committee-meeting-a-focus-on-v1-roadblocks/ https://www.classicpress.net/blog/committee-meeting-a-focus-on-v1-roadblocks/
+Redirect 301 /blog/2018/08/28/wordpress-gutenberg-the-500-million-cost-to-business/ https://www.classicpress.net/blog/wordpress-gutenberg-the-500-million-cost-to-business/
+Redirect 301 /blog/2018/08/20/classicpress-a-fork-of-wordpress-without-gutenberg/ https://www.classicpress.net/blog/classicpress-a-fork-of-wordpress-without-gutenberg/
+# END 301 Redirects

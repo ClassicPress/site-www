@@ -187,9 +187,9 @@ button {
 #content h3 a,
 #content h4 a { text-decoration:none; font-weight:600; }
 
-/*article a[target='_blank']::after { content:'\00A0\2750'; font-size:70%; position:relative; top:-3px; margin-left:0; color:#07989e; text-decoration:none; display: inline-block; }*/
-/**fontawesome 4; could not make it work with fa5*/
-article a[target='_blank']::after { font-family: 'FontAwesome'; content:'\f08e'; font-size:60%; position:relative; top:-1px; margin-left:2px; color:#057f99; text-decoration:none; display: inline-block; }
+
+/*font awesome 5*/
+article a[target='_blank']::after { font-size:60%; position:relative; top:-1px; margin-left:2px; color:#057f99; text-decoration:none; display: inline-block; font-family:'Font Awesome 5 Free'; content:'\f35d'; font-weight:900; }
 
 article .button a[target='_blank']:after { content:''!important; display:none!important; } 
 
@@ -394,13 +394,29 @@ header.blog h1,
 p { margin:0 0 .75em; }
 #main p { line-height:1.75; font-size:1.05em; }
 #main h2 { font-size:1.8em; color:#057f99; }
+#main h2.small,
+#main h2 .small { font-size:1.5em!important; }
 #main h3 { font-size:1.5em; color:#4b2063; }
+#main h3.small,
+#main h3 .small { font-size:1.3em!important; }
 #main h4 { font-size:1.3em; color:#057f99; }
+#main h4.small,
+#main h4 .small { font-size:1.05em!important; }
 #main ul,
-#main ol { margin-top:.5em; margin-bottom:.9em; }
+#main ol { margin-top:.5em; margin-bottom:.9em; padding-left:28px; }
 .twocolumn {display:flex; justify-content: space-between; }
 p.text-leftcol,
-p.text-rightcol { width:47.5% }
+p.text-rightcol,
+.column1,
+.column2 { width:47.5%; }
+
+@media(max-width:900px) {
+.twocolumn { display:block; }
+p.text-leftcol,
+p.text-rightcol,
+.column1,
+.column2 { width:100%; }
+}
 
 .post-thumbnail { margin:1.5em 0; border-bottom: 10px solid #057f99; }
 .page-main .post-thumbnail { margin:.6em 0 1.4em; }
@@ -605,6 +621,8 @@ table.cp-file-list .cp-file-size {
 /*****SIDEBAR*****************************/
 #sidebar p,
 #sidebar li { font-size:1em; }
+#sidebar.sidebar-page .sidebar-note ul { padding-left: 1.3em; margin:.4em 0; }
+#sidebar.sidebar-page .sidebar-note li { font-size:.96em; }
 .sidebar-note { padding:10px 9px 12px 15px; background-image: linear-gradient(to right, #eeeef1, #d1e1e5); border-radius:8px; margin: .3em 0 1.5em 0; }
 #sidebar h3 { padding-top:.1em; margin-bottom:.2em; font-size: 1.3em; }
 #sidebar p { margin-bottom:.4em; }
@@ -739,7 +757,7 @@ footer#legal { max-width:unset; margin:0; background:#002e38; }
 .ficon { text-align:center; padding-top:.1em; font-size:50px; color:#057f99; margin-bottom:-.2em; }
 .feature h2 { font-size: 1.8em; text-align: center; color:#4b2063; margin-left:-5px; }
 .feature p { font-size:1.1em; }
-.getcp { max-width:36rem; display:flex; justify-content:space-between; margin:0 auto; padding:1.75em 0; }
+.getcp { max-width:36rem; display:flex; justify-content:space-around; margin:0 auto; padding:1.75em 0; }
 .getcp p { font-size:1.2em; }
 
 .homepanel3 { padding:3em 1.5em; 
@@ -841,6 +859,7 @@ footer#legal { max-width:unset; margin:0; background:#002e38; }
 	#sidebar { max-width:600px; margin: 0 auto; }
 	#sidebar .widget-container,
 	#sidebar .sidebar-internal { text-align:center; }
+	#sidebar .sidebar-internal .sidebar-note p { text-align:left; }
 }
 @media(max-width:600px) {
 	.classic,

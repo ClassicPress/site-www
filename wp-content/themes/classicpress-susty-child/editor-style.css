@@ -61,12 +61,19 @@ code { width:100%; background:#f3f3f3; font-family:Monaco, Consolas, "Andale Mon
 
 h1, h2, h3,h4 {
 	position: relative;
-	color: #057f99;
 	line-height: 1.25;
 	font-family:"Source Sans Pro";
 	font-weight: 600;
 }
-h3 { color:#4b2063; }
+h2 { font-size:1.8em; color:#057f99; }
+h2.small,
+h2 .small { font-size:1.5em!important; }
+h3 { font-size:1.5em; color:#4b2063; }
+h3.small,
+h3 .small { font-size:1.3em!important; }
+h4 { font-size:1.3em; color:#057f99; }
+h4.small,
+h4 .small { font-size:1.05em!important; }
 p, li {
 	font-family:"Source Sans Pro";
 	font-weight: 400;

@@ -38,7 +38,7 @@ echo '<div id="sidebar" class="sidebar-page">';
 			echo '<h3>'.$sbnotehd.'</h3>';
 			}
 			if ($sbnotetext) {
-			echo '<p>'.$sbnotetext.'</p>';
+			echo $sbnotetext;
 			}
 			if ($sbnotextlink) {
 			echo '<p class="readmore"><a href="'.$sbnotextlink.'" target="_blank" rel="noreferrer noopener">'.$sbbutton.'</a></p>';

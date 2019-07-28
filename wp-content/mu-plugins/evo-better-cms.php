@@ -178,7 +178,7 @@ function mrw_add_text_styles( $styles ) {
 	array(
 		'title' => "Small",
 		'inline' => 'span',
-		'selector' => 'p,li',
+		'selector' => 'p,li,h2,h3,h4',
 		'classes' => 'small'
 	),
 	array(
