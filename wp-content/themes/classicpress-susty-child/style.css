@@ -68,6 +68,7 @@ Use it to make something cool, have fun, and share what you've learned with othe
     url('fonts/source-sans-pro-v12-latin-700italic.woff') format('woff');
 }
 
+
 /**reset susty*****************/
 a { border-bottom:none!important; }
 .alignright { margin:1em 0 .75em 1.25em; }
@@ -189,7 +190,7 @@ button {
 
 
 /*font awesome 5*/
-article a[target='_blank']::after { font-size:60%; position:relative; top:-1px; margin-left:2px; color:#057f99; text-decoration:none; display: inline-block; font-family:'Font Awesome 5 Free'; content:'\f35d'; font-weight:900; }
+article a[target='_blank']::after { font-size:60%; position:relative; top:-2px; margin-left:2px; color:#057f99; text-decoration:none; display: inline-block; font-family:'Font Awesome 5 Free'; content:'\f35d'; font-weight:900; }
 
 article .button a[target='_blank']:after { content:''!important; display:none!important; } 
 
@@ -284,19 +285,21 @@ ul#primary-menu.menu li.current_page_item  ul li a:active { background: rgba(62,
 
 
 #masthead .menu .sub-menu {
-		display: inline;
-		flex-direction: column;
-		position: absolute;		
-		z-index: 100;
-		margin-top: 2px;
-		background: rgba(5,127,153,1.0);
-		border: none;
-		padding: 0!important;
-		border-radius:/*0 0 6px*/ 6px!important;
-		-webkit-box-shadow: 1px 2px 3px 0px rgba(0,0,0,0.25);
-		-moz-box-shadow: 1px 2px 3px 0px rgba(0,0,0,0.25);
-		box-shadow: 1px 2px 3px 0px rgba(0,0,0,0.25);
+	display: none;
+	min-width: 125px;
+	flex-direction: column;
+	position: absolute;		
+	z-index: 100;
+	margin-top: 2px;
+	background: rgba(5,127,153,1.0);
+	border: none;
+	padding: 0!important;
+	border-radius:/*0 0 6px*/ 6px!important;
+	-webkit-box-shadow: 1px 2px 3px 0px rgba(0,0,0,0.25);
+	-moz-box-shadow: 1px 2px 3px 0px rgba(0,0,0,0.25);
+	box-shadow: 1px 2px 3px 0px rgba(0,0,0,0.25);
 }
+
 #masthead .menu #menu-item-606 .sub-menu { max-width:10em; }
 #masthead .menu ul.sub-menu li a,
 #masthead .menu li.menu-item-has-children ul.sub-menu li a { padding-left: .85em; border-radius:0; }
@@ -480,6 +483,7 @@ p.button.white a:focus { box-shadow: 0 0 3px 2px #41cbb3; color:#5b0460!importan
 p.question { font-weight:600; }
 #content p a.toggleLink { display:inline-block; font-size:70%; line-height:1; text-decoration:none; padding:.35em .75em; background:#f1f1f1; color:#040402; border-radius:15px; text-transform: uppercase; width:56px; text-align:center; position:relative; top:-2px; outline:none!important; }
 #content p a.toggleLink:hover,
+#content p a.toggleLink:focus,
 #content p a.toggleLink:active { background:#89288f; color:#fff; }
 .toggle { margin-top:-5px; margin-bottom:1.2em; padding:.4em .6em .4em .75em; background:#f6f6f6; border-radius:6px; }
 
@@ -634,7 +638,7 @@ table.cp-file-list .cp-file-size {
 #sidebar input[type="search"] { width: 190px; padding:.3em; position:relative; top:1px; }
 #sidebar input[type="submit"],
 #commentform input[type="submit"],
-.search-form input[type="submit"] { padding: .6em 1em .7em; font-size:.9em; border-radius: 5px; font-weight: 400; color: #fff!important; line-height: 1; border-bottom: 0; text-decoration: none!important; text-transform: none; letter-spacing: 0; background:#89288f; border:1px solid #89288f; }
+.search-form input[type="submit"] { padding: .6em 1em .7em; font-size:.9em; border-radius: 5px; font-weight: 400; color: #fff!important; line-height: 1; border-bottom: 0; text-decoration: none!important; text-transform: none; letter-spacing: 0; background:#89288f; border:1px solid #89288f; position: relative; top: -2px; }
 #sidebar input[type="submit"]:hover,
 #commentform input[type="submit"]:hover,
 .search-form input[type="submit"]:hover,
@@ -676,7 +680,7 @@ footer#colophon {
 #colophon p.registration { margin-top:.8em; }
 
 #colophon .nav a,
-#colophon .nav a:visited { color:#eaec8e; font-weight:600; border:none!important; text-decoration:underline; }
+#colophon .nav a:visited { color:#eaec8e; font-weight:600; border:none!important; text-decoration:none; }
 #colophon .nav a:hover,
 #colophon .nav a:active,
 #colophon .nav a:focus { color:#fff; }
@@ -860,6 +864,7 @@ footer#legal { max-width:unset; margin:0; background:#002e38; }
 	#sidebar .widget-container,
 	#sidebar .sidebar-internal { text-align:center; }
 	#sidebar .sidebar-internal .sidebar-note p { text-align:left; }
+	.sidebar-page .widget-container { display:none; }
 }
 @media(max-width:600px) {
 	.classic,
