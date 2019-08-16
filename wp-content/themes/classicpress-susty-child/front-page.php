@@ -17,8 +17,9 @@ get_header();
 	$heroimage = get_field('hero_image');
 	$heroalt = get_field('hero_imagealt');
 	if ($herotitle) {
-	echo '<div class="home-hero">';
-		
+		echo '<div class="home-hero-container">';
+		echo '<div class="home-hero">';
+
 		echo '<div class="home-hero-image">';
 		if (($imgvid == 'Video') && ($video)) {
 			echo '<div class="embed-container">'.$video.'</div>';
@@ -26,7 +27,7 @@ get_header();
 			echo '<img src="'.$heroimage.'" alt="'.$heroalt.'">';
 		}
 		echo '</div>';
-		
+
 		echo '<div class="home-hero-text">';
 			echo '<h1>'.$herotitle.'</h1>';
 			if ($herosubtitle) {
@@ -36,12 +37,12 @@ get_header();
 			echo '<h3>'.$herotext.'</h3>';
 			}
 		echo '</div>';
-		
-	echo '</div>';
+
+		echo '</div><!-- .home-hero -->';
+		echo '</div><!-- .home-hero-container -->';
 	}
 	// (conditional opening <section> tag in header.php template)
 	?>
-</section>
 
 <section class="homepanel1">
 	<article class="community-home">
@@ -69,7 +70,7 @@ get_header();
 					echo $featicon1;
 					echo '</div>';
 				}
-				
+
 				echo '<h2>'.$feathead1.'</h2>';
 			}
 			if ($feattext1) {

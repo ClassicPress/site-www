@@ -37,7 +37,7 @@ function cp_susty_enqueue_parent_theme_styles() {
 		. '</li>';
 	wp_localize_script( 'cp-susty-menu', 'MENU_ITEM', array(
 		'searchform' => $searchform,
-	) );*/ 
+	) );*/
 
 	# Live search
 	wp_enqueue_script( 'jquery-ui-autocomplete' );
@@ -184,16 +184,16 @@ function cp_insert_twittercard_tags() {
 	}
 
 // Assemble the meta tag markup.
-	$markup  = '<meta name="twitter:card" value="summary_large_image" />' . "\n";
-	$markup .= '<meta name="twitter:url" value="' . $url . '" />' . "\n";
-	$markup .= '<meta name="twitter:title" value="' . $title . '" />' . "\n";
-	$markup .= '<meta name="twitter:description" value="' . $desc . '" />' . "\n";
-	$markup .= '<meta name="twitter:image" value="' . $image . '" />' . "\n";
-	$markup .= '<meta name="twitter:image:alt" value="' . $title . '" />' . "\n";
-	$markup .= '<meta name="twitter:site" value="@getclassicpress" />' . "\n";
+	$markup  = '<meta name="twitter:card" content="summary_large_image" />' . "\n";
+	$markup .= '<meta name="twitter:url" content="' . $url . '" />' . "\n";
+	$markup .= '<meta name="twitter:title" content="' . $title . '" />' . "\n";
+	$markup .= '<meta name="twitter:description" content="' . $desc . '" />' . "\n";
+	$markup .= '<meta name="twitter:image" content="' . $image . '" />' . "\n";
+	$markup .= '<meta name="twitter:image:alt" content="' . $title . '" />' . "\n";
+	$markup .= '<meta name="twitter:site" content="@getclassicpress" />' . "\n";
 	// Add creator tag if author profile has a Twitter username.
 	if( get_the_author_meta( 'twitter' ) ) {
-		$markup .= '<meta name="twitter:creator" value="@'. str_replace( '@', '', get_the_author_meta( 'twitter' ) ) .'" />' . "\n";
+		$markup .= '<meta name="twitter:creator" content="@'. str_replace( '@', '', get_the_author_meta( 'twitter' ) ) .'" />' . "\n";
 	}
 	// Print the tags.
 	echo $markup;

@@ -709,8 +709,11 @@ footer#legal { max-width:unset; margin:0; background:#002e38; }
 	background-size: auto;
 	background-position: 50% 50%;	
 	background-repeat: no-repeat;
+	background-color:#0f0;
 }
 .home-hero { display: flex; flex-wrap: wrap; align-items: center; max-width: 72rem; margin: 0 auto; padding: 3rem 1.5rem; }
+.home-hero-container:first-child {border-bottom:15px solid #692478;
+	}
 .home-hero-text { width: auto; text-align: left; }
 .home-hero-text h1, 
 .home-hero-text h2 { color: #fff; }

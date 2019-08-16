@@ -10,7 +10,7 @@
 
 	</div>
 
-	<footer id="colophon" role="contentinfo">
+	<footer id="colophon">
 		<div class="classic">
 			<div class="footerleft">
 				<a href="/"><img src="<?php echo get_stylesheet_directory_uri(); ?>/images/icon-white.svg" alt="ClassicPress" /></a>
@@ -20,18 +20,18 @@
 				</ul>
 			</div>
 			<div class="footerright">
-				<?php 
-				$footmenu = wp_nav_menu( array( 
-					'theme_location' => 'footer-menu', 
-					'depth' => 1, 
+				<?php
+				$footmenu = wp_nav_menu( array(
+					'theme_location' => 'footer-menu',
+					'depth' => 1,
 					'menu_id' => 'footmenu',
 					'menu_class' => 'nav'
-				) ); 
-				if ($footmenu) { 
-					echo($footmenu); 
+				) );
+				if ($footmenu) {
+					echo($footmenu);
 				}
 				?>
-			</div>			
+			</div>
 		</div>
 	</footer>
 	<footer id="legal">
