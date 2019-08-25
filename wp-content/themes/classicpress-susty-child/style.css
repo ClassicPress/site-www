@@ -521,8 +521,6 @@ nav a {
 #content ul li, 
 #content ol li { padding-top: .2em; padding-bottom: .2em; font-size:1.05em; }
 
-#content h1 { font-size: 2.3em; }
-
 article > header > h1, article > header > h2 {
 	font-size: 1.5em;
 }
@@ -754,7 +752,7 @@ footer#legal { max-width:unset; margin:0; background:#002e38; }
 .homepanel1 { padding: 2.5rem 1.5em; }
 .community-home { max-width: 56rem; margin: 0 auto; padding: 1rem 0; }
 .community-home { margin: 0 auto; padding: 0; }
-.community-home h1 { font-size: 2.5em; padding-top:0; }
+.community-home h2 { font-size: 2.4em; padding-top:0; }
 .community-home p { margin-bottom: 1rem; font-size:1.25em; }
 .community-home p.button.center { font-size:1.2em; margin-top:1.5em; }
 
