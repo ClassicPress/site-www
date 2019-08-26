@@ -1,12 +1,11 @@
 RewriteEngine On
 
-# Deny access to .env Composer files, and directories in a way that does not
-# reveal their existence (pass off to ClassicPress for 404 generation)
+# Deny access to files like .env and Composer in a way that does not reveal
+# their existence (pass off to ClassicPress for 404 generation)
 RewriteCond %{REQUEST_FILENAME} /\.env(\.example)?$ [OR]
 RewriteCond %{REQUEST_URI} ^/composer\. [OR]
 RewriteCond %{REQUEST_URI} ^/vendor(/|\?|$) [OR]
-RewriteCond %{REQUEST_URI} ^/README.md [OR]
-RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_URI} ^/README.md
 RewriteRule . /index.php [L]
 
 # BEGIN ClassicPress
