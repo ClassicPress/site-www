@@ -104,15 +104,20 @@
 	<?php if(!is_front_page()) {
 			echo '<header id="page-title">';
 			if (is_blog()) {
-			echo '<h1>';
-			esc_html_e( 'ClassicPress Blog', 'susty' );
-			echo '</h1>';
+				echo '<h1>';
+				esc_html_e( 'ClassicPress Blog', 'susty' );
+				echo '</h1>';
 			} elseif (is_search()) {
-			echo '<h1>';
-			esc_html_e( 'Search Results', 'susty' );
-			echo '</h1>';
-			} else {
-			the_title( '<h1>', '</h1>' );
+				echo '<h1>';
+				esc_html_e( 'Search Results', 'susty' );
+				echo '</h1>';
+			} elseif (is_404()) {
+				echo '<h1>';
+				esc_html_e( 'Oops! That page can&rsquo;t be found.', 'susty' );
+				echo '</h1>';
+			}
+			else {
+				the_title( '<h1>', '</h1>' );
 			}
 			echo '</header><!-- .entry-header -->';
 		}
