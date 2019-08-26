@@ -1,14 +1,10 @@
-= Latest Github Release =
+# Latest Github Release
 Automatically add a download link to the latest Github repo release zips with a shortcode [latest_github_release user="Github" repo="years-since"]
 
-== Description ==
-
-Automatically add a download link to the latest Github repo release zips with a shortcode [latest_github_release user="Github" repo="years-since"]
-
-== Usage ==
+# Usage
 Add the shortcode ```[latest_github_release user="Github" repo="years-since"]``` to desired post/page/widget and save to have the code working.
 
-=== options ===
+## Options
 One can add some customization to the shortcode such as 
 
 * Name of the button = ```[latest_github_release name="Desired Name"]```
@@ -17,5 +13,5 @@ One can add some customization to the shortcode such as
 1. Name attribute defaults to the word "Download"
 1. Name is usedin combination with the other attribbutes user & repo.
 
-== Contribute/Issues/Feedback ==
+## Contribute/Issues/Feedback
 If you have any feedback, just write an issue. Or fork the code and submit a PR [on Github](https://github.com/bahiirwa/Latest-Github-Release).
