@@ -31,15 +31,17 @@ $user_website = get_the_author_meta('url', $post->post_author);
  
 // Get link to the author archive page
 $user_posts = get_author_posts_url( get_the_author_meta( 'ID' , $post->post_author));
+
+$author_details = '';
   
 /*if ( ! empty( $display_name ) )
  
-$author_details = '<h5 class="author_name">About ' . $display_name . '</h5>';*/
+$author_details .= '<h5 class="author_name">About ' . $display_name . '</h5>';*/
  
 if ( ! empty( $user_description ) && ( ! empty( $display_name ) ) )
 // Author avatar and bio
  
-$author_details = '<div class="author_details">' . get_avatar( get_the_author_meta('user_email') , 90 ) . nl2br( '<div class="authtext"><h5 class="author_name">About ' . $display_name . '</h5><p>'.$user_description.'</p>' );
+$author_details .= '<div class="author_details">' . get_avatar( get_the_author_meta('user_email') , 90 ) . nl2br( '<div class="authtext"><h5 class="author_name">About ' . $display_name . '</h5><p>'.$user_description.'</p>' );
  
 $author_details .= '<p class="author_links"><a href="'. $user_posts .'">View all posts by ' . $display_name . '</a>';  
  
