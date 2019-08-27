@@ -2059,3 +2059,35 @@ footer#legal {
 		margin: 0 0 .3em 0;
 	}
 }
+
+
+/* Comments linked to Discourse forums */
+
+.discourse-comments-area .comment-list {
+	list-style: none;
+	padding-left: 0;
+}
+.discourse-comments-area a {
+	text-decoration: underline;
+}
+.discourse-comments-area .comment-author,
+.discourse-comments-area .comment-metadata {
+	float: left;
+	padding-right: 8px;
+}
+.discourse-comments-area .comment-author .avatar {
+	width: 32px;
+	height: 32px;
+	position: absolute;
+}
+.discourse-comments-area .fn {
+	padding-left: 40px;
+}
+.discourse-comments-area .comment-content {
+	clear: both;
+}
+.discourse-comments-area img.emoji {
+	width: 1.1em;
+	height: 1.1em;
+	vertical-align: text-top;
+}
