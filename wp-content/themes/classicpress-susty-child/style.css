@@ -60,7 +60,8 @@ Use it to make something cool, have fun, and share what you've learned with othe
 /**reset susty*****************/
 
 a {
-	border-bottom: none !important;
+	border-bottom: none;
+	outline: none;
 }
 
 .alignright {
@@ -78,7 +79,7 @@ strong {
 
 small,
 .small {
-	font-size: 80% !important;
+	font-size: 80%;
 }
 
 .code {
@@ -128,7 +129,7 @@ select:-moz-focusring,
 input:-moz-focusring,
 [type="button"]:-moz-focusring,
 [type="reset"]:-moz-focusring {
-	outline: rgba(63, 146, 242, 1) auto 2px !important;
+	outline: rgba(63, 146, 242, 1) auto 2px;
 	-moz-outline-radius: 5px;
 }
 
@@ -153,7 +154,6 @@ div.wpcf7-response-output {
 /**Mobile Menu*******/
 
 .mob-cancel-button {
-	font-size: 20px !important;
 	padding: 9px 12px;
 }
 
@@ -169,21 +169,18 @@ a.mobmenu-right-bt {
 #mobmenuright li a,
 #mobmenuright li a:visited {}
 
-#mobmenuright li a:hover,
-#mobmenuright li a:active {
-	background-color: #00657a !important;
+#mobmenuright li a:active,
+#mobmenuright li .current-menu-item a {
+	background-color: #00657a;
 }
 
 .mob-menu-slideout-over .mobmenu-panel {
-	overflow-y: hidden !important;
+	overflow-y: hidden;
 }
 
 .mobmenu-content #mobmenuright .sub-menu {
 	padding: 0;
 }
-
-
-/*.mobmenu-content #mobmenuright .sub-menu li a { padding-left: 48px; } */
 
 .mobmenu-content .sub-menu li:last-child {
 	border: none;
@@ -293,7 +290,7 @@ button {
 	text-decoration: underline;
 	font-weight: 500;
 	background: transparent;
-	border: 0 !important;
+	border: 0;
 }
 
 .homepanel1 a:hover,
@@ -333,8 +330,8 @@ article a[target='_blank']::after {
 }
 
 article .button a[target='_blank']:after {
-	content: '' !important;
-	display: none !important;
+	content: '';
+	display: none;
 }
 
 img {
@@ -378,7 +375,7 @@ img {
 
 #secondary-nav .hdrsocial a {
 	display: inline-block;
-	border: 0 !important;
+	border: 0;
 	padding: .75em .75em .5em .5em;
 	color: rgba(255, 255, 255, 0.5);
 }
@@ -425,7 +422,7 @@ img {
 #secondary-nav .smenu ul li a:visited {
 	display: inline-block;
 	color: rgba(255, 255, 255, .9);
-	text-decoration: none !important;
+	text-decoration: none;
 	border: none;
 	padding: .15em .7em .25em;
 }
@@ -438,7 +435,7 @@ img {
 
 #secondary-nav .smenu ul li.switchbutton a,
 #secondary-nav .smenu ul li.switchbutton a:visited {
-	border: 1px solid rgba(255, 255, 255, 1.0) !important;
+	border: 1px solid rgba(255, 255, 255, 1.0);
 	border-radius: 5px;
 }
 
@@ -627,13 +624,13 @@ i.dropdown-symbol {
 
 #masthead .menu ul.sub-menu li:last-child a,
 #masthead .menu li.menu-item-has-children ul.sub-menu li:last-child a {
-	border-radius: 0 0 6px 6px !important;
+	border-radius: 6px;
 	padding-bottom: 1em;
 }
 
 #masthead .menu ul.sub-menu li:first-child a,
 #masthead .menu li.menu-item-has-children ul.sub-menu li:first-child a {
-	border-radius: 6px 6px 0 0 !important;
+	border-radius: 6px;
 }
 
 @media(min-width:900px) {
@@ -693,7 +690,7 @@ i.dropdown-symbol {
 /**********PAGE TITLE**********************/
 
 header#page-title {
-	padding: 4.2em 0 1em !important;
+	padding: 4.2em 0 1em;
 	background: #006b81;
 	background: -moz-linear-gradient(-135deg, #3ebca6 18%, #057f99 50%, #006b81 100%);
 	background: -webkit-linear-gradient(-135deg, #3ebca6 18%, #057f99 50%, #006b81 100%);
@@ -747,7 +744,7 @@ header#page-title {
 /********** CONTENT **********************/
 
 .center {
-	text-align: center !important;
+	text-align: center;
 }
 
 h1,
@@ -795,7 +792,7 @@ p {
 
 #main h2.small,
 #main h2 .small {
-	font-size: 1.5em !important;
+	font-size: 1.5em;
 }
 
 #main h3 {
@@ -805,7 +802,7 @@ p {
 
 #main h3.small,
 #main h3 .small {
-	font-size: 1.3em !important;
+	font-size: 1.3em;
 }
 
 #main h4 {
@@ -815,7 +812,7 @@ p {
 
 #main h4.small,
 #main h4 .small {
-	font-size: 1.05em !important;
+	font-size: 1.05em;
 }
 
 #main ul,
@@ -980,7 +977,7 @@ p.text-rightcol,
 	color: #767676;
 	margin-bottom: .35em;
 	font-size: .84em;
-	line-height: 1.2 !important;
+	line-height: 1.2;
 	font-style: italic;
 }
 
@@ -1005,11 +1002,11 @@ input[type="submit"] {
 	display: inline-block;
 	padding: .9rem 2.5rem;
 	border-radius: 5px;
-	font-weight: 400 !important;
-	color: #fff !important;
+	font-weight: 400;
+	color: #fff;
 	line-height: 1;
 	border-bottom: 0;
-	text-decoration: none !important;
+	text-decoration: none;
 	text-transform: none;
 	letter-spacing: 0;
 }
@@ -1018,47 +1015,93 @@ input[type="submit"]:focus {
 	outline: none;
 }
 
-p.button.purple a,
-p.button.purple a:visited,
-input[type="submit"] {
-	background: #89288f !important;
+#content p.button a {
+	text-decoration: none;
 	border: none;
 }
 
-p.button.blue a,
-p.button.blue a:visited {
-	background: #07989e !important;
-	border: none;
+#content p.button.purple a,
+#content p.button.purple a:visited {
+	background: #89288f;
+	color: #fff;
 }
 
-p.button.purple a:hover,
-p.button.purple a:active,
-p.button.purple a:focus,
-input[type="submit"]:hover,
-input[type="submit"]:focus {
+#content p.button.purple a:hover,
+#content p.button.purple a:active,
+#content p.button.purple a:focus {
 	box-shadow: 0 0 3px 2px #89288f;
-	border: none;
 }
 
-p.button.blue a:hover,
-p.button.blue a:active,
-p.button.blue a:focus {
+#content p.button.blue a,
+#content p.button.blue a:visited {
+	background: #07989e;
+	color: #fff;
+}
+
+#content p.button.blue a:hover,
+#content p.button.blue a:active,
+#content p.button.blue a:focus {
 	box-shadow: 0 0 3px 2px #3ebca6;
 }
 
-p.button.white a,
-p.button.white a:visited {
-	background: #fff !important;
-	color: #89288f !important;
+#content p.button.white a,
+#content p.button.white a:visited {
+	background: #fff;
+	color: #89288f;
 	font-size: 20px;
-	font-weight: 600 !important;
+	font-weight: 600;
 }
 
-p.button.white a:hover,
-p.button.white a:active,
-p.button.white a:focus {
+#content p.button.white a:hover,
+#content p.button.white a:active,
+#content p.button.white a:focus {
 	box-shadow: 0 0 3px 2px #41cbb3;
-	color: #5b0460 !important;
+	color: #5b0460;
+}
+
+input[type="submit"] {
+	background: #89288f;
+	border: none;
+}
+
+input[type="submit"]:hover,
+input[type="submit"]:focus {
+	box-shadow: 0 0 3px 2px #89288f;
+}
+
+/* Buttons on home page and other specific pages need a little extra help */
+#content .homepanel1 p.button.blue a,
+#content .homepanel1 p.button.blue a:visited {
+	background: #07989e;
+	color: #fff;
+	text-decoration: none;
+}
+#content .homepanel2 p.button.purple a,
+#content .homepanel2 p.button.purple a:visited {
+	background: #89288f;
+	color: #fff;
+	text-decoration: none;
+}
+#content .homepanel3 p.button.white a,
+#content #content .homepanel3 p.button.white a:visited {
+	background: #fff;
+	color: #89288f;
+	text-decoration: none;
+	font-weight: 600;
+}
+#content .homepanel4 p.button.purple a,
+#content .homepanel4 p.button.purple a:visited {
+	background: #89288f;
+	color: #fff;
+	text-decoration: none;
+}
+.page-contributors #content p.button.purple a,
+.page-contributors #content p.button.purple a,
+.page-get-classicpress #content p.button.purple a,
+.page-get-classicpress #content p.button.purple a {
+	background: #89288f;
+	color: #fff;
+	text-decoration: none;
 }
 
 
@@ -1082,7 +1125,7 @@ p.question {
 	text-align: center;
 	position: relative;
 	top: -2px;
-	outline: none !important;
+	outline: none;
 }
 
 #content p a.toggleLink:hover,
@@ -1117,7 +1160,7 @@ p.question {
 	text-align: center;
 	position: relative;
 	top: -2px;
-	outline: none !important;
+	outline: none;
 }
 
 #content h3 a.toggleLink:hover,
@@ -1135,7 +1178,7 @@ p.question {
 }
 
 .toggle.dem .demblock {
-	width: 31% !important;
+	width: 31%;
 }
 
 .toggle.dem .demblock ul {
@@ -1163,16 +1206,16 @@ p.question {
 		display: block;
 	}
 	.toggle.dem .demblock {
-		width: 100% !important;
+		width: 100%;
 	}
 }
 
 .edit-link a {
-	font-weight: 400 !important;
+	font-weight: 400;
 	text-transform: uppercase;
-	padding: 0 !important;
+	padding: 0;
 	letter-spacing: .1em;
-	text-decoration: none !important;
+	text-decoration: none;
 	font-size: 14px;
 }
 
@@ -1289,7 +1332,7 @@ label select {
 	line-height: 1.5;
 	width: 322px;
 	margin-left: -1.5em;
-	padding: 0.5em 0 0.5em 1em !important;
+	padding: 0.5em 0 0.5em 1em;
 	background-color: #fff;
 	border: 1px solid #006b81;
 	border-top: 0;
@@ -1390,10 +1433,10 @@ table.cp-file-list .cp-file-size {
 	padding: .55rem 1.5rem .65em;
 	border-radius: 5px;
 	font-weight: 400;
-	color: #fff !important;
+	color: #fff;
 	line-height: 1;
 	border-bottom: 0;
-	text-decoration: none !important;
+	text-decoration: none;
 	text-transform: none;
 	letter-spacing: 0;
 	background: #89288f;
@@ -1418,10 +1461,10 @@ table.cp-file-list .cp-file-size {
 	font-size: .9em;
 	border-radius: 5px;
 	font-weight: 400;
-	color: #fff !important;
+	color: #fff;
 	line-height: 1;
 	border-bottom: 0;
-	text-decoration: none !important;
+	text-decoration: none;
 	text-transform: none;
 	letter-spacing: 0;
 	background: #89288f;
@@ -1513,7 +1556,7 @@ footer#colophon {
 #colophon .nav a:visited {
 	color: #eaec8e;
 	font-weight: 600;
-	border: none !important;
+	border: none;
 	text-decoration: none;
 }
 
@@ -1589,8 +1632,8 @@ footer#legal {
 /***** HOME PAGE *******************************/
 
 .home #content {
-	max-width: 500rem !important;
-	padding: 0 !important;
+	max-width: 500rem;
+	padding: 0;
 	border-bottom: 15px solid #89288f;
 	border-image-source: linear-gradient(45deg, rgb(137, 40, 143), rgb(75, 32, 99));
 	border-image-slice: 1;
@@ -1854,6 +1897,15 @@ footer#legal {
 .getinvolved a {
 	width: 270px;
 	text-align: center;
+}
+
+.getinvolved p a {
+	width: 270px;
+	text-align: center;
+	height: 76px;
+	overflow: hidden;
+	vertical-align: middle;
+	display: table-cell;
 }
 
 @media screen and (max-width:900px) {

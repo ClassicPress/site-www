@@ -214,3 +214,16 @@ function cp_insert_twittercard_tags() {
 	// Print the tags.
 	echo $markup;
 }
+
+/*
+ * Add the page slug as a class to the <body>
+ * Gives greater flexibility for styling
+ */
+function cp_add_page_slug_body_class( $classes ) {
+    global $post;
+    if ( isset( $post ) ) {
+        $classes[] = 'page-' . $post->post_name;
+    }
+    return $classes;
+}
+add_filter( 'body_class', 'cp_add_page_slug_body_class' );
