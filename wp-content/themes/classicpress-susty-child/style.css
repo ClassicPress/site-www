@@ -242,7 +242,7 @@ select,
 optgroup,
 textarea {
 	color: #040402;
-	font-family: OpenDyslexicAlta, OpenDyslexic, "Source Sans Pro", "Helvetica Neue", Verdana, sans-serif;
+	font-family: "Source Sans Pro", "Helvetica Neue", Verdana, sans-serif;
 	font-size: calc( 15px + 2 * (100vw / 1500));
 	line-height: 1.5;
 }
