@@ -64,22 +64,15 @@ function is_blog () {
 }
 
 /**
- * Override the way ClassicPress includes the theme's stylesheet so that we can
- * add our own version string
+ * Set our own version string for the theme's stylesheet
  */
-function cp_susty_override_style_css_version( $html, $handle, $href, $media ) {
-	if ( $handle !== 'susty-style' ) {
-		return $html;
+function cp_susty_override_style_css_version( $version, $type, $handle ) {
+	if ( $type !== 'style' || $handle !== 'susty-style' ) {
+		return $version;
 	}
-
-	$ver = cp_susty_get_asset_version();
-	return preg_replace(
-		'#\?ver=[^\'"]+([\'"])#',
-		'?ver=' . $ver . '$1',
-		$html
-	);
+	return cp_susty_get_asset_version();
 }
-add_filter( 'style_loader_tag', 'cp_susty_override_style_css_version', 10, 4 );
+add_filter( 'classicpress_asset_version', 'cp_susty_override_style_css_version', 10, 3 );
 
 /* Add Twitter card tags for social sharing. */
 add_action( 'wp_head', 'cp_insert_twittercard_tags', 0 );
