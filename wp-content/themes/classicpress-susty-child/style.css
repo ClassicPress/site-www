@@ -1102,7 +1102,7 @@ p.question {
 	color: #fff;
 }
 
-.toggle {
+.toggle, .callout-box {
 	margin-top: -5px;
 	margin-bottom: 1.2em;
 	padding: .4em .6em .4em .75em;

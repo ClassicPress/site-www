@@ -4,21 +4,28 @@
  * Stylesheet version (cache buster)
  */
 function cp_susty_get_asset_version() {
-	return '20190830.2';
+	return '20190830.3';
 }
 
 /**
  * Enqueue scripts and styles
  */
-function cp_susty_enqueue_parent_theme_styles() {
+function cp_susty_enqueue_assets() {
 	wp_enqueue_style(
 		'cp-susty-parent-style',
 		get_template_directory_uri() . '/style.css',
 		[],
 		cp_susty_get_asset_version()
 	);
+
+	wp_enqueue_script(
+		'cp-susty-script',
+		get_stylesheet_directory_uri() . '/script.js',
+		array( 'jquery' ),
+		cp_susty_get_asset_version()
+	);
 }
-add_action( 'wp_enqueue_scripts', 'cp_susty_enqueue_parent_theme_styles' );
+add_action( 'wp_enqueue_scripts', 'cp_susty_enqueue_assets' );
 
 /*Register new menu to replace 'Primary'*/
 unregister_nav_menu( 'Primary', 'susty' ); /*should unregister problem menu, but does not*/
