@@ -68,7 +68,9 @@
 				<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><img src="<?php echo home_url( '/wp-content/themes/classicpress-susty-child/images/logo-white.svg' ); ?>" width="250" alt="ClassicPress logo"> <span class="screen-reader-text"><?php esc_html_e( 'Home', 'susty' ); ?></span></a>
 			</span>
 
-			<nav id="site-navigation" class="main-navigation" aria-label="Main menu">
+			<nav id="site-navigation" class="main-navigation nav--toggle-sub nav--toggle-small" aria-label="
+			<?php esc_attr_e('Main menu', 'susty'); 
+			?>"
 				<?php
 				/*wp_nav_menu( array(
 					'theme_location' => 'Primary',

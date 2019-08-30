@@ -18,13 +18,31 @@ function cp_susty_enqueue_parent_theme_styles() {
 		cp_susty_get_asset_version()
 	);
 
-	wp_enqueue_script(
+/* 	wp_enqueue_script(
 		'cp-susty-menu',
 		get_stylesheet_directory_uri() . '/js/scripts.js',
 		[ 'jquery' ],
 		array( 'jquery' ),
 		cp_susty_get_asset_version()
-	);
+	); */
+
+	wp_enqueue_script('susty-navigation', get_stylesheet_directory_uri() . '/js/navigation.min.js', array(), '20190827', true);
+
+   wp_localize_script('susty-navigation', 'sustyScreenReaderText', array(
+		'expand' => __('Expand child menu', 'susty'),
+	   'collapse' => __('Collapse child menu', 'susty')
+   ));
+
+function filter_primary_nav_menu_dropdown_symbol( string $item_output, WP_Post $item, int $depth, $args ) {
+
+	// Add the dropdown for items that have children.
+	if ( ! empty( $item->classes ) && in_array( 'menu-item-has-children', $item->classes ) ) {
+		return $item_output . '<span class="dropdown"><i class="dropdown-symbol"></i></span>';
+	}
+
+	return $item_output;
+}
+add_filter( 'walker_nav_menu_start_el', 'filter_primary_nav_menu_dropdown_symbol', 10, 4 );
 
 	# Add menu to first submenu or as last menu item on mobile
 	/*$searchform = '<li class="menu-item">'
