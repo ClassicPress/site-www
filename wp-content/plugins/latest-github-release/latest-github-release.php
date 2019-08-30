@@ -50,6 +50,7 @@ class LatestGithubRelease {
 			'repo' => '',
 			// set default button name to Download
 			'name' => 'Download Zip',
+			'class' => 'latest-github-release-link',
 		];
 
 		// Replace any missing shortcode arguments with defaults.
@@ -85,11 +86,22 @@ class LatestGithubRelease {
 			);
 		}
 
-		return (
-			'<a href="' . $zip_url . '" class="cp-release-link">'
-			. $atts['name']
+		$html = (
+			'<a href="' . esc_attr( $zip_url ) . '"'
+			. ' class="' . esc_attr( $atts['class'] ) . '">'
+			. esc_html( $atts['name'] )
 			. '</a>'
 		);
+
+		/**
+		 * Filters the HTML for the release link.
+		 *
+		 * @since 1.3.0
+		 *
+		 * @param string $html The link HTML.
+		 * @param array  $atts The full array of shortcode attributes.
+		 */
+		return apply_filters( 'latest_github_release_link', $html, $atts );
 	}
 
 	/**
