@@ -446,24 +446,18 @@ img {
 	border-radius: 5px;
 }
 
-#secondary-nav .smenu ul li.switchbutton.migrate a {
+#secondary-nav .smenu ul li.switchbutton.donate a {
 	background: #057f99;
 }
 
 #secondary-nav .smenu ul li.switchbutton.download a {
-	background: #057f99;
+	background: #89288f;
+	font-weight: 600;
 	margin-left: 6px;
 }
 
 #secondary-nav .smenu ul li.switchbutton a:hover,
-#secondary-nav .smenu ul li.switchbutton a:active,
-#secondary-nav .smenu ul li.switchbutton a:focus {
-	border: 1px solid rgba(255, 255, 255, 1.0);
-	box-shadow: 0 0 3px 3px #3ebca6;
-}
-
-#secondary-nav .smenu ul li.switchbutton.download a:hover,
-#secondary-nav .smenu ul li.switchbutton.download a:active {
+#secondary-nav .smenu ul li.switchbutton a:active {
 	box-shadow: 0 0 3px 3px #41cbb3;
 }
 

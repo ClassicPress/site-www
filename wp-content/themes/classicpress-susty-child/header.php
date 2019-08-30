@@ -52,7 +52,7 @@
 			$donate = get_field('donate_link', 'option');
 			$switch = get_field('migration_plugin', 'option');
 			$getcp = get_field('get_classicpress', 'option');
-			echo '<li class="switchbutton download"><a href="'.$donate.'" target="_blank" rel="noreferrer noopener">Donate</a></li>';
+			echo '<li class="switchbutton donate"><a href="'.$donate.'" target="_blank" rel="noreferrer noopener">Donate</a></li>';
 			echo '<li class="switchbutton download"><a href="'.$getcp.'">Get ClassicPress</a></li>';
 			?>
 		</ul>
