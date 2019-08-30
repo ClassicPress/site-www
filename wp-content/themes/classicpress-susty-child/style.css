@@ -60,7 +60,7 @@ Use it to make something cool, have fun, and share what you've learned with othe
 /**reset susty*****************/
 
 a {
-    border-bottom: none!important;
+    border-bottom: none !important;
 }
 
 .alignright {
@@ -78,7 +78,7 @@ strong {
 
 small,
 .small {
-    font-size: 80%!important;
+    font-size: 80% !important;
 }
 
 .code {
@@ -128,7 +128,7 @@ select:-moz-focusring,
 input:-moz-focusring,
 [type="button"]:-moz-focusring,
 [type="reset"]:-moz-focusring {
-    outline: rgba(63, 146, 242, 1) auto 2px!important;
+    outline: rgba(63, 146, 242, 1) auto 2px !important;
     -moz-outline-radius: 5px;
 }
 
@@ -171,11 +171,11 @@ a.mobmenu-right-bt {
 
 #mobmenuright li a:hover,
 #mobmenuright li a:active {
-    background-color: #00657a!important;
+    background-color: #00657a !important;
 }
 
 .mob-menu-slideout-over .mobmenu-panel {
-    overflow-y: hidden!important;
+    overflow-y: hidden !important;
 }
 
 .mobmenu-content #mobmenuright .sub-menu {
@@ -293,7 +293,7 @@ button {
     text-decoration: underline;
     font-weight: 500;
     background: transparent;
-    border: 0!important;
+    border: 0 !important;
 }
 
 .homepanel1 a:hover,
@@ -333,8 +333,8 @@ article a[target='_blank']::after {
 }
 
 article .button a[target='_blank']:after {
-    content: ''!important;
-    display: none!important;
+    content: '' !important;
+    display: none !important;
 }
 
 img {
@@ -378,7 +378,7 @@ img {
 
 #secondary-nav .hdrsocial a {
     display: inline-block;
-    border: 0!important;
+    border: 0 !important;
     padding: .75em .75em .5em .5em;
     color: rgba(255, 255, 255, 0.5);
 }
@@ -425,7 +425,7 @@ img {
 #secondary-nav .smenu ul li a:visited {
     display: inline-block;
     color: rgba(255, 255, 255, .9);
-    text-decoration: none!important;
+    text-decoration: none !important;
     border: none;
     padding: .15em .7em .25em;
 }
@@ -438,7 +438,7 @@ img {
 
 #secondary-nav .smenu ul li.switchbutton a,
 #secondary-nav .smenu ul li.switchbutton a:visited {
-    border: 1px solid rgba(255, 255, 255, 1.0)!important;
+    border: 1px solid rgba(255, 255, 255, 1.0) !important;
     border-radius: 5px;
 }
 
@@ -669,13 +669,13 @@ i.dropdown-symbol {
 
 #masthead .menu ul.sub-menu li:last-child a,
 #masthead .menu li.menu-item-has-children ul.sub-menu li:last-child a {
-    border-radius: 0 0 6px 6px!important;
+    border-radius: 0 0 6px 6px !important;
     padding-bottom: 1em;
 }
 
 #masthead .menu ul.sub-menu li:first-child a,
 #masthead .menu li.menu-item-has-children ul.sub-menu li:first-child a {
-    border-radius: 6px 6px 0 0!important;
+    border-radius: 6px 6px 0 0 !important;
 }
 
 @media(min-width:900px) {
@@ -736,7 +736,7 @@ i.dropdown-symbol {
 /**********PAGE TITLE**********************/
 
 header#page-title {
-    padding: 4.2em 0 1em!important;
+    padding: 4.2em 0 1em !important;
     background: #006b81;
     background: -moz-linear-gradient(-135deg, #3ebca6 18%, #057f99 50%, #006b81 100%);
     background: -webkit-linear-gradient(-135deg, #3ebca6 18%, #057f99 50%, #006b81 100%);
@@ -792,7 +792,7 @@ header#page-title {
 /********** CONTENT **********************/
 
 .center {
-    text-align: center!important;
+    text-align: center !important;
 }
 
 h1,
@@ -840,7 +840,7 @@ p {
 
 #main h2.small,
 #main h2 .small {
-    font-size: 1.5em!important;
+    font-size: 1.5em !important;
 }
 
 #main h3 {
@@ -850,7 +850,7 @@ p {
 
 #main h3.small,
 #main h3 .small {
-    font-size: 1.3em!important;
+    font-size: 1.3em !important;
 }
 
 #main h4 {
@@ -860,7 +860,7 @@ p {
 
 #main h4.small,
 #main h4 .small {
-    font-size: 1.05em!important;
+    font-size: 1.05em !important;
 }
 
 #main ul,
@@ -1029,7 +1029,7 @@ p.text-rightcol,
     color: #767676;
     margin-bottom: .35em;
     font-size: .84em;
-    line-height: 1.2!important;
+    line-height: 1.2 !important;
     font-style: italic;
 }
 
@@ -1054,11 +1054,11 @@ input[type="submit"] {
     display: inline-block;
     padding: .9rem 2.5rem;
     border-radius: 5px;
-    font-weight: 400!important;
-    color: #fff!important;
+    font-weight: 400 !important;
+    color: #fff !important;
     line-height: 1;
     border-bottom: 0;
-    text-decoration: none!important;
+    text-decoration: none !important;
     text-transform: none;
     letter-spacing: 0;
 }
@@ -1070,13 +1070,13 @@ input[type="submit"]:focus {
 p.button.purple a,
 p.button.purple a:visited,
 input[type="submit"] {
-    background: #89288f!important;
+    background: #89288f !important;
     border: none;
 }
 
 p.button.blue a,
 p.button.blue a:visited {
-    background: #07989e!important;
+    background: #07989e !important;
     border: none;
 }
 
@@ -1097,17 +1097,17 @@ p.button.blue a:focus {
 
 p.button.white a,
 p.button.white a:visited {
-    background: #fff!important;
-    color: #89288f!important;
+    background: #fff !important;
+    color: #89288f !important;
     font-size: 20px;
-    font-weight: 600!important;
+    font-weight: 600 !important;
 }
 
 p.button.white a:hover,
 p.button.white a:active,
 p.button.white a:focus {
     box-shadow: 0 0 3px 2px #41cbb3;
-    color: #5b0460!important;
+    color: #5b0460 !important;
 }
 
 
@@ -1131,7 +1131,7 @@ p.question {
     text-align: center;
     position: relative;
     top: -2px;
-    outline: none!important;
+    outline: none !important;
 }
 
 #content p a.toggleLink:hover,
@@ -1166,7 +1166,7 @@ p.question {
     text-align: center;
     position: relative;
     top: -2px;
-    outline: none!important;
+    outline: none !important;
 }
 
 #content h3 a.toggleLink:hover,
@@ -1184,7 +1184,7 @@ p.question {
 }
 
 .toggle.dem .demblock {
-    width: 31%!important;
+    width: 31% !important;
 }
 
 .toggle.dem .demblock ul {
@@ -1212,16 +1212,16 @@ p.question {
         display: block;
     }
     .toggle.dem .demblock {
-        width: 100%!important;
+        width: 100% !important;
     }
 }
 
 .edit-link a {
-    font-weight: 400!important;
+    font-weight: 400 !important;
     text-transform: uppercase;
-    padding: 0!important;
+    padding: 0 !important;
     letter-spacing: .1em;
-    text-decoration: none!important;
+    text-decoration: none !important;
     font-size: 14px;
 }
 
@@ -1444,10 +1444,10 @@ table.cp-file-list .cp-file-size {
     padding: .55rem 1.5rem .65em;
     border-radius: 5px;
     font-weight: 400;
-    color: #fff!important;
+    color: #fff !important;
     line-height: 1;
     border-bottom: 0;
-    text-decoration: none!important;
+    text-decoration: none !important;
     text-transform: none;
     letter-spacing: 0;
     background: #89288f;
@@ -1472,10 +1472,10 @@ table.cp-file-list .cp-file-size {
     font-size: .9em;
     border-radius: 5px;
     font-weight: 400;
-    color: #fff!important;
+    color: #fff !important;
     line-height: 1;
     border-bottom: 0;
-    text-decoration: none!important;
+    text-decoration: none !important;
     text-transform: none;
     letter-spacing: 0;
     background: #89288f;
@@ -1567,7 +1567,7 @@ footer#colophon {
 #colophon .nav a:visited {
     color: #eaec8e;
     font-weight: 600;
-    border: none!important;
+    border: none !important;
     text-decoration: none;
 }
 
@@ -1644,7 +1644,7 @@ footer#legal {
 
 .home #content {
     max-width: 500rem !important;
-    padding: 0!important;
+    padding: 0 !important;
     border-bottom: 15px solid #89288f;
     border-image-source: linear-gradient(45deg, rgb(137, 40, 143), rgb(75, 32, 99));
     border-image-slice: 1;
