@@ -18,15 +18,13 @@ function cp_susty_enqueue_parent_theme_styles() {
 		cp_susty_get_asset_version()
 	);
 
-/* 	wp_enqueue_script(
-		'cp-susty-menu',
-		get_stylesheet_directory_uri() . '/js/scripts.js',
-		[ 'jquery' ],
-		array( 'jquery' ),
-		cp_susty_get_asset_version()
-	); */
-
-	wp_enqueue_script('susty-navigation', get_stylesheet_directory_uri() . '/js/navigation.min.js', array(), '20190827', true);
+	wp_enqueue_script(
+		'susty-navigation',
+		get_stylesheet_directory_uri() . '/js/navigation.js',
+		array(),
+		'20190827',
+		true
+	);
 
    wp_localize_script('susty-navigation', 'sustyScreenReaderText', array(
 		'expand' => __('Expand child menu', 'susty'),
