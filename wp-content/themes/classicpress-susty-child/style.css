@@ -524,6 +524,10 @@ ul#primary-menu.menu li ul li {
 	margin: 0;
 }
 
+ul#primary-menu.menu > li > a {
+	outline-offset: -2px;
+}
+
 ul#primary-menu.menu li a,
 ul#primary-menu.menu li a:visited {
 	color: rgba(255, 255, 255, 1.0);
@@ -562,7 +566,6 @@ ul#primary-menu.menu li.current_page_item ul li a:active {
 	display: none;
 	position: absolute;
 	top: 100%;
-	margin-top: 3px; /* to avoid hiding focus outline */
 	-webkit-box-orient: vertical;
 	-webkit-box-direction: normal;
 	-ms-flex-direction: column;
