@@ -884,34 +884,29 @@ p.text-rightcol,
 
 #main ul.brand-colors li {
 	padding: 0 0 .2em 0;
-	line-height: 1.4;
+	line-height: 1.8;
+}
+
+#main ul.brand-colors li:before {
+	width: 30px;
+	height: 30px;
+	border-radius: 15px;
+	content: '';
+	margin-right: 6px;
+	vertical-align: bottom;
+	display: inline-block;
 }
 
 #main ul.brand-colors li.aqua:before {
-	font-family: 'FontAwesome';
-	content: '\f111';
-	color: #057f99;
-	font-size: 160%;
-	margin-right: 5px;
-	vertical-align: middle;
+	background: #057f99;
 }
 
 #main ul.brand-colors li.deepviolet:before {
-	font-family: 'FontAwesome';
-	content: '\f111';
-	color: #361946;
-	font-size: 160%;
-	margin-right: 5px;
-	vertical-align: middle;
+	background: #361946;
 }
 
 #main ul.brand-colors li.violet:before {
-	font-family: 'FontAwesome';
-	content: '\f111';
-	color: #89288f;
-	font-size: 160%;
-	margin-right: 5px;
-	vertical-align: middle;
+	background: #89288f;
 }
 
 .nav-links {
