@@ -1228,6 +1228,9 @@ nav a {
 	padding: 0;
 }
 
+body.home #content {
+	border-bottom: none;
+}
 
 /****CRAYON CODE HILITES******/
 
