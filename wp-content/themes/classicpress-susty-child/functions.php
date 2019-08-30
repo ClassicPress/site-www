@@ -17,61 +17,15 @@ function cp_susty_enqueue_parent_theme_styles() {
 		[],
 		cp_susty_get_asset_version()
 	);
-
-	wp_enqueue_script(
-		'susty-navigation',
-		get_stylesheet_directory_uri() . '/js/navigation.js',
-		array(),
-		'20190827',
-		true
-	);
-
-   wp_localize_script('susty-navigation', 'sustyScreenReaderText', array(
-		'expand' => __('Expand child menu', 'susty'),
-	   'collapse' => __('Collapse child menu', 'susty')
-   ));
-
-function filter_primary_nav_menu_dropdown_symbol( string $item_output, WP_Post $item, int $depth, $args ) {
-
-	// Add the dropdown for items that have children.
-	if ( ! empty( $item->classes ) && in_array( 'menu-item-has-children', $item->classes ) ) {
-		return $item_output . '<span class="dropdown"><i class="dropdown-symbol"></i></span>';
-	}
-
-	return $item_output;
-}
-add_filter( 'walker_nav_menu_start_el', 'filter_primary_nav_menu_dropdown_symbol', 10, 4 );
-
-	# Add menu to first submenu or as last menu item on mobile
-	/*$searchform = '<li class="menu-item">'
-		. '<form role="search" method="get" class="search-form" action="' . home_url( '/' ) . '">'
-		. '<label>'
-		. '<span class="screen-reader-text">' . _x( 'Search for:', 'label' ) . '</span>'
-		. '<input type="search" class="search-field" placeholder="' . esc_attr_x( 'Search …', 'placeholder' ) . '" value="' . get_search_query() . '" id="s" name="s" title="' . esc_attr_x( 'Search for:', 'label' ) . '" />'
-		. '</label>'
-		. '</form>'
-		. '</li>';
-	wp_localize_script( 'cp-susty-menu', 'MENU_ITEM', array(
-		'searchform' => $searchform,
-	) );*/
-
-	# Live search
-	wp_enqueue_script( 'jquery-ui-autocomplete' );
-	wp_enqueue_script( 'search-complete', get_stylesheet_directory_uri() . '/js/search.js', array( 'jquery', 'jquery-ui-autocomplete' ), null, true );
-	wp_localize_script( 'search-complete', 'SEARCHCOMPLETE', array(
-		'rest_url' => esc_url_raw( rest_url() ),
-		'search_nonce' => wp_create_nonce( 'wp_rest' ),
-	) );
-
 }
 add_action( 'wp_enqueue_scripts', 'cp_susty_enqueue_parent_theme_styles' );
 
-/*Register new menu to replace 'Primary'***/
+/*Register new menu to replace 'Primary'*/
 unregister_nav_menu( 'Primary', 'susty' ); /*should unregister problem menu, but does not*/
 register_nav_menus( array(
 	'main-menu' => __( 'MainMenu', 'susty' ),
 	'footer-menu' => __( 'FooterMenu', 'susty' ),
-	) );
+) );
 
 
 /***load Font Awesome scripts***/
@@ -109,7 +63,6 @@ function is_blog () {
     return ( is_archive() || is_author() || is_category() || is_home() || is_single() || is_tag()) && 'post' == get_post_type();
 }
 
-
 /**
  * Override the way ClassicPress includes the theme's stylesheet so that we can
  * add our own version string
@@ -127,42 +80,6 @@ function cp_susty_override_style_css_version( $html, $handle, $href, $media ) {
 	);
 }
 add_filter( 'style_loader_tag', 'cp_susty_override_style_css_version', 10, 4 );
-
-/* REGISTER CUSTOM SEARCH REST API ROUTE */
-function cp_register_search_route() {
-    register_rest_route( 'cp/v1', '/search', array(
-        'methods'  => 'GET',
-        'callback' => 'cp_ajax_search',
-    ) );
-}
-add_action( 'rest_api_init', 'cp_register_search_route' );
-
-/* PREPARE SEARCH RESULTS FOR REST API */
-# https://benrobertson.io/wordpress/wordpress-custom-search-endpoint
-function cp_ajax_search( $request ) {
-	$posts = [];
-	$results = [];
-	// check for a search term
-	if ( isset( $request['query'] ) ) {
-		// get posts
-		$posts = get_posts( [
-			'posts_per_page' => 20,
-			'post_type' => ['page', 'post'],
-			's' => $request['query'],
-		] );
-		// set up the data to return
-		foreach( $posts as $post ) {
-			$results[] = [
-				'title' => $post->post_title,
-				'link' => get_permalink( $post->ID )
-			];
-		}
-	}
-	if ( empty( $results ) ) {
-		return new WP_Error( 'front_end_ajax_search', 'No results' );
-	}
-	return rest_ensure_response( $results );
-}
 
 /* Add Twitter card tags for social sharing. */
 add_action( 'wp_head', 'cp_insert_twittercard_tags', 0 );
@@ -199,17 +116,22 @@ function cp_insert_twittercard_tags() {
 
 	}
 
-// Assemble the meta tag markup.
+	// Assemble the meta tag markup.
 	$markup  = '<meta name="twitter:card" content="summary_large_image" />' . "\n";
-	$markup .= '<meta name="twitter:url" content="' . $url . '" />' . "\n";
-	$markup .= '<meta name="twitter:title" content="' . $title . '" />' . "\n";
-	$markup .= '<meta name="twitter:description" content="' . $desc . '" />' . "\n";
-	$markup .= '<meta name="twitter:image" content="' . $image . '" />' . "\n";
-	$markup .= '<meta name="twitter:image:alt" content="' . $title . '" />' . "\n";
+	$markup .= '<meta name="twitter:url" content="' . esc_attr( $url ) . '" />' . "\n";
+	$markup .= '<meta name="twitter:title" content="' . esc_attr( $title ) . '" />' . "\n";
+	$markup .= '<meta name="twitter:description" content="' . esc_attr( $desc ) . '" />' . "\n";
+	$markup .= '<meta name="twitter:image" content="' . esc_attr( $image ) . '" />' . "\n";
+	$markup .= '<meta name="twitter:image:alt" content="' . esc_attr( $title ) . '" />' . "\n";
 	$markup .= '<meta name="twitter:site" content="@getclassicpress" />' . "\n";
 	// Add creator tag if author profile has a Twitter username.
-	if( get_the_author_meta( 'twitter' ) ) {
-		$markup .= '<meta name="twitter:creator" content="@'. str_replace( '@', '', get_the_author_meta( 'twitter' ) ) .'" />' . "\n";
+	if ( get_the_author_meta( 'twitter' ) ) {
+		$markup .= (
+			'<meta name="twitter:creator" content="@'
+			. esc_attr( str_replace( '@', '', get_the_author_meta( 'twitter' ) ) )
+			. '" />'
+			. "\n"
+		);
 	}
 	// Print the tags.
 	echo $markup;
