@@ -609,7 +609,7 @@ ul#primary-menu.menu li.current_page_item ul li a:active {
 		margin: 0 auto;
 	}
 	#site-navigation {
-		margin-right: -1em;
+		margin-right: -0.3em;
 	}
 	.menu {
 		display: flex;
