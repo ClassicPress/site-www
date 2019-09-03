@@ -23,16 +23,16 @@ Use it to make something cool, have fun, and share what you've learned with othe
 
 @font-face {
 	font-family: 'Source Sans Pro';
-	font-style: normal;
-	font-weight: 600;
-	src: local('Source Sans Pro SemiBold'), local('SourceSansPro-SemiBold'), url('fonts/source-sans-pro-v12-latin-600.woff2') format('woff2'), url('fonts/source-sans-pro-v12-latin-600.woff') format('woff');
+	font-style: italic;
+	font-weight: 400;
+	src: local('Source Sans Pro Italic'), local('SourceSansPro-Italic'), url('fonts/source-sans-pro-v12-latin-italic.woff2') format('woff2'), url('fonts/source-sans-pro-v12-latin-italic.woff') format('woff');
 }
 
 @font-face {
 	font-family: 'Source Sans Pro';
-	font-style: italic;
-	font-weight: 400;
-	src: local('Source Sans Pro Italic'), local('SourceSansPro-Italic'), url('fonts/source-sans-pro-v12-latin-italic.woff2') format('woff2'), url('fonts/source-sans-pro-v12-latin-italic.woff') format('woff');
+	font-style: normal;
+	font-weight: 600;
+	src: local('Source Sans Pro SemiBold'), local('SourceSansPro-SemiBold'), url('fonts/source-sans-pro-v12-latin-600.woff2') format('woff2'), url('fonts/source-sans-pro-v12-latin-600.woff') format('woff');
 }
 
 @font-face {
@@ -55,6 +55,50 @@ Use it to make something cool, have fun, and share what you've learned with othe
 	font-weight: 700;
 	src: local('Source Sans Pro Bold Italic'), local('SourceSansPro-BoldItalic'), url('fonts/source-sans-pro-v12-latin-700italic.woff2') format('woff2'), url('fonts/source-sans-pro-v12-latin-700italic.woff') format('woff');
 }
+
+/********* Icons from Icomoon instead of Font Awesome **********/
+@font-face {
+	font-family: 'cpicons';
+	src:  url('fonts/cpicons.eot?2x2hlr');
+	src:  url('fonts/cpicons.eot?2x2hlr#iefix') format('embedded-opentype'),
+	url('fonts/cpicons.ttf?2x2hlr') format('truetype'),
+	url('fonts/cpicons.woff?2x2hlr') format('woff'),
+	url('fonts/cpicons.svg?2x2hlr#cpicons') format('svg');
+	font-weight: normal;
+	font-style: normal;
+	font-display: block;
+}
+[class^="cpicon-"], [class*=" cpicon-"] {
+	font-family: 'cpicons';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.cpicon-discourse:before {
+	content: "\e900";
+}
+.cpicon-external-link-alt:before {
+	content: "\e901";
+}
+.cpicon-facebook-f:before {
+	content: "\e902";
+}
+.cpicon-github:before {
+	content: "\e903";
+}
+.cpicon-slack:before {
+	content: "\e904";
+}
+.cpicon-twitter:before {
+	content: "\e905";
+}
+
 
 
 /**reset susty*****************/
@@ -320,20 +364,17 @@ button {
 	font-weight: 600;
 }
 
-
-/*font awesome 5*/
-
+/* External link icon */
 article a[target='_blank']::after {
 	font-size: 60%;
 	position: relative;
-	top: -2px;
-	margin-left: 2px;
+	top: -3px;
+	margin-left: 4px;
 	color: #057f99;
 	text-decoration: none;
 	display: inline-block;
-	font-family: 'Font Awesome 5 Free';
-	content: '\f35d';
-	font-weight: 900;
+	font-family: 'cpicons';
+	content: '\e901';
 }
 
 article .button a[target='_blank']:after {

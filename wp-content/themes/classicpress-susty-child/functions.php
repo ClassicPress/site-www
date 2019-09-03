@@ -4,8 +4,9 @@
  * Stylesheet version (cache buster)
  */
 function cp_susty_get_asset_version() {
-	return '20190831';
+	return '20190901';
 }
+
 
 /**
  * Enqueue scripts and styles
@@ -27,6 +28,7 @@ function cp_susty_enqueue_assets() {
 }
 add_action( 'wp_enqueue_scripts', 'cp_susty_enqueue_assets' );
 
+
 /*Register new menu to replace 'Primary'*/
 unregister_nav_menu( 'Primary', 'susty' ); /*should unregister problem menu, but does not*/
 register_nav_menus( array(
@@ -35,17 +37,6 @@ register_nav_menus( array(
 ) );
 
 
-/***load Font Awesome scripts***/
-function enqueue_load_fa() {
-wp_enqueue_script( 'load-fa', 'https://kit.fontawesome.com/6152c16332.js' );
-//wp_enqueue_script( 'load-fa', 'https://use.fontawesome.com/releases/latest/js/all.js');
-}
-add_action( 'wp_enqueue_scripts', 'enqueue_load_fa' );
-
-function enqueue_fa() {
-    wp_enqueue_style('font-awesome-v5', '/wp-content/themes/classicpress-susty-child/font-awesome-v5/css/fontawesome-all.min.css');
-}
-add_action('wp_enqueue_scripts', 'enqueue_fa');
 
 /****Add widgets to blog sidebar***/
 if ( function_exists('register_sidebar') )
@@ -58,6 +49,8 @@ if ( function_exists('register_sidebar') )
     'after_title' => '</h3>',
   )
 );
+
+
 /** Modify Featured Image Text **/
 function filter_featured_image_admin_text( $content, $post_id, $thumbnail_id ){
     $help_text = '<p>' . __( '<i>Ideal size is 800 x 471 pixels.</i>', 'ClassicPress' ) . '</p>';
@@ -65,10 +58,12 @@ function filter_featured_image_admin_text( $content, $post_id, $thumbnail_id ){
 }
 add_filter( 'admin_post_thumbnail_html', 'filter_featured_image_admin_text', 10, 3 );
 
+
 /****simplify blog detection*********/
 function is_blog () {
     return ( is_archive() || is_author() || is_category() || is_home() || is_single() || is_tag()) && 'post' == get_post_type();
 }
+
 
 /**
  * Set our own version string for the theme's stylesheet
@@ -80,6 +75,7 @@ function cp_susty_override_style_css_version( $version, $type, $handle ) {
 	return cp_susty_get_asset_version();
 }
 add_filter( 'classicpress_asset_version', 'cp_susty_override_style_css_version', 10, 3 );
+
 
 /* Add Twitter card tags for social sharing. */
 add_action( 'wp_head', 'cp_insert_twittercard_tags', 0 );

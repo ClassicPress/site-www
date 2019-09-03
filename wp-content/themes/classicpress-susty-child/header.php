@@ -14,7 +14,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<link rel="profile" href="http://gmpg.org/xfn/11">
-	<!--link rel="preload" href="<?php //echo home_url( '/wp-content/themes/classicpress-susty-child/fonts/DejaVuSans-webfont.woff2' ); ?>" as="font" type="font/woff2" crossorigin-->
 	<link rel="preload" href="<?php echo home_url( '/wp-content/themes/classicpress-susty-child/fonts/source-sans-pro-v12-latin-600.woff2' ); ?>" as="font" type="font/woff2" crossorigin>
 	<link rel="preload" href="<?php echo home_url( '/wp-content/themes/classicpress-susty-child/fonts/source-sans-pro-v12-latin-regular.woff2' ); ?>" as="font" type="font/woff2" crossorigin>
 	<link rel="preload" href="<?php echo home_url( '/wp-content/themes/classicpress-susty-child/fonts/source-sans-pro-v12-latin-italic.woff2' ); ?>" as="font" type="font/woff2" crossorigin>
@@ -68,9 +67,7 @@
 				<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><img src="<?php echo home_url( '/wp-content/themes/classicpress-susty-child/images/logo-white.svg' ); ?>" width="250" alt="ClassicPress logo"> <span class="screen-reader-text"><?php esc_html_e( 'Home', 'susty' ); ?></span></a>
 			</span>
 
-			<nav id="site-navigation" class="main-navigation nav--toggle-sub nav--toggle-small" aria-label="
-			<?php esc_attr_e('Main menu', 'susty'); 
-			?>"
+			<nav id="site-navigation" class="main-navigation nav--toggle-sub nav--toggle-small" aria-label="<?php esc_attr_e('Main menu', 'susty'); ?>">
 				<?php
 				/*wp_nav_menu( array(
 					'theme_location' => 'Primary',
