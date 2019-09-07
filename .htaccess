@@ -23,4 +23,5 @@ RewriteRule . /index.php [L]
 # BEGIN 301 Redirects
 RedirectMatch 301 ^/blog/\d{4}/\d{1,2}/\d{1,2}/(.*)$ /blog/$1
 RedirectMatch 301 ^/download/?$ /get-classicpress/
+RedirectMatch 301 ^/classicpress-roadmap/?$ /roadmap/
 # END 301 Redirects
