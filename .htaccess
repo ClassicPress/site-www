@@ -27,3 +27,7 @@ RedirectMatch 301 ^/classicpress-roadmap/?$ /roadmap/
 RedirectMatch 301 ^/faqs/?$ /faq/
 RedirectMatch 301 ^/migrate/?$ /get-classicpress/
 # END 301 Redirects
+
+# BEGIN 302 Redirects
+RedirectMatch 302 ^/version/([^/]*)/?$ https://github.com/ClassicPress/ClassicPress-release/releases/tag/$1
+# END 302 Redirects
