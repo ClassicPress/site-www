@@ -69,7 +69,7 @@ Use it to make something cool, have fun, and share what you've learned with othe
 	font-display: block;
 }
 [class^="cpicon-"], [class*=" cpicon-"] {
-	font-family: 'cpicons' !important;
+	font-family: 'cpicons';
 	speak: none;
 	font-style: normal;
 	font-weight: normal;
