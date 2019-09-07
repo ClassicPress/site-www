@@ -56,7 +56,7 @@ Use it to make something cool, have fun, and share what you've learned with othe
 	src: local('Source Sans Pro Bold Italic'), local('SourceSansPro-BoldItalic'), url('fonts/source-sans-pro-v12-latin-700italic.woff2') format('woff2'), url('fonts/source-sans-pro-v12-latin-700italic.woff') format('woff');
 }
 
-/********* Icons from Icomoon instead of Font Awesome **********/
+/********* Icons from Icomoon **********/
 @font-face {
 	font-family: 'cpicons';
 	src:  url('fonts/cpicons.eot?ri8q54');
@@ -68,9 +68,8 @@ Use it to make something cool, have fun, and share what you've learned with othe
 	font-style: normal;
 	font-display: block;
 }
-[class^="cpicon-"], [class*=" cpicon-"], 
-.fas.fa-lock, .fas.fa-code, .fas.fa-smile-beam {
-	font-family: 'cpicons'!important;
+[class^="cpicon-"], [class*=" cpicon-"] {
+	font-family: 'cpicons' !important;
 	speak: none;
 	font-style: normal;
 	font-weight: normal;
@@ -99,15 +98,12 @@ Use it to make something cool, have fun, and share what you've learned with othe
 .cpicon-twitter:before {
 	content: "\e905";
 }
-.fas.fa-code:before,
 .cpicon-code:before {
 	content: "\e906";
 }
-.fas.fa-lock:before,
 .cpicon-lock:before {
 	content: "\e907";
 }
-.fas.fa-smile-beam:before,
 .cpicon-smile-beam:before {
 	content: "\e908";
 }
