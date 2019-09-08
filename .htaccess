@@ -5,6 +5,7 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} /\.env(\.example)?$ [OR]
 RewriteCond %{REQUEST_URI} ^/composer\. [OR]
 RewriteCond %{REQUEST_URI} ^/vendor(/|\?|$) [OR]
+RewriteCond %{REQUEST_URI} ^/\.git [OR]
 RewriteCond %{REQUEST_URI} ^/README.md
 RewriteRule . /index.php [L]
 
