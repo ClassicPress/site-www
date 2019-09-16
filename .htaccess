@@ -40,6 +40,7 @@ RedirectMatch 301 ^/blog/faqconc/how-to-revert-to-wp-498/?$ /faq/
 RedirectMatch 301 ^/blog/tag/elementor-sticky/?$ /blog/
 RedirectMatch 301 ^/classicpress-roadmap/?$ /roadmap/
 RedirectMatch 301 ^/download/?$ /get-classicpress/
+RedirectMatch 301 ^/get-involved/?$ /community/
 RedirectMatch 301 ^/faqs/?$ /faq/
 RedirectMatch 301 ^/migrate/?$ /get-classicpress/
 RedirectMatch 301 ^/our-mission/?$ /about/
@@ -47,4 +48,5 @@ RedirectMatch 301 ^/our-mission/?$ /about/
 
 # BEGIN 302 Redirects
 RedirectMatch 302 ^/version/([^/]*)/?$ https://github.com/ClassicPress/ClassicPress-release/releases/tag/$1
+RedirectMatch 302 ^/donate/?$ https://donate.classicpress.net/
 # END 302 Redirects
