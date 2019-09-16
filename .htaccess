@@ -9,6 +9,18 @@ RewriteCond %{REQUEST_URI} ^/\.git [OR]
 RewriteCond %{REQUEST_URI} ^/README.md
 RewriteRule . /index.php [L]
 
+# Deny access to .php files inside the wp-content dir
+# Mostly exploit/probe attempts, but these legitimate requests will be blocked:
+# /wp-content/plugins/mobile-menu/vendor/titan-framework/lib/iframe-font-preview.php?...
+# https://stackoverflow.com/a/47139015
+RewriteCond %{REQUEST_URI} ^(.*/)?wp-content/.*\.php$
+RewriteRule . /index.php [L]
+
+# Avoid revealing information about plugin/theme directories
+RewriteCond %{REQUEST_URI} ^(.*/)?wp-content(/|$)
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule . /index.php [L]
+
 # BEGIN ClassicPress
 <IfModule mod_rewrite.c>
 RewriteEngine On
