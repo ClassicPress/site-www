@@ -38,8 +38,8 @@ RedirectMatch 301 ^/blog/\d{4}/\d{1,2}/\d{1,2}/(.*)$ /blog/$1
 RedirectMatch 301 ^/blog/classicpress-for-business-professional-organization-websites/?$ /blog/why-choose-classicpress-for-your-business-professional-website-cms/
 RedirectMatch 301 ^/blog/faqconc/how-to-revert-to-wp-498/?$ /faq/
 RedirectMatch 301 ^/blog/tag/elementor-sticky/?$ /blog/
-RedirectMatch 301 ^/download/?$ /get-classicpress/
 RedirectMatch 301 ^/classicpress-roadmap/?$ /roadmap/
+RedirectMatch 301 ^/download/?$ /get-classicpress/
 RedirectMatch 301 ^/faqs/?$ /faq/
 RedirectMatch 301 ^/migrate/?$ /get-classicpress/
 RedirectMatch 301 ^/our-mission/?$ /about/
