@@ -22,7 +22,6 @@ RewriteCond %{REQUEST_URI} ^(.*/)?(wp-(content|includes)(/|$)|wp-admin/[^/]+(/|$
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule . /index.php [L]
 
-
 ## BEGIN WEB PERFORMANCE ##
 # Reference doc https://github.com/h5bp/server-configs-apache/blob/master/dist/.htaccess
 # Media types
@@ -66,73 +65,6 @@ RewriteRule . /index.php [L]
 	AddType text/vnd.rim.location.xloc xloc
 	AddType text/vtt vtt
 	AddType text/x-component htc
-</IfModule>
-
-# Headers
-<IfModule mod_headers.c>
-	Header set Connection keep-alive
-	Header always unset "X-Powered-By"
-	Header unset "X-Powered-By"
-	Header unset ETag
-	FileETag None
-</IfModule>
-
-# Server compression
-<IfModule mod_deflate.c>
-    # Force compression for mangled `Accept-Encoding` request headers
-    <IfModule mod_setenvif.c>
-        <IfModule mod_headers.c>
-            SetEnvIfNoCase ^(Accept-EncodXng|X-cept-Encoding|X{15}|~{15}|-{15})$ ^((gzip|deflate)\s*,?\s*)+|[X~-]{4,13}$ HAVE_Accept-Encoding
-            RequestHeader append Accept-Encoding "gzip,deflate" env=HAVE_Accept-Encoding
-        </IfModule>
-    </IfModule>
-	<FilesMatch "\.(html|php|txt|xml|js|css)$">
-		SetOutputFilter DEFLATE
-	</FilesMatch>
-
-    # Compress all output labeled with one of the following media types.
-    # https://httpd.apache.org/docs/current/mod/mod_filter.html#addoutputfilterbytype
-    <IfModule mod_filter.c>
-        AddOutputFilterByType DEFLATE "application/atom+xml" \
-                                      "application/javascript" \
-                                      "application/json" \
-                                      "application/ld+json" \
-                                      "application/manifest+json" \
-                                      "application/rdf+xml" \
-                                      "application/rss+xml" \
-                                      "application/schema+json" \
-                                      "application/geo+json" \
-                                      "application/vnd.ms-fontobject" \
-                                      "application/wasm" \
-                                      "application/x-font-ttf" \
-                                      "application/x-javascript" \
-                                      "application/x-web-app-manifest+json" \
-                                      "application/xhtml+xml" \
-                                      "application/xml" \
-                                      "font/eot" \
-                                      "font/opentype" \
-                                      "font/otf" \
-                                      "image/bmp" \
-                                      "image/svg+xml" \
-                                      "image/vnd.microsoft.icon" \
-                                      "text/cache-manifest" \
-                                      "text/calendar" \
-                                      "text/css" \
-                                      "text/html" \
-                                      "text/javascript" \
-                                      "text/plain" \
-                                      "text/markdown" \
-                                      "text/vcard" \
-                                      "text/vnd.rim.location.xloc" \
-                                      "text/vtt" \
-                                      "text/x-component" \
-                                      "text/x-cross-domain-policy" \
-                                      "text/xml"
-
-    </IfModule>
-	<IfModule mod_mime.c>
-		AddEncoding gzip svgz
-	</IfModule>
 </IfModule>
 
 # Cache expiration
@@ -190,11 +122,8 @@ RewriteRule . /index.php [L]
 	ExpiresByType text/plain A3600
 	ExpiresByType text/xsd A3600
 	ExpiresByType text/xsl A3600
-
 </IfModule>
-
 ## END WEB PERFORMANCE ##
-
 
 # BEGIN ClassicPress
 <IfModule mod_rewrite.c>
