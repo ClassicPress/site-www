@@ -16,8 +16,9 @@ RewriteRule . /index.php [L]
 RewriteCond %{REQUEST_URI} ^(.*/)?wp-content/.*\.php$
 RewriteRule . /index.php [L]
 
-# Avoid revealing information about plugin/theme directories
-RewriteCond %{REQUEST_URI} ^(.*/)?wp-content(/|$)
+# Avoid revealing information about core/plugin/theme directories
+# https://github.com/ClassicPress/ClassicPress-Network/issues/6
+RewriteCond %{REQUEST_URI} ^(.*/)?(wp-(content|includes)(/|$)|wp-admin/[^/]+(/|$))
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule . /index.php [L]
 
