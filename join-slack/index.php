@@ -1,4 +1,4 @@
 <?php
 
 header('HTTP/1.1 302 Found');
-header('Location: https://join.slack.com/t/classicpress/shared_invite/enQtNDIwNjY2OTg1MjAxLWJiM2U2NmY3ZjFlZjQ4Zjk2OGI4ZTg3NzY1ZTU3NzI3OTRjMTU0YzAzOWUyZmZlODgyOWE1YTViYjcwY2Y5YzI');
+header('Location: https://join.slack.com/t/classicpress/shared_invite/enQtNDIwNjY2OTg1MjAxLWY0MmYyZDg3MDQ1ODA5ZTUzNzg2OWI1MzE3ZTdkNzkyMGVkMjQ5M2NiMDIyMTQxNWI1NmE2ZWJmZmM0YzY5OTY');
