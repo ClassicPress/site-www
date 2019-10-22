@@ -8,3 +8,5 @@ add_filter( 'incompatible_sql_modes', function( $incompatible_modes ) {
 	$incompatible_modes[] = 'ANSI';
 	return $incompatible_modes;
 } );
+
+$GLOBALS['wpdb']->set_sql_mode();
