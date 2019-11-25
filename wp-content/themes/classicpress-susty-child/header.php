@@ -50,7 +50,7 @@
 			<?php
 			$donate = get_field('donate_link', 'option');
 			$getcp = get_field('get_classicpress', 'option');
-			echo '<li class="switchbutton donate"><a href="'.$donate.'" target="_blank" rel="noreferrer noopener">Donate</a></li>';
+			echo '<li class="switchbutton donate"><a href="'.$donate.'">Donate</a></li>';
 			echo '<li class="switchbutton download"><a href="'.$getcp.'">Get ClassicPress</a></li>';
 			?>
 		</ul>
