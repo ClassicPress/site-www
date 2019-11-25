@@ -155,5 +155,4 @@ RedirectMatch 301 ^/translating-classicpress/?$ /blog/classicpress-localization/
 # BEGIN 302 Redirects
 RedirectMatch 302 ^/blog/meet-the-community-patrick-klein/?$ /blog/meet-the-community-patrick-van-noort/
 RedirectMatch 302 ^/version/([^/]*)/?$ https://github.com/ClassicPress/ClassicPress-release/releases/tag/$1
-RedirectMatch 302 ^/donate/?$ https://donate.classicpress.net/
 # END 302 Redirects
