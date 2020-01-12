@@ -149,6 +149,14 @@ small,
 	margin-bottom: 1.4em;
 }
 
+/* blockquotes */
+
+blockquote {
+	margin: 0 1.5em .75em;
+	border-left: 4px solid #057f99;
+	padding-left: 1em;
+}
+
 
 /*block: paragraph or list item*/
 
@@ -1272,6 +1280,13 @@ ol.comment-list {
 	padding-left: 0;
 }
 
+ol.comment-list > .comment {
+	margin-top: 1.5em;
+}
+ol.comment-list > .comment:first-child {
+	margin-top: 0;
+}
+
 #respond {
 	margin-bottom: 1.8em;
 }
@@ -2096,6 +2111,7 @@ footer#legal {
 }
 .discourse-comments-area .comment-content {
 	clear: both;
+	padding-top: 0.9em;
 }
 .discourse-comments-area img.emoji {
 	width: 1.1em;
