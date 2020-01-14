@@ -63,8 +63,8 @@ class ReallySimpleCaptcha {
 		/* Width of a character */
 		$this->font_char_width = 15;
 
-		/* Image type. 'png', 'gif' or 'jpeg' */
-		$this->img_type = 'png';
+		/* Image type. XXX Hard-coded to 'gif', see generate_image() below */
+		$this->img_type = 'gif';
 
 		/* Mode of temporary image files */
 		$this->file_mode = 0644;
@@ -128,6 +128,8 @@ class ReallySimpleCaptcha {
 					$this->base[1] + mt_rand( -2, 2 ), $fg, $font, $word[$i] );
 				$x += $this->font_char_width;
 			}
+
+			$this->img_type = 'gif'; // XXX hard-coded for ClassicPress
 
 			switch ( $this->img_type ) {
 				case 'jpeg':
