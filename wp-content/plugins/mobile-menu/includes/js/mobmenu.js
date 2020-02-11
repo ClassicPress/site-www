@@ -50,6 +50,7 @@
         $( '.mobmenu-push-wrap' ).after( $( '.mobmenu-right-alignment' ).detach() );
         $( '.mobmenu-push-wrap' ).after( $( '.mob-menu-header-holder' ).detach() ); 
         $( '.mobmenu-push-wrap' ).after( $( '.mobmenu-footer-menu-holder' ).detach() ); 
+        $( '.mobmenu-push-wrap' ).after( $( '.mobmenu-overlay' ).detach() ); 
         $( '.mobmenu-push-wrap' ).after( $( '#wpadminbar' ).detach() );
 
         if ( $('.mob-menu-header-holder' ).attr( 'data-detach-el' ) != '' ) {
@@ -158,7 +159,12 @@
 
       });
      
-      $( document ).on( 'click', '.mobmenu a[href*="#"]:not([href="#"]), .mobmenu-panel a[href*="#"]:not([href="#"])', function(event){
+      $('.mobmenu a[href*="#"], .mobmenu-panel a[href*="#"]')
+        // Remove links that don't actually link to anything
+        .not('[href="#"]')
+        .not('[href="#0"]')
+        .on( 'click', function(event) {
+          // On-page links  
   
         if (
           location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') 

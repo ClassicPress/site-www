@@ -27,9 +27,6 @@
     line-height: 30px;
     cursor: pointer;
 }
-.show-nav-left.mob-menu-slideout .mobmenul-container i {
-    display: none;
-}
 .mob-retina-logo{
     display: none;
     max-width: 100%;
@@ -61,6 +58,7 @@
 }
 .mobmenu-content .sub-menu {
     display: none;
+    opacity: 1;
 }
 .mobmenur-container {
     position: absolute;     
@@ -98,7 +96,6 @@
     border-style: outset;
     border: none;
 }
-
 .mobmenu-left-alignment.show-panel, .mobmenu-right-alignment.show-panel {
     -webkit-transform: translateX(0);
     -moz-transform: translateX(0);
@@ -126,21 +123,16 @@ body.admin-bar .mobmenu, body.admin-bar .mobmenu-panel {
 #wpadminbar {
     position: fixed;
 }
-.show-nav-left .mobmenu-push-wrap, .show-nav-right .mobmenu-push-wrap, .show-nav-left .mob-menu-header-holder, .show-nav-left .mobmenu-left-alignment, .show-nav-right .mobmenu-right-alignment {
-    -webkit-transition: -webkit-transform .4s;
-    -moz-transition: -moz-transform .4s;
-    -ms-transition: -ms-transform .4s;
-    -o-transition: -o-transform .4s;
-    transition: transform .4s;
-}
-/* Mobmenu Slide Over */
-.mobmenu-overlay {
-    opacity: 0;
+.show-nav-left .mob-menu-header-holder, .show-nav-right .mob-menu-header-holder, .mob-menu-header-holder, .mobmenu-panel, .mobmenu-overlay , .show-nav-left .mobmenu-push-wrap, .show-nav-right .mobmenu-push-wrap, .show-nav-left .mob-menu-header-holder, .show-nav-left .mobmenu-left-alignment, .show-nav-right .mobmenu-right-alignment, .show-nav-left .mobmenu-overlay, .show-nav-right .mobmenu-overlay{
     -webkit-transition: -webkit-transform .5s;
     -moz-transition: -moz-transform .5s;
     -ms-transition: -ms-transform .5s;
     -o-transition: -o-transform .5s;
     transition: transform .5s;
+}
+/* Mobmenu Slide Over */
+.mobmenu-overlay {
+    opacity: 0;
 }
 .widget img {
     max-width: 100%; 
@@ -172,20 +164,13 @@ body.admin-bar .mobmenu, body.admin-bar .mobmenu-panel {
     padding-left: 10px;
     padding-right: 10px;
 }
-.mobmenu-panel {
-    -webkit-transition: -webkit-transform .5s;
-    -moz-transition: -moz-transform .5s;
-    -ms-transition: -ms-transform .5s;
-    -o-transition: -o-transform .5s;
-    transition: transform .5s;
-}
 /* Hides everything pushed outside of it */
 .mob-menu-slideout .mobmenu-panel {
     position: fixed;
     top: 0;
     height: 100%;
     z-index: 300000;
-    overflow-y: auto;   
+    overflow-y: hidden;   
     overflow-x: hidden;
     opacity: 1;
 }
@@ -197,12 +182,7 @@ body.admin-bar .mobmenu, body.admin-bar .mobmenu-panel {
     visibility: visible;
     opacity: 1;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
-}
-.mob-menu-header-holder{
-    -webkit-transition: -webkit-transform 0.7s;
-    transition: -webkit-transform 0.7s;
-    transition: transform 0.7s;
-    transition: transform 0.7s,-webkit-transform 0.7s;
+    margin: 0;
 }
 .mob-menu-slideout .mobmenu-left-alignment, .mob-menu-slideout-over .mobmenu-left-alignment {
     left: 0;
@@ -266,11 +246,6 @@ body.admin-bar .mobmenu, body.admin-bar .mobmenu-panel {
     left: 0;
     top: 0;
     opacity: 1;
-    -webkit-transition: -webkit-transform .5s;
-    -moz-transition: -moz-transform .5s;
-    -ms-transition: -ms-transform .5s;
-    -o-transition: -o-transform .5s;
-    transition: transform .5s;
     position: fixed;
     cursor: pointer;
 }

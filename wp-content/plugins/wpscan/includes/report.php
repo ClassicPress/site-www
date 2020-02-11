@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) or die( "No script kiddies please!" );
 
   <?php if ( get_transient( self::WPSCAN_TRANSIENT_CRON ) ) : ?>
   <div class="notice notice-info">
-    <p><?php _e( 'Task is running in background, reload the page in a minute to see your report updated.', 'wpscan' ) ?></p>
+    <p><?php _e( 'The task is running in the background. This page will be reloaded once finished to display the results.', 'wpscan' ) ?></p>
   </div>
   <?php endif; ?>
 

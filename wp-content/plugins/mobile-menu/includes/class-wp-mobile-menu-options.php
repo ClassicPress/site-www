@@ -33,6 +33,12 @@ class WP_Mobile_Menu_Options
         $this->init_options();
     }
     
+    /**
+     *
+     * Initiliaze the Options.
+     *
+     * @since 2.0
+     */
     private function init_options()
     {
         add_action( 'tf_create_options', array( $this, 'create_plugin_options' ) );
@@ -55,6 +61,8 @@ class WP_Mobile_Menu_Options
         $menus_options[''] = __( 'Choose one menu', 'mobile-menu' );
         $icons_positions = array();
         $icon_types = array();
+        // Initialize Titan with my special unique namespace.
+        $titan = TitanFramework::getInstance( 'mobmenu' );
         foreach ( $menus as $menu ) {
             $menus_options[$menu->name] = $menu->name;
         }
@@ -81,17 +89,38 @@ class WP_Mobile_Menu_Options
             'search'    => 'Search',
             'left-menu' => 'Left Menu',
         );
-        // Initialize Titan with my special unique namespace.
-        $titan = TitanFramework::getInstance( 'mobmenu' );
         // Create my admin options panel.
         $panel = $titan->createAdminPanel( array(
             'name'  => 'Mobile Menu Options',
             'title' => __( 'Mobile Menu Options', 'mobile-menu' ),
             'icon'  => 'dashicons-smartphone',
         ) );
+        // Premium options.
+        // Create options in My Meta Box.
+        $mobmenu_metabox = $titan->createMetaBox( array(
+            'name'      => __( 'WP Mobile Menu Meta options', 'mobile-menu' ),
+            'post_type' => array( 'page' ),
+        ) );
+        global  $mm_fs ;
+        // Create WP Mobile Menu Meta Box options.
+        $custom_html = '<style>.dashicons-yes {color:#008000;font-size: 3em;padding-right: 20px;margin-top: -10px;}';
+        $custom_html .= '.mm-button-business-upgrade {margin-top: 20px!important;background-color: #FF015C!important;border-color: #fff;color: #fff!important;margin: 20px 10px 20px 10px;text-transform: uppercase;min-height: 35px;padding-top: 5px;border-radius: 6px;}';
+        $custom_html .= '</style><p>The features below are available in the Premium versions of WP Mobile Menu.</p>';
+        $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>' . __( 'Alternative Left Menu', 'mobile-menu' ) . '</strong></p>';
+        $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>' . __( 'Alternative Right Menu', 'mobile-menu' ) . '</strong></p>';
+        $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>' . __( 'Alternative Footer Menu', 'mobile-menu' ) . '</strong></p>';
+        $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>' . __( 'Use page title', 'mobile-menu' ) . '</strong></p>';
+        $custom_html .= '<p><a href="' . $mm_fs->get_upgrade_url() . '&cta=metabox-settings" class="button mm-button-business-upgrade">' . __( 'Upgrade Now!', 'mobile-menu' ) . '</a></p>';
+        $custom_html .= '</div></div>';
+        // Page Metabox Upgrade Content.
+        $mobmenu_metabox->createOption( array(
+            'name'   => '',
+            'type'   => 'custom',
+            'custom' => $custom_html,
+        ) );
         // Only proceed if we are in the plugin page.
         
-        if ( !is_admin() || isset( $_GET['page'] ) && 'mobile-menu-options' === $_GET['page'] ) {
+        if ( !is_admin() || isset( $_GET['page'] ) && 'mobile-menu-options' === sanitize_text_field( $_GET['page'] ) ) {
             // Create General Options panel.
             $general_tab = $panel->createTab( array(
                 'name' => __( 'General Options', 'mobile-menu' ),
@@ -100,6 +129,7 @@ class WP_Mobile_Menu_Options
             $header_tab = $panel->createTab( array(
                 'name' => __( 'Header', 'mobile-menu' ),
             ) );
+            $this->create_footer_options_upsell( $panel, $titan );
             // Create Left Menu Options panel.
             $left_menu_tab = $panel->createTab( array(
                 'name' => __( 'Left Menu', 'mobile-menu' ),
@@ -108,6 +138,8 @@ class WP_Mobile_Menu_Options
             $right_menu_tab = $panel->createTab( array(
                 'name' => __( 'Right Menu', 'mobile-menu' ),
             ) );
+            // Create Woocommerce options upsell.
+            $this->create_woocommerce_options_upsell( $panel, $titan );
             // Create Color Options panel.
             $colors_tab = $panel->createTab( array(
                 'name' => __( 'Colors', 'mobile-menu' ),
@@ -133,31 +165,6 @@ class WP_Mobile_Menu_Options
                 'type' => 'iframe',
                 'url'  => $doc_url,
             ) );
-            // Check if it's the Woocommerce Pro Plan.
-            if ( $mm_fs->is_plan( 'woocommerce_pro' ) && $mm_fs->is__premium_only() ) {
-                // Woocommerce Menu Font.
-                $fonts_tab->createOption( array(
-                    'name'                => __( 'Woocommerce Menu Font', 'mobile-menu' ),
-                    'id'                  => 'mm_woo_menu_font',
-                    'type'                => 'font',
-                    'desc'                => __( 'Select a style', 'mobile-menu' ),
-                    'show_font_weight'    => true,
-                    'show_font_style'     => true,
-                    'show_line_height'    => true,
-                    'show_letter_spacing' => true,
-                    'show_text_transform' => true,
-                    'show_font_variant'   => false,
-                    'show_text_shadow'    => false,
-                    'show_color'          => false,
-                    'css'                 => ' .mobmenu-cart-panel > div, .mobmenu-cart-panel > span .mobmenu-cart-panel  .mob-expand-submenu ,.mobmenu-cart-panel > .widgettitle, .mobmenu-cart-panel > li a, .mobmenu-cart-panel > li a:visited, .mobmenu-cart-panel .mobmenu-content > h2, .mobmenu-cart-panel .mobmenu-content > h3 {
-								value
-					}',
-                    'default'             => array(
-                    'line-height' => '1.5em',
-                    'font-family' => 'Dosis',
-                ),
-                ) );
-            }
             // Width trigger.
             $general_tab->createOption( array(
                 'name'    => __( 'Mobile Menu Visibility(Width Trigger)', 'mobile-menu' ),
@@ -183,6 +190,16 @@ class WP_Mobile_Menu_Options
                 'enabled'  => __( 'On', 'mobile-menu' ),
                 'disabled' => __( 'Off', 'mobile-menu' ),
             ) );
+            // Enable/Disable Testing Mode.
+            $general_tab->createOption( array(
+                'name'     => __( 'Enable Testing Mode (only visible for admins).', 'mobile-menu' ),
+                'id'       => 'only_testing_mode',
+                'type'     => 'enable',
+                'default'  => false,
+                'desc'     => __( 'Enable only for admin users. This will disable the Mobile Menu for all the visitors of your site except the administrator users.', 'mobile-menu' ),
+                'enabled'  => __( 'On', 'mobile-menu' ),
+                'disabled' => __( 'Off', 'mobile-menu' ),
+            ) );
             // Enable/Disable Left Header Menu.
             $general_tab->createOption( array(
                 'name'     => __( 'Enable Left Menu', 'mobile-menu' ),
@@ -204,12 +221,12 @@ class WP_Mobile_Menu_Options
                 'disabled' => __( 'Off', 'mobile-menu' ),
             ) );
             $general_tab->createOption( array(
-                'name' => __( 'Hide Original Menu/header', 'mobile-menu' ),
+                'name' => __( 'Hide Original Theme Menu', 'mobile-menu' ),
                 'type' => 'heading',
             ) );
             $general_tab->createOption( array(
                 'type' => 'note',
-                'desc' => __( 'If you need help identifying the correct elements just send us an email to <a href="mailto:support@wpmobilemenu.com">support@wpmobilemenu.com</a> with your site url and a screenshot of the element you want to hide. We reply fast.', 'mobile-menu' ),
+                'desc' => __( 'If you need help identifying the correct elements just create a new ticket in our <a href="https://www.wpmobilemenu.com/support-contact/?utm_source=wprepo-dash&utm_medium=user%20website&utm_campaign=hide_original_menu_help" target="_blank">support page</a> with your site url and a screenshot of the element you want to hide. We reply fast.', 'mobile-menu' ),
             ) );
             // Hide Html Elements.
             $general_tab->createOption( array(
@@ -258,7 +275,7 @@ class WP_Mobile_Menu_Options
                 'type'    => 'select',
                 'desc'    => __( 'Choose the display type for the mobile menu.', 'mobile-menu' ),
                 'options' => $display_type,
-                'default' => '',
+                'default' => 'slideout-over',
             ) );
             // Automatically Close Sub Menus.
             $general_tab->createOption( array(
@@ -356,7 +373,7 @@ class WP_Mobile_Menu_Options
                 'lang' => 'javascript',
             ) );
             $general_tab->createOption( array(
-                'name' => __( 'Import/Export Options', 'mobile-menu' ),
+                'name' => __( 'Import and Export', 'mobile-menu' ),
                 'type' => 'heading',
             ) );
             // Export settings.
@@ -405,96 +422,6 @@ class WP_Mobile_Menu_Options
                 'desc'     => __( 'Choose if you want to disable the logo/text so it will only display the menu icons in the header.', 'mobile-menu' ),
                 'enabled'  => __( 'Yes', 'mobile-menu' ),
                 'disabled' => __( 'No', 'mobile-menu' ),
-            ) );
-            $header_tab->createOption( array(
-                'name' => __( 'Logo options', 'mobile-menu' ),
-                'type' => 'heading',
-            ) );
-            // Enable/Disable Site Logo.
-            $header_tab->createOption( array(
-                'name'     => __( 'Site Logo', 'mobile-menu' ),
-                'id'       => 'enabled_logo',
-                'type'     => 'enable',
-                'default'  => false,
-                'desc'     => __( 'Choose if you want to display an image has logo or text instead.', 'mobile-menu' ),
-                'enabled'  => __( 'Logo', 'mobile-menu' ),
-                'disabled' => __( 'Text', 'mobile-menu' ),
-            ) );
-            $header_branding = array(
-                'logo' => __( 'Logo', 'mobile-menu' ),
-                'text' => __( 'Text', 'mobile-menu' ),
-            );
-            
-            if ( $titan->getOption( 'enabled_logo' ) ) {
-                $default_header_branding = 'logo';
-            } else {
-                $default_header_branding = 'text';
-            }
-            
-            // Use the page title in the Header or Header Banner(global Option).
-            $header_tab->createOption( array(
-                'name'    => __( 'Site Logo', 'mobile-menu' ),
-                'id'      => 'header_branding',
-                'type'    => 'select',
-                'desc'    => __( 'Chose the Header Branding ( Logo/Text ).', 'mobile-menu' ),
-                'options' => $header_branding,
-                'default' => $default_header_branding,
-            ) );
-            // Site Logo Image.
-            $header_tab->createOption( array(
-                'name'    => __( 'Logo', 'mobile-menu' ),
-                'id'      => 'logo_img',
-                'type'    => 'upload',
-                'desc'    => __( 'Upload your logo image', 'mobile-menu' ),
-                'default' => '',
-            ) );
-            // Header Height.
-            $header_tab->createOption( array(
-                'name'    => __( 'Logo Height', 'mobile-menu' ),
-                'id'      => 'logo_height',
-                'type'    => 'number',
-                'desc'    => __( 'Enter the height of the logo', 'mobile-menu' ),
-                'default' => '',
-                'max'     => '500',
-                'min'     => '0',
-                'unit'    => 'px',
-            ) );
-            // Site Logo Retina Image.
-            $header_tab->createOption( array(
-                'name'    => __( 'Logo Retina', 'mobile-menu' ),
-                'id'      => 'logo_img_retina',
-                'type'    => 'upload',
-                'desc'    => __( 'Upload your logo image for retina devices', 'mobile-menu' ),
-                'default' => '',
-            ) );
-            // Enable/Disable Logo Url.
-            $header_tab->createOption( array(
-                'name'     => __( 'Disable Logo URL ', 'mobile-menu' ),
-                'id'       => 'disabled_logo_url',
-                'type'     => 'enable',
-                'default'  => false,
-                'desc'     => __( 'Choose if you want to disable the logo url to avoid being redirect to the homepage or alternative home url when touching the header logo.', 'mobile-menu' ),
-                'enabled'  => __( 'Yes', 'mobile-menu' ),
-                'disabled' => __( 'No', 'mobile-menu' ),
-            ) );
-            // Alternative Site URL.
-            $header_tab->createOption( array(
-                'name'    => __( 'Alternative Logo URL', 'mobile-menu' ),
-                'id'      => 'logo_url',
-                'type'    => 'text',
-                'desc'    => __( 'Enter you alternative logo URL. If you leave it blank it will use the Site URL.', 'mobile-menu' ),
-                'default' => '',
-            ) );
-            // Logo/text Top Margin.
-            $header_tab->createOption( array(
-                'name'    => __( 'Logo/Text Top Margin', 'mobile-menu' ),
-                'id'      => 'logo_top_margin',
-                'type'    => 'number',
-                'desc'    => __( 'Enter the logo/text top margin', 'mobile-menu' ),
-                'default' => '10',
-                'max'     => '450',
-                'min'     => '0',
-                'unit'    => 'px',
             ) );
             $header_tab->createOption( array(
                 'name' => __( 'Header options', 'mobile-menu' ),
@@ -575,6 +502,96 @@ class WP_Mobile_Menu_Options
                 'min'     => '0',
                 'unit'    => 'px',
             ) );
+            $header_tab->createOption( array(
+                'name' => __( 'Logo options', 'mobile-menu' ),
+                'type' => 'heading',
+            ) );
+            // Enable/Disable Site Logo.
+            $header_tab->createOption( array(
+                'name'     => __( 'Site Logo', 'mobile-menu' ),
+                'id'       => 'enabled_logo',
+                'type'     => 'enable',
+                'default'  => false,
+                'desc'     => __( 'Choose if you want to display an image has logo or text instead.', 'mobile-menu' ),
+                'enabled'  => __( 'Logo', 'mobile-menu' ),
+                'disabled' => __( 'Text', 'mobile-menu' ),
+            ) );
+            $header_branding = array(
+                'logo' => __( 'Logo', 'mobile-menu' ),
+                'text' => __( 'Text', 'mobile-menu' ),
+            );
+            
+            if ( $titan->getOption( 'enabled_logo' ) ) {
+                $default_header_branding = 'logo';
+            } else {
+                $default_header_branding = 'text';
+            }
+            
+            // Use the page title in the Header or Header Banner(global Option).
+            $header_tab->createOption( array(
+                'name'    => __( 'Site Logo', 'mobile-menu' ),
+                'id'      => 'header_branding',
+                'type'    => 'select',
+                'desc'    => __( 'Chose the Header Branding ( Logo/Text ).', 'mobile-menu' ),
+                'options' => $header_branding,
+                'default' => $default_header_branding,
+            ) );
+            // Site Logo Image.
+            $header_tab->createOption( array(
+                'name'    => __( 'Logo', 'mobile-menu' ),
+                'id'      => 'logo_img',
+                'type'    => 'upload',
+                'desc'    => __( 'Upload your logo image', 'mobile-menu' ),
+                'default' => '',
+            ) );
+            // Header Height.
+            $header_tab->createOption( array(
+                'name'    => __( 'Logo Height', 'mobile-menu' ),
+                'id'      => 'logo_height',
+                'type'    => 'number',
+                'desc'    => __( 'Enter the height of the logo', 'mobile-menu' ),
+                'default' => '',
+                'max'     => '500',
+                'min'     => '0',
+                'unit'    => 'px',
+            ) );
+            // Site Logo Retina Image.
+            $header_tab->createOption( array(
+                'name'    => __( 'Retina Logo', 'mobile-menu' ),
+                'id'      => 'logo_img_retina',
+                'type'    => 'upload',
+                'desc'    => __( 'Upload your logo image for retina devices', 'mobile-menu' ),
+                'default' => '',
+            ) );
+            // Enable/Disable Logo Url.
+            $header_tab->createOption( array(
+                'name'     => __( 'Disable Logo URL ', 'mobile-menu' ),
+                'id'       => 'disabled_logo_url',
+                'type'     => 'enable',
+                'default'  => false,
+                'desc'     => __( 'Choose if you want to disable the logo url to avoid being redirect to the homepage or alternative home url when touching the header logo.', 'mobile-menu' ),
+                'enabled'  => __( 'Yes', 'mobile-menu' ),
+                'disabled' => __( 'No', 'mobile-menu' ),
+            ) );
+            // Alternative Site URL.
+            $header_tab->createOption( array(
+                'name'    => __( 'Alternative Logo URL', 'mobile-menu' ),
+                'id'      => 'logo_url',
+                'type'    => 'text',
+                'desc'    => __( 'Enter you alternative logo URL. If you leave it blank it will use the Site URL.', 'mobile-menu' ),
+                'default' => '',
+            ) );
+            // Logo/text Top Margin.
+            $header_tab->createOption( array(
+                'name'    => __( 'Logo/Text Top Margin', 'mobile-menu' ),
+                'id'      => 'logo_top_margin',
+                'type'    => 'number',
+                'desc'    => __( 'Enter the logo/text top margin', 'mobile-menu' ),
+                'default' => '0',
+                'max'     => '450',
+                'min'     => '0',
+                'unit'    => 'px',
+            ) );
             $def_value = $titan->getOption( 'header_font_size' );
             
             if ( $def_value > 0 ) {
@@ -596,9 +613,6 @@ class WP_Mobile_Menu_Options
                 'show_text_shadow'    => false,
                 'show_color'          => false,
                 'show_line_height'    => false,
-                'css'                 => '.mob-menu-logo-holder > .headertext span, .mobmenu input.mob-menu-search-field {
-					value
-					}',
                 'default'             => array(
                 'font-family' => 'Roboto',
                 'font-size'   => $def_value,
@@ -649,9 +663,6 @@ class WP_Mobile_Menu_Options
                 'show_font_variant'   => false,
                 'show_text_shadow'    => false,
                 'show_color'          => true,
-                'css'                 => '.left-menu-icon-text {
-							value
-				}',
                 'default'             => array(
                 'line-height' => '1.5em',
                 'font-family' => 'Dosis',
@@ -735,7 +746,7 @@ class WP_Mobile_Menu_Options
                 'id'      => 'left_icon_top_margin',
                 'type'    => 'number',
                 'desc'    => __( 'Enter the Left Icon Top Margin', 'mobile-menu' ),
-                'default' => '10',
+                'default' => '0',
                 'max'     => '450',
                 'min'     => '0',
                 'unit'    => 'px',
@@ -857,9 +868,6 @@ class WP_Mobile_Menu_Options
                 'show_font_variant'   => false,
                 'show_text_shadow'    => false,
                 'show_color'          => false,
-                'css'                 => ' #mobmenuleft  .mob-expand-submenu , #mobmenuleft > .widgettitle, #mobmenuleft li a, #mobmenuleft li a:visited, #mobmenuleft .mobmenu-content h2, #mobmenuleft .mobmenu-content h3, .mobmenu-left-panel .mobmenu-display-name {
-							value
-				}',
                 'default'             => array(
                 'line-height' => '1.5em',
                 'font-family' => 'Dosis',
@@ -922,9 +930,6 @@ class WP_Mobile_Menu_Options
                 'show_font_variant'   => false,
                 'show_text_shadow'    => false,
                 'show_color'          => false,
-                'css'                 => ' .right-menu-icon-text {
-							value
-				}',
                 'default'             => array(
                 'line-height' => '1.5em',
                 'font-family' => 'Dosis',
@@ -997,7 +1002,7 @@ class WP_Mobile_Menu_Options
                 'id'      => 'right_icon_top_margin',
                 'type'    => 'number',
                 'desc'    => __( 'Enter the Right Icon Top Margin', 'mobile-menu' ),
-                'default' => '10',
+                'default' => '0',
                 'max'     => '450',
                 'min'     => '0',
                 'unit'    => 'px',
@@ -1120,9 +1125,6 @@ class WP_Mobile_Menu_Options
                 'show_font_variant'   => false,
                 'show_text_shadow'    => false,
                 'show_color'          => false,
-                'css'                 => ' #mobmenuright li a, #mobmenuright li a:visited, #mobmenuright .mobmenu-content h2, #mobmenuright .mobmenu-content h3, .mobmenu-left-panel .mobmenu-display-name {
-					value
-				}',
                 'default'             => array(
                 'line-height' => '1.5em',
                 'font-family' => 'Dosis',
@@ -1153,7 +1155,7 @@ class WP_Mobile_Menu_Options
             ) );
             // Header Left Menu Section.
             $colors_tab->createOption( array(
-                'name' => __( 'Header Colors', 'mobile-menu' ),
+                'name' => __( 'Header', 'mobile-menu' ),
                 'type' => 'heading',
             ) );
             // Header Background color.
@@ -1176,7 +1178,7 @@ class WP_Mobile_Menu_Options
             ) );
             // Header Left Menu Section.
             $colors_tab->createOption( array(
-                'name' => __( 'Left Menu Colors', 'mobile-menu' ),
+                'name' => __( 'Left Menu', 'mobile-menu' ),
                 'type' => 'heading',
             ) );
             // Left Menu Icon color.
@@ -1231,7 +1233,7 @@ class WP_Mobile_Menu_Options
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
-                'default' => '#444',
+                'default' => '#FFF',
             ) );
             // Left Panel Sub-menu Background Color.
             $colors_tab->createOption( array(
@@ -1258,11 +1260,11 @@ class WP_Mobile_Menu_Options
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
-                'default' => '#fff',
+                'default' => '#666',
             ) );
             // Header Right Menu Section.
             $colors_tab->createOption( array(
-                'name' => __( 'Right Menu Colors', 'mobile-menu' ),
+                'name' => __( 'Right Menu', 'mobile-menu' ),
                 'type' => 'heading',
             ) );
             // Right Menu Icon color.
@@ -1290,7 +1292,7 @@ class WP_Mobile_Menu_Options
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
-                'default' => '#38404c',
+                'default' => '#F7F7F7',
             ) );
             // Right Panel Text color.
             $colors_tab->createOption( array(
@@ -1299,7 +1301,7 @@ class WP_Mobile_Menu_Options
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
-                'default' => '#fff',
+                'default' => '#666',
             ) );
             // Right Panel Background Hover Color.
             $colors_tab->createOption( array(
@@ -1308,7 +1310,7 @@ class WP_Mobile_Menu_Options
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
-                'default' => '#8dacba',
+                'default' => '#666',
             ) );
             // Right Panel Text color Hover.
             $colors_tab->createOption( array(
@@ -1317,7 +1319,7 @@ class WP_Mobile_Menu_Options
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
-                'default' => '#444',
+                'default' => '#FFF',
             ) );
             // Right Panel Sub-menu Background Color.
             $colors_tab->createOption( array(
@@ -1344,7 +1346,7 @@ class WP_Mobile_Menu_Options
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
-                'default' => '#fff',
+                'default' => '#666',
             ) );
             // 3rd Level Right Menu Section.
             $colors_tab->createOption( array(
@@ -1428,6 +1430,77 @@ class WP_Mobile_Menu_Options
             ) );
         }
     
+    }
+    
+    /**
+     *
+     * Create Woocommerce options upsell.
+     *
+     * @since 2.6
+     *
+     * @param type   $panel Panel Options.
+     * @param Object $titan TitanFramework object that is being edited.
+     */
+    public function create_woocommerce_options_upsell( $panel, $titan )
+    {
+        global  $mm_fs ;
+        // Create Woocommerce Options panel.
+        $mm_woo_tab = $panel->createTab( array(
+            'name' => __( 'Woocommerce', 'mobile-menu' ),
+        ) );
+        $custom_html = '<div class="mm-business-features-holder"><div class="mm-bussiness-features"><h3>' . __( 'WooCommerce Features (Business Version)', 'mobile-menu' ) . '</h3>';
+        $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>Menu Cart Icon</strong> - Product counter notification buble, upload the desired icon.</p>';
+        $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>Mobile Product Filter</strong> - Advanced product filter for mobile users.</p>';
+        $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>Show only products</strong> - In the Header Live Search.</p>';
+        $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>Cart total in footer</strong> - Cart total in all pages or only in WooCommerce pages.</p>';
+        $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>Sliding Cart</strong> - Easily see what is in the Cart.</p>';
+        $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>Account links in Sliding Cart</strong> - Easy access to the account area.</p>';
+        $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>Checkout and View Cart</strong> - Inside the sliding cart it will increase the conversion rate and avoid less abandoned carts.</p>';
+        $custom_html .= '<p><a href="' . $mm_fs->get_upgrade_url() . '&cta=woo-settings#" class="button mm-button-business-upgrade">' . __( 'Upgrade to Business!', 'mobile-menu' ) . '</a></p>';
+        $custom_html .= '<p>Not sure if it has the right features?  <a href="' . $mm_fs->get_trial_url() . '">' . esc_html( 'Start a Free trial', 'mobile-menu' ) . '</a></p>';
+        $custom_html .= '</div>';
+        $custom_html .= '<div class="mm-business-image"><a href="https://shopdemo.wpmobilemenu.com/?utm_source=wprepo-dash&utm_medium=user%20website&utm_campaign=upsell_link" target="_blank"><img src="' . plugins_url( 'demo-content/assets/shopdemo-mobile-menu.png', __FILE__ ) . '">';
+        $custom_html .= '</a><p><a href="https://shopdemo.wpmobilemenu.com/?utm_source=wprepo-dash&utm_medium=user%20website&utm_campaign=upsell_link"> ' . esc_html( 'See Demo Site', 'mobile-menu' ) . '</a></div></div>';
+        // Woocommerce Tab Upgrade Content.
+        $mm_woo_tab->createOption( array(
+            'name'   => '',
+            'type'   => 'custom',
+            'custom' => $custom_html,
+        ) );
+    }
+    
+    /**
+     *
+     * Create Footer options upsell.
+     *
+     * @since 2.6
+     *
+     * @param type   $panel Panel Options.
+     * @param Object $titan TitanFramework object that is being edited.
+     */
+    public function create_footer_options_upsell( $panel, $titan )
+    {
+        global  $mm_fs ;
+        // Create Footer Options panel.
+        $footer_tab = $panel->createTab( array(
+            'name' => __( 'Footer', 'mobile-menu' ),
+        ) );
+        $custom_html = '<div class="mm-business-features-holder"><div class="mm-bussiness-features"><h3>' . __( 'Footer Features', 'mobile-menu' ) . '</h3>';
+        $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>Fixed Footer Bar</strong></p>';
+        $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>Auto-hide on Scroll</strong></p>';
+        $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>Highlight current page</strong></p>';
+        $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>4 Different Styles</strong></p>';
+        $custom_html .= '<p><a href="' . $mm_fs->get_upgrade_url() . '&cta=footer-settings#" class="button mm-button-business-upgrade">' . __( 'Upgrade now!', 'mobile-menu' ) . '</a></p>';
+        $custom_html .= '<p>Not sure if it has the right features?  <a href="' . $mm_fs->get_trial_url() . '">' . esc_html( 'Start a Free trial', 'mobile-menu' ) . '</a></p>';
+        $custom_html .= '</div>';
+        $custom_html .= '<div class="mm-business-image"><a href="https://prodemo.wpmobilemenu.com/?utm_source=wprepo-dash&utm_medium=user%20website&utm_campaign=upsell_link" target="_blank"><img src="' . plugins_url( 'demo-content/assets/prodemo-mobile-menu.png', __FILE__ ) . '">';
+        $custom_html .= '</a><p><a href="https://prodemo.wpmobilemenu.com/?utm_source=wprepo-dash&utm_medium=user%20website&utm_campaign=upsell_link"> ' . esc_html( 'See Demo Site', 'mobile-menu' ) . '</a></div></div>';
+        // Footer Tab Upgrade Content.
+        $footer_tab->createOption( array(
+            'name'   => '',
+            'type'   => 'custom',
+            'custom' => $custom_html,
+        ) );
     }
 
 }

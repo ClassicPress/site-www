@@ -3,11 +3,17 @@
 
 jQuery( document ).ready( function( $ ) {
 
-  if ( $( '#metabox-summary' ).length === 0 )
-    return;
-
   let button_check = $( '#metabox-summary .check-now button' );
   let spinner = $( '#metabox-summary .spinner' );
+
+  // Checks if a cron job is already running when the page loads
+  
+  if ( local.doing_cron == 'YES' ) {
+    button_check.attr( 'disabled', true );
+    spinner.css( 'visibility', 'visible' );
+
+    check_cron();
+  }
 
   // Starts the cron job
 

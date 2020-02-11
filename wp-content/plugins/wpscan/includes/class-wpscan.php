@@ -118,7 +118,8 @@ class WPScan {
           'ajaxurl'       => admin_url( 'admin-ajax.php' ),
           'action_check'  => self::WPSCAN_ACTION_CHECK,
           'action_cron'   => self::WPSCAN_TRANSIENT_CRON,
-          'ajax_nonce'    => wp_create_nonce( self::WPSCAN_SCRIPT )
+          'ajax_nonce'    => wp_create_nonce( self::WPSCAN_SCRIPT ),
+          'doing_cron'    => get_transient( self::WPSCAN_TRANSIENT_CRON ) ? 'YES' : 'NO'
       );
 
       wp_localize_script( self::WPSCAN_SCRIPT, 'local', $local_array );
@@ -132,8 +133,8 @@ class WPScan {
   * Schedule and event to run verify() function
   */
   static public function schedule() {
-
-    if ( empty( get_option( self::OPT_API_TOKEN ) ) )
+    
+    if ( get_transient( self::WPSCAN_TRANSIENT_CRON ) || empty( get_option( self::OPT_API_TOKEN ) ) )
       return;
 
     set_transient( self::WPSCAN_TRANSIENT_CRON, time() );
@@ -246,6 +247,9 @@ class WPScan {
   */
   static public function check_now() {
 
+    if ( get_transient( self::WPSCAN_TRANSIENT_CRON ) )
+      return;
+
     wp_schedule_single_event( time() - 1, self::WPSCAN_SCHEDULE );
     spawn_cron();
 
@@ -347,13 +351,16 @@ class WPScan {
   * @return string
   */
   static public function get_vulnerabilities( $data, $version ) {
-
+    
     $list = array();
     $key = key( $data );
 
     if ( empty( $data->$key->vulnerabilities ) ) {
       return $list;
     }
+
+    // Trim and remove potential leading 'v'
+    $version = ltrim(trim($version), 'v');
 
     foreach ( $data->$key->vulnerabilities as $item ) {
       if ( $item->fixed_in ) {

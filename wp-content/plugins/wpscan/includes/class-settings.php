@@ -145,9 +145,7 @@ class WPScan_Settings extends WPScan {
   static public function sanitize_api_token( $value ) {
 
     $value = trim($value);
-    $version = get_bloginfo( 'version' );
-    $endpoint = '/wordpresses/' . str_replace( '.', '', $version );
-    $result = self::api_get( $endpoint, $value );
+    $result = self::api_get( '/status', $value );
 
     if( $result ===  401 || $result ===  403 ) {
 

@@ -305,6 +305,7 @@ class WP_Mobile_Menu_Core
         }
         
         $header_elements_order = array( 'left-menu', 'logo', 'right-menu' );
+        $language_selector = '';
         $header_output = '<div  class="mobmenul-container">';
         if ( !empty($header_elements_order) ) {
             foreach ( $header_elements_order as $element ) {
@@ -326,6 +327,9 @@ class WP_Mobile_Menu_Core
                         break;
                     case 'search':
                         $header_output .= $header_search;
+                        break;
+                    case 'language-selector':
+                        $header_output .= $language_selector;
                         break;
                 }
             }
@@ -380,7 +384,7 @@ class WP_Mobile_Menu_Core
                             $left_menu_panel_content .= $header_cart;
                             break;
                         case 'logo':
-                            $left_menu_panel_content .= '</div>' . $logo_content;
+                            $left_menu_panel_content .= $logo_content;
                             break;
                     }
                 }
@@ -542,38 +546,6 @@ class WP_Mobile_Menu_Core
     
     /**
      *
-     * Format Header Branding(Logo + Text).
-     *
-     * @since 2.6
-     * @var $titan
-     * @var $page_title_header
-     */
-    public function mm_format_header_banner( $titan, $page_title_header )
-    {
-        $banner_text = '';
-        $output = '';
-        // Get the page specific banner text.
-        if ( 'banner' === $page_title_header ) {
-            $banner_text = $current_page_title;
-        }
-        // Get the Global header text.
-        if ( 'header' === $titan->getOption( 'page_title_header_global' ) ) {
-            $header_text = $current_page_title;
-        }
-        // Get the Global banner text.
-        
-        if ( 'banner' === $titan->getOption( 'page_title_header_global' ) ) {
-            $banner_text = $current_page_title;
-        } else {
-            $banner_text = __( do_shortcode( $titan->getOption( 'header_banner_content' ) ), 'mobile-menu' );
-        }
-        
-        $output .= '<div class="mob-menu-header-banner">' . $banner_text . '</div>';
-        return $output;
-    }
-    
-    /**
-     *
      * Format Header Branding (Logo + Text).
      *
      * @since 2.6
@@ -588,6 +560,7 @@ class WP_Mobile_Menu_Core
         $logo_output = '';
         $logo_url = '';
         $logo_url_end = '';
+        $logo_alt = get_post_meta( intval( $titan->getOption( 'logo_img' ) ), '_wp_attachment_image_alt', true );
         // Retina Logo.
         
         if ( $titan->getOption( 'logo_img_retina' ) ) {
@@ -620,9 +593,19 @@ class WP_Mobile_Menu_Core
         
         $output = '<div class="mob-menu-logo-holder">' . $logo_url;
         $header_branding = $titan->getOption( 'header_branding' );
+        // Assign the image alt valude with the blog title in case it's not provided on the image. It the blog title also doesn't exist default it to Organization Logo.
+        if ( '' === $logo_alt ) {
+            
+            if ( '' === get_bloginfo( 'name' ) ) {
+                $logo_alt = __( 'Organization Logo', 'mobile-menu' );
+            } else {
+                $logo_alt = get_bloginfo( 'name' );
+            }
+        
+        }
         
         if ( ('logo' === $header_branding || 'logo-text' === $header_branding || 'text-logo' === $header_branding) && '' !== $logo_img ) {
-            $logo_output .= '<img class="mob-standard-logo" src="' . $logo_img . '"  alt=" ' . __( 'Logo Header Menu', 'mobile-menu' ) . '">';
+            $logo_output .= '<img class="mob-standard-logo" src="' . $logo_img . '"  alt="' . $logo_alt . '">';
             // If there is a retina logo.
             if ( isset( $logo_img_retina ) ) {
                 $logo_output .= '<img class="mob-retina-logo" src="' . $logo_img_retina . '"  alt=" ' . __( 'Logo Header Menu', 'mobile-menu' ) . '">';
@@ -862,6 +845,7 @@ class WP_Mobile_Menu_Core
                     if ( $result ) {
                         $message = __( 'Settings Imported successfully.', 'mobile-menu' );
                         $message_code = 'success';
+                        $titan->cssInstance->generateSaveCSS();
                     } else {
                         $message = __( 'Something went wrong. Upload a new file and try again.', 'mobile-menu' );
                         $message_code = 'error';
@@ -875,7 +859,122 @@ class WP_Mobile_Menu_Core
             }
         
         }
+        $version_class = 'mm-free-version';
         ?>
+		<div class="mobile-menu-demos-wrapper">
+			<h2><?php 
+        esc_html_e( 'Import the Mobile Menu Official Demos', 'mobile-menu' );
+        ?></h2>
+			<p><?php 
+        esc_html_e( 'This process will import the settings from the official demos. The logos should be assigned after the import.', 'mobile-menu' );
+        ?></p>
+			<ul class="demos-importer">
+				<li>
+					<div>
+						<h4><?php 
+        esc_html_e( 'Free Demo', 'mobile-menu' );
+        ?></h4>
+						<button type="submit" class="button button-secondary button-next mobile-menu-import-demo" data-demo-id="free-demo" value="<?php 
+        esc_attr_e( 'Import Demo', 'mobile-menu' );
+        ?>"><?php 
+        esc_html_e( 'Import Demo', 'mobile-menu' );
+        ?></button>
+						<?php 
+        
+        if ( isset( $_REQUEST['demo'] ) && 'free-demo' === $_REQUEST['demo'] ) {
+            ?>
+								<h4 class="<?php 
+            echo  $message_code ;
+            ?>"><?php 
+            _e( $message, 'mobile-menu' );
+            ?></h4>
+						<?php 
+        }
+        
+        ?>
+					</div>
+					<a href="https://demo.wpmobilemenu.com/?utm_source=wprepo-dash&utm_medium=user%20website&utm_campaign=import-demo" target="_blank">
+						<img src="<?php 
+        echo  plugins_url( 'demo-content/assets/freedemo-mobile-menu.png', __FILE__ ) ;
+        ?>">
+						<span><?php 
+        esc_html_e( 'See Demo Site', 'mobile-menu' );
+        ?></span>
+					</a>
+				</li>
+				<li>
+					<div>
+						<h4><?php 
+        esc_html_e( 'WooCommerce Shop Demo (Business)', 'mobile-menu' );
+        ?></h4>
+						<button type="submit" class="button button-secondary button-next mobile-menu-import-demo <?php 
+        echo  $version_class ;
+        ?>" data-demo-id="shop-demo" value="<?php 
+        esc_attr_e( 'Import Demo', 'mobile-menu' );
+        ?>"><?php 
+        esc_html_e( 'Import Demo', 'mobile-menu' );
+        ?></button>
+						<?php 
+        
+        if ( isset( $_REQUEST['demo'] ) && 'shop-demo' === $_REQUEST['demo'] ) {
+            ?>
+								<h4 class="<?php 
+            echo  $message_code ;
+            ?>"><?php 
+            _e( $message, 'mobile-menu' );
+            ?></h4>
+						<?php 
+        }
+        
+        ?>
+					</div>
+					<a href="https://shopdemo.wpmobilemenu.com/?utm_source=wprepo-dash&utm_medium=user%20website&utm_campaign=demo_importer_option" target="_blank">
+						<img src="<?php 
+        echo  plugins_url( 'demo-content/assets/shopdemo-mobile-menu.png', __FILE__ ) ;
+        ?>">
+						<span><?php 
+        esc_html_e( 'See Demo Site', 'mobile-menu' );
+        ?></span>
+					</a>
+				</li>
+				<li>
+					<div>
+						<h4><?php 
+        esc_html_e( 'Professional Demo', 'mobile-menu' );
+        ?></h4>
+						<button type="submit" class="button button-secondary button-next mobile-menu-import-demo <?php 
+        echo  $version_class ;
+        ?>" data-demo-id="professional-demo" value="<?php 
+        esc_attr_e( 'Import Demo', 'mobile-menu' );
+        ?>"><?php 
+        esc_html_e( 'Import Demo', 'mobile-menu' );
+        ?></button>
+						<?php 
+        
+        if ( isset( $_REQUEST['demo'] ) && 'professional-demo' === $_REQUEST['demo'] ) {
+            ?>
+								<h4 class="<?php 
+            echo  $message_code ;
+            ?>"><?php 
+            _e( $message, 'mobile-menu' );
+            ?></h4>
+						<?php 
+        }
+        
+        ?>
+					</div>
+					<a href="https://prodemo.wpmobilemenu.com/?utm_source=wprepo-dash&utm_medium=user%20website&utm_campaign=demo_importer_option" target="_blank">
+						<img src="<?php 
+        echo  plugins_url( 'demo-content/assets/prodemo-mobile-menu.png', __FILE__ ) ;
+        ?>">
+						<span><?php 
+        esc_html_e( 'See Demo Site', 'mobile-menu' );
+        ?></span>
+					</a>
+				</li>
+			</ul>
+		</div>
+
 		<form class="mobile-menu-importer-wrapper" enctype="multipart/form-data" method="post" action=""> 
 
 			<?php 
