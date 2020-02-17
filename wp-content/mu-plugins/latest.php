@@ -19,6 +19,20 @@ add_action( 'rest_api_init', function() {
 	] );
 } );
 
+/**
+ * Returns information about the latest ClassicPress release, or redirects to a
+ * URL that can be used to download the release.
+ *
+ * The 'project' argument can be either 'core' or 'migration-plugin'.
+ *
+ * The 'format' argument can be either 'json' or 'zip', or additionally
+ * 'tar.gz' for the 'core' project.
+ *
+ * For 'core', GitHub builds a .zip and a .tar.gz file for us for each release.
+ *
+ * For 'migration-plugin', we build the .zip file ourselves, so the .tar.gz
+ * file is not available.
+ */
 function cpnet_rest_latest( $request ) {
 	switch ( $request['project'] ) {
 		case 'core':
@@ -26,24 +40,26 @@ function cpnet_rest_latest( $request ) {
 				'user' => 'ClassicPress',
 				'repo' => 'ClassicPress-release',
 			];
+			$formats = [ 'json', 'zip', 'tar.gz' ];
 			break;
 		case 'migration-plugin':
 			$github_params = [
 				'user' => 'ClassicPress',
 				'repo' => 'ClassicPress-Migration-Plugin',
 			];
+			$formats = [ 'json', 'zip' ];
 			break;
 		default:
 			return new WP_Error(
 				'rest_invalid_param',
-				"Invalid value for argument 'project' (allowed: 'core', 'migration-plugin')"
+				"Argument 'project' must be one of: 'core', 'migration-plugin'"
 			);
 	}
 
-	if ( ! in_array( $request['format'], [ 'json', 'zip' ], true ) ) {
+	if ( ! in_array( $request['format'], $formats, true ) ) {
 		return new WP_Error(
 			'rest_invalid_param',
-			"Invalid value for argument 'format' (allowed: 'json', 'zip')"
+			"Argument 'format' must be one of: 'json', 'zip', 'tar.gz' (core only)"
 		);
 	}
 
@@ -57,8 +73,19 @@ function cpnet_rest_latest( $request ) {
 		return $zip_url;
 	}
 
+	if ( $request['project'] === 'core' ) {
+		$tar_gz_url = preg_replace( '#\.zip$#', '.tar.gz', $zip_url );
+	} else {
+		$tar_gz_url = null;
+	}
+
 	if ( $request['format'] === 'zip' ) {
 		wp_redirect( $zip_url );
+		die();
+	}
+
+	if ( $request['format'] === 'tar.gz' && $tar_gz_url ) {
+		wp_redirect( $tar_gz_url );
 		die();
 	}
 
@@ -68,6 +95,9 @@ function cpnet_rest_latest( $request ) {
 	$data['github_web_url'] = $release_data['html_url'];
 	$data['github_api_url'] = $release_data['url'];
 	$data['zip_url'] = $zip_url;
+	if ( $tar_gz_url ) {
+		$data['tar_gz_url'] = $tar_gz_url;
+	}
 
 	return $data;
 }

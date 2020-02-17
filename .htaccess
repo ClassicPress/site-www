@@ -155,6 +155,7 @@ RedirectMatch 301 ^/translating-classicpress/?$ /blog/classicpress-localization/
 # BEGIN 302 Redirects
 RedirectMatch 302 ^/latest\.json$ /wp-json/cp/v1/latest
 RedirectMatch 302 ^/latest\.zip$ /wp-json/cp/v1/latest?format=zip
+RedirectMatch 302 ^/latest\.tar\.gz$ /wp-json/cp/v1/latest?format=tar.gz
 RedirectMatch 302 ^/latest-migration-plugin\.json$ /wp-json/cp/v1/latest?project=migration-plugin
 RedirectMatch 302 ^/latest-migration-plugin\.zip$ /wp-json/cp/v1/latest?project=migration-plugin&format=zip
 RedirectMatch 302 ^/blog/meet-the-community-patrick-klein/?$ /blog/meet-the-community-patrick-van-noort/
