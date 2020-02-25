@@ -16,6 +16,15 @@ You will need to
 and run `composer install` in order to download the library that makes the
 `.env` file work properly.
 
-Then add a local administrative user, for example using
-[WP-CLI](https://wp-cli.org/)
-and the `wp user create` command.
+Then update the site URL, for example using
+[WP-CLI](https://wp-cli.org/):
+
+```
+wp search-replace https://www.classicpress.net http://www.classicpress.local
+```
+
+Finally add a local administrative user, for example:
+
+```
+wp user create admin admin@local.host --role=administrator --user_pass=changeme
+```
