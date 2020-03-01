@@ -150,6 +150,7 @@ RedirectMatch 301 ^/faqs/?$ /faq/
 RedirectMatch 301 ^/migrate/?$ /get-classicpress/
 RedirectMatch 301 ^/our-mission/?$ /about/
 RedirectMatch 301 ^/translating-classicpress/?$ /blog/classicpress-localization/
+RedirectMatch 301 ^/increase-your-plugin-audience-with-classicpress-users/?$ /for-plugin-developers/
 # END 301 Redirects
 
 # BEGIN 302 Redirects
