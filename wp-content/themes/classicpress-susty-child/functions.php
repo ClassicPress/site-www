@@ -4,7 +4,7 @@
  * Stylesheet version (cache buster)
  */
 function cp_susty_get_asset_version() {
-	return '20200219';
+	return '20200301';
 }
 
 

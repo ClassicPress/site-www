@@ -633,7 +633,7 @@ ul#primary-menu.menu li.current_page_item ul li a:active {
 	z-index: 1;
 	background: rgba(5, 127, 153, 1.0);
 	border-radius: 0 0 6px 6px;
-	width: 150px;
+	width: 180px;
 }
 
 .nav--toggle-sub li:hover > ul,
