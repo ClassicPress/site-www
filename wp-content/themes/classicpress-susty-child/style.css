@@ -591,10 +591,9 @@ ul#primary-menu.menu li a:visited {
 	border-radius: 6px;
 }
 
-ul#primary-menu.menu li.current_page_parent>a,
-ul#primary-menu.menu li.current_page_item>a {
+ul#primary-menu.menu li.current_page_parent > a,
+ul#primary-menu.menu li.current_page_item > a {
 	background: rgba(62, 188, 166, .5);
-	border-radius: 6px;
 }
 
 ul#primary-menu.menu li.current_page_parent ul li a,
