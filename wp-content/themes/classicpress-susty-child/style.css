@@ -589,6 +589,7 @@ ul#primary-menu.menu li a,
 ul#primary-menu.menu li a:visited {
 	color: rgba(255, 255, 255, 1.0);
 	border-radius: 6px;
+	border-width: 0; /* IE11/Edge fix */
 }
 
 ul#primary-menu.menu li.current_page_parent > a,
@@ -637,6 +638,12 @@ ul#primary-menu.menu li.current_page_item ul li a:active {
 
 .nav--toggle-sub li:hover > ul,
 .nav--toggle-sub li:focus-within > ul {
+	display: block;
+}
+
+/* IE11/Edge fix for main menu submenus and keyboard navigation */
+/* .open class applied in JS */
+.nav--toggle-sub li > ul.sub-menu.open {
 	display: block;
 }
 
@@ -701,6 +708,7 @@ ul#primary-menu.menu li.current_page_item ul li a:active {
 		margin-top: 0.69em;
 		margin-left: 0.12em;
 		vertical-align: middle;
+		display: inline-block; /* IE11/Edge fix */
 	}
 }
 
@@ -748,6 +756,12 @@ header#page-title h1 {
 	width: 100%;
 	max-width: 20rem;
 	padding: 0 1em 1em 1em;
+}
+
+/* IE11/Edge fix for incorrect display width */
+/* body.ie11 class applied in JS */
+body.ie11 #sidebar {
+	max-width: 27rem;
 }
 
 header#page-title {
