@@ -3,9 +3,7 @@
 function cp_logo_link_html( $dir, $entry, $format_key, $link_text ) {
 	$dir_url = site_url( "/$dir" );
 	return (
-		'<a href="' . esc_attr(
-			$dir_url . '/' . $entry['formats'][ $format_key ]
-		) . '">'
+		'<a href="' . esc_attr( $dir_url . $entry['formats'][ $format_key ]) . '">'
 		. esc_html( $link_text )
 		. '</a>'
 	);
@@ -40,7 +38,9 @@ function cp_logo_list_shortcode( $atts ) {
 			background-position: center;
 		\"></div></div></a>\n";
 		$html .= "</td><td class=\"cp-logo-info\">\n";
-		$html .= esc_html( $entry['description'] ) . "<br>\n";
+		$html .= "<div class=\"cp-logo-description\">";
+		$html .= esc_html( $entry['description'] );
+		$html .= "</div>\n";
 		$html .= "Formats: ";
 		$html .= cp_logo_link_html( $dir, $entry, 'svg', 'SVG' );
 		$html .= " | PNG: ";

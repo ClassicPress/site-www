@@ -1392,10 +1392,20 @@ label select {
 }
 
 
-/* LOGO TABLE (https://www.classicpress.net/brand-guidelines/) */
+/* LOGO TABLES (https://www.classicpress.net/brand-guidelines/) */
+
+table.cp-logo-descriptions td.cp-logo-image {
+	width: 210px;
+	text-align: right;
+	vertical-align: middle;
+}
+
+table.cp-logo-descriptions td.cp-logo-description {
+	vertical-align: middle;
+	padding-left: 1em;
+}
 
 table.cp-logo-list {
-	max-width: 600px;
 	border-spacing: 0 6px;
 }
 
@@ -1425,6 +1435,13 @@ table.cp-logo-list .cp-logo-preview .cp-logo-thumbnail {
 
 table.cp-logo-list .cp-logo-info {
 	padding-left: 1em;
+	width: 100%;
+}
+
+table.cp-logo-list .cp-logo-description {
+	font-size: 108%;
+	font-weight: bold;
+	margin-bottom: 0.3em;
 }
 
 
