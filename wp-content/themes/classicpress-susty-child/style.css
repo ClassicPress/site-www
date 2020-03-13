@@ -1392,43 +1392,39 @@ label select {
 }
 
 
-/* TABLE */
+/* LOGO TABLE (https://www.classicpress.net/brand-guidelines/) */
 
-table.cp-file-list {
+table.cp-logo-list {
 	max-width: 600px;
 	border-spacing: 0 6px;
 }
 
-table.cp-file-list td {
+table.cp-logo-list td {
 	padding: 0;
 	margin-bottom: 4px;
 }
 
-table.cp-file-list tr:hover td {
+table.cp-logo-list tr:hover td {
 	background: #ddd;
 }
 
-table.cp-file-list .cp-file-preview .cp-file-wrapper {
+table.cp-logo-list .cp-logo-preview .cp-logo-wrapper {
 	border: 6px solid #eee;
 	background: #ddd;
 	width: 132px;
 	height: 132px;
 }
 
-table.cp-file-list tr:hover .cp-file-preview .cp-file-wrapper {
-	border-color: #ddd
+table.cp-logo-list tr:hover .cp-logo-preview .cp-logo-wrapper {
+	border-color: #ddd;
 }
 
-table.cp-file-list .cp-file-preview .cp-file-thumbnail {
-	border: 6px solid #ddd
+table.cp-logo-list .cp-logo-preview .cp-logo-thumbnail {
+	border: 6px solid #ddd;
 }
 
-table.cp-file-list .cp-file-name {
+table.cp-logo-list .cp-logo-info {
 	padding-left: 1em;
-}
-
-table.cp-file-list .cp-file-size {
-	padding-right: 1em;
 }
 
 
