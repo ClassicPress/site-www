@@ -948,19 +948,19 @@ p.text-rightcol,
 
 #main ul.brand-colors {
 	list-style-type: none;
-	padding-left: .67em;
+	padding-left: .6em;
 	margin: .1em 0 .8em;
 }
 
 #main ul.brand-colors li {
 	padding: 0 0 .2em 0;
-	line-height: 1.8;
+	line-height: 1.5;
 }
 
 #main ul.brand-colors li:before {
-	width: 30px;
-	height: 30px;
-	border-radius: 15px;
+	width: 24px;
+	height: 24px;
+	border-radius: 12px;
 	content: '';
 	margin-right: 6px;
 	vertical-align: bottom;
