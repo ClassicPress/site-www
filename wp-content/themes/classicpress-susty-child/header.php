@@ -105,6 +105,8 @@
 				echo '<h1>';
 				esc_html_e( 'ClassicPress Blog', 'susty' );
 				echo '</h1>';
+			} elseif (is_single()) {
+				the_title( '<h1>', '</h1>' );
 			} elseif (is_search()) {
 				echo '<h1>';
 				esc_html_e( 'Search Results', 'susty' );
