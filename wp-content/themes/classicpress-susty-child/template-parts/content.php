@@ -10,21 +10,6 @@
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-
-<!--
-	<header class="blog">
-		<?php
-		/*
-		if ( is_singular() ) :
-			the_title( '<h1>', '</h1>' );
-		else :
-			the_title( '<h2><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h2>' );
-		endif;
-		*/
-		?>
-	</header>
--->
-
 	<?php susty_wp_post_thumbnail(); ?>
 
 	<div>
