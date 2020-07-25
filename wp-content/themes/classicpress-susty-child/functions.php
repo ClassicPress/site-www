@@ -4,7 +4,7 @@
  * Stylesheet version (cache buster)
  */
 function cp_susty_get_asset_version() {
-	return '20200312.2';
+	return '20200724.1';
 }
 
 
@@ -61,7 +61,7 @@ add_filter( 'admin_post_thumbnail_html', 'filter_featured_image_admin_text', 10,
 
 /****simplify blog detection*********/
 function is_blog () {
-    return ( is_archive() || is_author() || is_category() || is_home() || is_single() || is_tag()) && 'post' == get_post_type();
+    return ( is_archive() || is_author() || is_category() || is_home() || is_tag()) && 'post' == get_post_type();
 }
 
 

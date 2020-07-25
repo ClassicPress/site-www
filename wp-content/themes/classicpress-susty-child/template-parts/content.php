@@ -10,17 +10,15 @@
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+<?php if ( ! is_singular() ) : ?>
 	<header class="blog">
-		<?php
-		if ( is_singular() ) :
-			the_title( '<h1>', '</h1>' );
-		else :
-			the_title( '<h2><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h2>' );
-		endif;
-		?>
-	
+		<?php the_title(
+			'<h2><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">',
+			'</a></h2>'
+		); ?>
 	</header>
-
+<?php endif; ?>
+	
 	<?php susty_wp_post_thumbnail(); ?>
 
 	<div>
