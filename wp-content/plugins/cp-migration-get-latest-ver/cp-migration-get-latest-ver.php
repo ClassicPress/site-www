@@ -2,11 +2,14 @@
 /**
  * Plugin Name: Get Latest WP Version Supported by CP Migration Plugin
  * Description: Gets the latest version of WordPress supported by the CP Migration Plugin. [cp_migration_get_wp_ver]
- * Version: 0.1.0
+ * Version: 1.0.0
  * Author: Tim Hughes
  * Author URI: https://github.com/timbocode/
  * Plugin URI: https://github.com/timbocode/cp-migration-get-latest-ver
  * Text Domain: cp_migration_get_wp_ver
+ * License: GPL v2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
+ * Requires at least: 1.0.0
  */
 
 namespace timbocode\MigrationGetWPVer;
@@ -16,22 +19,14 @@ defined( 'ABSPATH' ) || exit;
 class MigrationGetWPVer {
 
 
-	public static function register() {
-		add_shortcode( 'cp_migration_get_wp_ver', [ __CLASS__, 'process_shortcode' ] );
+	public static function register_cp_migration_shortcode() {
+		add_shortcode( 'cp_migration_get_wp_ver', [ __CLASS__, 'create_cp_migration_shortcode' ] );
 	}
 
 
-	public static function process_shortcode( $atts ) {
-		// Set max to true dy default
-		$defaults = [ 
-			'max'  => true,
-		];
-
-		// Replace any missing shortcode arguments with defaults.
-		$atts = shortcode_atts( $defaults, $atts, 'cp_migration_get_wp_ver' );
-
+	public static function create_cp_migration_shortcode() {
 		// Get the migration plugin data from API. Check cache first.
-		$migration_plugin_data = self::get_migration_plugin_data_cached( $atts );
+		$migration_plugin_data = self::get_migration_plugin_data_cached( 'cp_migration_get_wp_ver' );
 		
 		if ( is_wp_error( $migration_plugin_data ) ) {
 			return esc_html( $migration_plugin_data->get_error_message() );
@@ -41,33 +36,27 @@ class MigrationGetWPVer {
 	}
 	
 
-	public static function get_migration_plugin_data_cached( $atts ) {
+	public static function get_migration_plugin_data_cached( $trans_name ) {
 		// Get transient data if exists
-		$migration_data = get_transient( self::get_transient_name( $atts ) );
-
+		$migration_data = get_transient( $trans_name );
 
 		if ( empty( $migration_data ) ) {
 			//If no transient set, fetch data from API
-			$migration_data = self::get_migration_plugin_data( $atts );
+			$migration_data = self::get_migration_plugin_data();
 
 			if ( is_wp_error( $migration_data ) ) {
 				return $migration_data;
 			}
 
 			// Save migration data to transient
-			set_transient( self::get_transient_name( $atts ), $migration_data, 60 * MINUTE_IN_SECONDS );
+			set_transient( $trans_name, $migration_data, 60 * MINUTE_IN_SECONDS );
 		}
 
 		return $migration_data;
 	}
 	
 
-	public static function get_transient_name( $atts ) {
-		return ( 'mgwpv_api_' . $atts['max'] );
-	}
-
-
-	public static function get_migration_plugin_data( $atts ) {
+	public static function get_migration_plugin_data() {
 		$api_url = 'https://api-v1.classicpress.net/migration/';
 		
 		// Make API call
@@ -98,4 +87,4 @@ class MigrationGetWPVer {
 
 }
 
-MigrationGetWPVer::register();
+MigrationGetWPVer::register_cp_migration_shortcode();
