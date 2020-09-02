@@ -100,10 +100,12 @@
 	} ?>
 
 	<?php if(!is_front_page()) {
+	    $category = get_the_category();
 			echo '<header id="page-title">';
 			if (is_blog()) {
 				echo '<h1>';
-				esc_html_e( 'ClassicPress Blog', 'susty' );
+				esc_html_e( 'ClassicPress Blog: ', 'susty' );
+				echo esc_html( ucwords( $category[0]->name ) );
 				echo '</h1>';
 			} elseif (is_single()) {
 				the_title( '<h1>', '</h1>' );
