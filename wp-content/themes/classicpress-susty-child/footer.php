@@ -40,7 +40,7 @@
 				<p>© 2018-<?php echo date("Y"); ?> ClassicPress. All Rights Reserved.</p>
 			</div>
 			<div class="cppolicy">
-				<p><a href="https://www.iubenda.com/privacy-policy/41030260" target="_blank" rel="noopener noreferrer">Privacy Policy</a> | <a href="https://www.iubenda.com/privacy-policy/41030260/cookie-policy" target="_blank" rel="noopener noreferrer">Cookie Policy</a></p>
+				<p><a href="https://www.classicpress.net/privacy-policy/">Privacy Policy</a></p>
 			</div>
 		</div>
 	</footer>
