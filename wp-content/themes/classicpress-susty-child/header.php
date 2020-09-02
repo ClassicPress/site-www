@@ -100,7 +100,7 @@
 	} ?>
 
 	<?php if(!is_front_page()) {
-	    $category = get_the_category();
+			$category = get_the_category();
 			echo '<header id="page-title">';
 			if (is_blog()) {
 				echo '<h1>';
