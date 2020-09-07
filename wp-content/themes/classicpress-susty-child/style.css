@@ -2144,3 +2144,19 @@ footer#legal {
 	height: 1.1em;
 	vertical-align: text-top;
 }
+
+
+/* Classic Commerce */
+
+#main ul.woocommerce-error {
+	padding-left: 3em;
+}
+ul.woocommerce-error::before {
+	top: 1.26em;
+	left: 1.35em;
+}
+
+body.page-cart .coupon,
+body.page-checkout .woocommerce-form-coupon-toggle {
+	display: none;
+}
