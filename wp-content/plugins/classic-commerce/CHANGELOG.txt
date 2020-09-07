@@ -1,0 +1,47 @@
+== Changelog ==
+
+= 1.0.0-rc.2 - 2020-08-29
+Fixed: Corrected color of two images to CC aqua, missed in rc1. #255
+
+= 1.0.0-rc.1 - 2020-08-29
+Fixed: Incorrect escaping of strings in setup wizard and order edit page. #244
+Improved: Better checks and improved messaging when invalid file type chosen for CSV tax import. #245
+Improved: CSS tweaks to enhance CC branding. New CC aqua color introduced. #247
+Improved: Big improvements to CC build process. #250, #251
+Tweaked: Removed all references to old ClassicPress-Research repository. #249
+
+= 1.0.0-beta.1 - 2020-05-16
+Improved automated testing on GitHub (#174)
+Coding standards improvements (#174)
+Added user agent (#202)
+Various CSS tweaks
+Various spacing and capitalization tweaks
+Rename logo and icon image files as per CP naming standard (#210)
+Updates to CodePotent Update Manager (#215)
+Comb out remnant css after Install wizard + Jetpack + woo services removal (#204)
+Backport security fixes from WC 3.8.0 and below (#218, #219, #220, #221, #222, #225, #228, #229, #230)
+Improved compatibility with PHP 7.4, ready for upcoming ClassicPress 1.2.0 (#225)
+Changed composer.json "type" back to "wordpress-plugin" for greater compatibility (#239, #240)
+
+= 1.0.0-alpha.3 - 2020-01-20
+NEW: Add usage tracking notice & opt-out
+NEW: Change template path to look for classic-commerce in theme folder
+UPDATE: Improve CC/Woo activation logic
+UPDATE: Change compatibility plugin warning message
+FIX: Fix deactivating WC/CC issue and change notice
+FIX: Prevent PHP fatal error when trying to activate WC while CC is still active
+FIX: Fix for CC admin menu icon display issues
+FiX: Prevent the compatibility plugin notice from appearing when it shouldn't
+Other minor tweaks
+
+= 1.0.0-alpha.2 - 2019-12-29
+Fix for issues #159 and #162 - notices displaying when they shouldn't
+
+= 1.0.0-alpha1 - 2019-12-28
+First alpha release of Classic Commerce
+
+= 0.1.0 - 2018-05-24 =
+WIP - Forking and documenting Classic Commerce 0.1.0
+
+= WooCommerce 3.4.5 - 2018-08-29 =
+[See changelog archive for all versions](https://raw.githubusercontent.com/ClassicPress-plugins/classic-commerce/master/CHANGELOG-Archive.txt).
