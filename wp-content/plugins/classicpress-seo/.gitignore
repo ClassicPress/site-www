@@ -1,9 +1,0 @@
-*.bat
-*.sh
-*.bak
-*.zip
-*.7z
-assets/admin/js/src/*
-assets/admin/js/orig/*
-sitemap-cache/*
-composer.*

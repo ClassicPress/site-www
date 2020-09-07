@@ -6,6 +6,12 @@ Latest release:  See [Change log](CHANGES.md)
 
 * * *
 
+## Installation
+
+1. Head over to the [Releases section](https://github.com/ClassicPress-plugins/classicpress-seo/releases) of this GitHub repository.
+2. Expand the "Assets" dropdown by the latest release and download the `classicpress-seo.zip` file.
+3. Go to the "Plugins > Add New" section of your site's dashboard and upload the zip file there using the "Upload Plugin" button.
+
 ## Minimum Requirements
 
 - ClassicPress 1.0.2
@@ -25,7 +31,7 @@ Local SEO / Knowledge Graph|Support for BuddyPress
 Redirections|Webmaster tools
 Rich Snippets|SEO Analysis
 XML Sitemap|Ability to edit .htaccess
-Support for [Classic Commerce](https://github.com/ClassicPress-research/classic-commerce) and WooCommerce|Ability to edit robots.txt
+Support for [Classic Commerce](https://github.com/ClassicPress-plugins/classic-commerce) and WooCommerce|Ability to edit robots.txt
 Social meta: Facebook, Twitter, Google Places, LinkedIn, Instagram, YouTube, Pinterest|Social meta: Yelp, FourSquare, Flickr, Reddit, SoundCloud, Tumblr and Myspace
 Imports for Rank Math, Yoast, All In One SEO and The SEO Framework | Imports for AIO Rich Snippets, SEOPress, WP Schema Pro, Redirection
 Role Manager|
