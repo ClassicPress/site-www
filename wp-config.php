@@ -84,7 +84,7 @@ $table_prefix = getenv( 'DB_TABLE_PREFIX' );
  *
  * @link https://codex.wordpress.org/Debugging_in_WordPress
  */
-define( 'WP_DEBUG', getenv( 'WP_DEBUG' ) );
+define( 'WP_DEBUG', getenv( 'WP_DEBUG' ) === 'true' );
 
 /**
  * Site URL constants
