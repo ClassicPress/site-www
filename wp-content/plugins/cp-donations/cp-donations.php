@@ -209,22 +209,22 @@ add_filter( 'woocommerce_is_sold_individually', 'cpdo_remove_quantity_field', 10
 
 // Override Template Parts. Props @ozfiddler
 function override_woocommerce_template_part( $template, $slug, $name ) {
-    $template_directory = plugin_dir_path( __FILE__ ) . 'templates/';
-    if ( $name ) {
-        $path = $template_directory . "{$slug}-{$name}.php";
-    } else {
-        $path = $template_directory . "{$slug}.php";
-    }
-    return file_exists( $path ) ? $path : $template;
+	$template_directory = plugin_dir_path( __FILE__ ) . 'templates/';
+	if ( $name ) {
+		$path = $template_directory . "{$slug}-{$name}.php";
+	} else {
+		$path = $template_directory . "{$slug}.php";
+	}
+	return file_exists( $path ) ? $path : $template;
 }
 add_filter( 'wc_get_template_part', 'override_woocommerce_template_part', 10, 3 );
 
 
 // Override Templates. Props @ozfiddler
 function override_woocommerce_template( $template, $template_name, $template_path ) {
-    $template_directory = plugin_dir_path( __FILE__ ) . 'templates/';
-    $path = $template_directory . $template_name;
-    return file_exists( $path ) ? $path : $template;
+	$template_directory = plugin_dir_path( __FILE__ ) . 'templates/';
+	$path = $template_directory . $template_name;
+	return file_exists( $path ) ? $path : $template;
 }
 add_filter( 'woocommerce_locate_template', 'override_woocommerce_template', 10, 3 );
 
@@ -243,9 +243,9 @@ if ( ! function_exists( 'cc_active_notice' ) ) {
 if ( ! function_exists( 'cpdo_notice_wc' ) ) {
 	function cpdo_notice_wc() {
 		?>
-        <div class="error">
-            <p><strong>Donations for ClassicPress</strong> requires Classic Commerce version 1.0.0 or greater.</p>
-        </div>
+		<div class="error">
+			<p><strong>Donations for ClassicPress</strong> requires Classic Commerce version 1.0.0 or greater.</p>
+		</div>
 		<?php
 	}
 }
