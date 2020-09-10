@@ -83,14 +83,14 @@ if ( ! function_exists( 'cpdo_init' ) ) {
 
 
 				function cpdo_admin_settings_page() {
-					?>
-                    <div class="cpdonations_settings_page wrap">
-                        <h1 class="cpdonations_settings_page_title"><?php echo esc_html__( 'Donations for ClassicPress', 'cp-donations' ) . ' ' . CPDO_VERSION; ?></h1>
-                        <div class="cpdonations_settings_page_content">
+				?>
+					<div class="cpdonations_settings_page wrap">
+						<h1 class="cpdonations_settings_page_title"><?php echo esc_html__( 'Donations for ClassicPress', 'cp-donations' ) . ' ' . CPDO_VERSION; ?></h1>
+						<div class="cpdonations_settings_page_content">
 							<p>No settings at present but there might be some day.</p>
-                        </div>
-                    </div>
-					<?php
+						</div>
+					</div>
+				<?php
 				}
 
 
