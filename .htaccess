@@ -162,4 +162,6 @@ RedirectMatch 302 ^/latest-migration-plugin\.json$ /wp-json/cp/v1/latest?project
 RedirectMatch 302 ^/latest-migration-plugin\.zip$ /wp-json/cp/v1/latest?project=migration-plugin&format=zip
 RedirectMatch 302 ^/blog/meet-the-community-patrick-klein/?$ /blog/meet-the-community-patrick-van-noort/
 RedirectMatch 302 ^/version/([^/]*)/?$ https://github.com/ClassicPress/ClassicPress-release/releases/tag/$1
+RedirectMatch 302 ^/shop/?$ /donate/#donate
+RedirectMatch 302 ^/product/donate-to-classicpress/?$ /donate/#donate
 # END 302 Redirects
