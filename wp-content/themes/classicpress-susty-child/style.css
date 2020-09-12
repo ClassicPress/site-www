@@ -1065,14 +1065,19 @@ input[type="submit"]:focus {
 }
 
 #content p.button.blue a,
-#content p.button.blue a:visited {
+#content p.button.blue a:visited,
+#content .wc-proceed-to-checkout a.checkout-button,
+#content .wc-proceed-to-checkout a.checkout-button:visited {
 	background: #07989e;
 	color: #fff;
 }
 
 #content p.button.blue a:hover,
 #content p.button.blue a:active,
-#content p.button.blue a:focus {
+#content p.button.blue a:focus,
+#content .wc-proceed-to-checkout a.checkout-button:hover,
+#content .wc-proceed-to-checkout a.checkout-button:active,
+#content .wc-proceed-to-checkout a.checkout-button:focus {
 	box-shadow: 0 0 3px 2px #3ebca6;
 }
 
