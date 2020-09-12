@@ -14,7 +14,7 @@
 		<div class="classic">
 			<div class="footerleft">
 				<a href="/"><img src="<?php echo get_stylesheet_directory_uri(); ?>/images/icon-white.svg" alt="ClassicPress" /></a>
-				<p class="registration">ClassicPress is a company limited by guarantee with registration number 11549088.</p>
+				<p class="registration">The ClassicPress project is under the direction of The ClassicPress Initiative, a nonprofit organization registered under section 501(c)(3) of the United States IRS code.</p>
 				<ul class="nav">
 					<li><a href="/contact/">Contact Us</a></li>
 				</ul>
