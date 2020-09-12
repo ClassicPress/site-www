@@ -53,7 +53,7 @@ defined( 'ABSPATH' ) or die( "No script kiddies please!" );
           </tr>
         </thead>
         <tbody id="report-plugins">
-          <?php foreach ( get_plugins() as $name => $details ) : $name = self::sanitize_plugin_name( $name ); ?>
+          <?php foreach ( get_plugins() as $name => $details ) : $name = self::sanitize_plugin_name( $name, $details ); ?>
           <tr>
             <th scope="row" class="check-column" style="text-align: center"><?php echo self::get_status( 'plugins', $name ) ?></span></th>
             <td class="plugin-title column-primary">
@@ -76,7 +76,7 @@ defined( 'ABSPATH' ) or die( "No script kiddies please!" );
           </tr>
         </thead>
         <tbody id="report-themes">
-          <?php foreach ( wp_get_themes() as $name => $details ) : ?>
+          <?php foreach ( wp_get_themes() as $name => $details ) : $name = self::sanitize_theme_name( $name, $details ); ?>
           <tr>
             <th scope="row" class="check-column" style="text-align: center"><?php echo self::get_status( 'themes', $name ) ?></span></th>
             <td class="plugin-title column-primary">

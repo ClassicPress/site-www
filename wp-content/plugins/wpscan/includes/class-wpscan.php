@@ -5,6 +5,10 @@ class WPScan {
   // Constants
   // Settings
   const OPT_API_TOKEN = 'wpscan_api_token';
+  const OPT_SCANNING_INTERVAL = 'wpscan_scanning_interval';
+
+  // Account
+  const OPT_ACCOUNT_STATUS = 'wpscan_account_status';
 
   // Notifications
   const OPT_EMAIL     = 'wpscan_mail';
@@ -54,7 +58,7 @@ class WPScan {
 
     // Languages
     load_plugin_textdomain( 'wpscan', false, self::$plugin_dir . 'languages' );
-
+    
     // Report
     self::$report = get_option( self::OPT_REPORT );
 
@@ -64,13 +68,19 @@ class WPScan {
     add_action( self::WPSCAN_SCHEDULE, array( __CLASS__, 'schedule' ), 999 );
     add_filter( 'plugin_action_links_' . plugin_basename( WPSCAN_PLUGIN_FILE ), array( __CLASS__, 'add_action_links' ) );
 
+    if ( defined('WPSCAN_API_TOKEN') ) {
+      add_action( 'admin_init', array( __CLASS__, 'api_token_from_constant' ) );
+    }
+    
     // Micro apps
     WPScan_Report::init();
     WPScan_Settings::init();
+    WPScan_Account::init();
     WPScan_Summary::init();
     WPScan_Notification::init();
     WPScan_Admin_Bar::init();
     WPScan_Dashboard::init();
+    WPScan_Sitehealth_integration::init();
 
   }
 
@@ -98,6 +108,25 @@ class WPScan {
 
   }
 
+  /**
+   * Use the global constant WPSCAN_API_TOKEN if defined.
+   * 
+   * @example define('WPSCAN_API_TOKEN', 'xxx');
+   * 
+   */
+  static public function api_token_from_constant() {
+
+    if ( get_option( self::OPT_API_TOKEN ) !== WPSCAN_API_TOKEN ) {
+        $sanitize = WPScan_Settings::sanitize_api_token(WPSCAN_API_TOKEN);
+      if ( $sanitize ) {
+        update_option( self::OPT_API_TOKEN, WPSCAN_API_TOKEN );
+      } else {
+        delete_option(self::OPT_API_TOKEN);
+      }
+    }
+
+  }
+
   /*
   *  Register Admin Scripts
   */
@@ -107,12 +136,14 @@ class WPScan {
 
     // enqueue only on wpscan pages and on dashboard (widgets)
     if ( $hook === self::$page_hook || $screen->id === 'dashboard' ) {
-      wp_enqueue_style( 'wpscan', plugins_url( 'assets/style.css', WPSCAN_PLUGIN_FILE ) );
+      wp_enqueue_style( 'wpscan', plugins_url( 'assets/css/style.css', WPSCAN_PLUGIN_FILE ) );
     }
 
     // only enqueue in wpscan pages
     if ( $hook === self::$page_hook ) {
-      wp_register_script( self::WPSCAN_SCRIPT, plugins_url( 'assets/scripts.js', WPSCAN_PLUGIN_FILE ), array( 'jquery' ), false, true );
+      wp_enqueue_script( self::WPSCAN_SCRIPT, plugins_url( 'assets/js/scripts.js', WPSCAN_PLUGIN_FILE ), array( 'jquery' ) );
+      wp_enqueue_script( 'pdfmake', plugins_url( 'assets/vendor/pdfmake/pdfmake.min.js', WPSCAN_PLUGIN_FILE ), array( self::WPSCAN_SCRIPT ) );
+      wp_enqueue_script( self::WPSCAN_SCRIPT . '-download-report', plugins_url( 'assets/js/download-report.js', WPSCAN_PLUGIN_FILE ), array( 'pdfmake' ) );
 
       $local_array = array(
           'ajaxurl'       => admin_url( 'admin-ajax.php' ),
@@ -123,8 +154,6 @@ class WPScan {
       );
 
       wp_localize_script( self::WPSCAN_SCRIPT, 'local', $local_array );
-
-      wp_enqueue_script( self::WPSCAN_SCRIPT, plugins_url( 'assets/scripts.js', WPSCAN_PLUGIN_FILE ), array( 'jquery' ) );
     }
 
   }
@@ -179,7 +208,7 @@ class WPScan {
       self::WPSCAN_ROLE,
       'wpscan',
       array( 'WPScan_Report', 'page' ),
-      self::$plugin_url . 'assets/menu-icon.svg',
+      self::$plugin_url . 'assets/svg/menu-icon.svg',
       null
     );
 
@@ -203,6 +232,10 @@ class WPScan {
   * Get the WPScan plugin version.
   */
   static public function wpscan_plugin_version() {
+    
+    if( !function_exists('get_plugin_data') ){
+      require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+    }
 
     return get_plugin_data( self::$plugin_dir . 'wpscan.php' )['Version'];
 
@@ -230,8 +263,15 @@ class WPScan {
       )
     );
 
+    // Hook before the request
+    do_action( 'wpscan/api/get/before' , $endpoint);
+
+    // Start the request
     $response = wp_remote_get( WPSCAN_API_URL . $endpoint, $args );
     $code = wp_remote_retrieve_response_code( $response );
+    
+    // Hook after the request
+    do_action( 'wpscan/api/get/after', $endpoint, $response );
 
     if ( $code == 200 ) {
       $body = wp_remote_retrieve_body( $response );
@@ -265,8 +305,51 @@ class WPScan {
       require_once ABSPATH . 'wp-admin/includes/plugin.php';
     }
 
+    if ( ! function_exists( 'wp_get_themes' ) ) {
+      require_once ABSPATH . 'wp-admin/includes/theme.php';
+    }
+
     $report = array();
     $errors = array();
+
+    // Plugins
+    $report['plugins'] = array();
+    $report['plugins']['total'] = 0;
+    foreach ( get_plugins() as $name => $details ) {
+      $name = self::sanitize_plugin_name( $name, $details );
+      $result = self::api_get( '/plugins/' . $name );
+      if ( is_object( $result ) ) {
+        $report['plugins'][ $name ]['vulnerabilities'] = self::get_vulnerabilities( $result, $details['Version'] );
+        $report['plugins'][ $name ]['closed'] = is_object($result->$name->closed) ? true : false;
+        $report['plugins']['total'] += count( $report['plugins'][ $name ]['vulnerabilities'] );
+      } elseif( $result ===  401 ) {
+        array_push( $errors, 401 );
+      } elseif( $result ===  403 ) {
+        array_push( $errors, 403 );
+      }
+    }
+
+    // Themes
+    $report['themes'] = array();
+    $report['themes']['total'] = 0;
+    $theme_options = array(
+      'errors'  => null,
+      'allowed' => null,
+      'blog_id' => 0,
+    );
+    foreach ( wp_get_themes( $theme_options ) as $name => $details ) {
+      $name = self::sanitize_theme_name( $name, $details );
+      $result = self::api_get( '/themes/' . $name );
+      if ( is_object( $result ) ) {
+        $report['themes'][ $name ]['vulnerabilities'] = self::get_vulnerabilities( $result, $details['Version'] );
+        $report['themes'][ $name ]['closed'] = is_object($result->$name->closed) ? true : false;
+        $report['themes']['total'] += count( $report['themes'][ $name ]['vulnerabilities'] );
+      } elseif( $result ===  401 ) {
+        array_push( $errors, 401 );
+      } elseif( $result ===  403 ) {
+        array_push( $errors, 403 );
+      }
+    }
 
     // WordPress
     $report['wordpress'] = array();
@@ -280,37 +363,6 @@ class WPScan {
       array_push( $errors, 401 );
     } elseif( $result ===  403 ) {
       array_push( $errors, 403 );
-    }
-
-    // Plugins
-    $report['plugins'] = array();
-    $report['plugins']['total'] = 0;
-    foreach ( get_plugins() as $name => $details ) {
-      $name = self::sanitize_plugin_name( $name );
-      $result = self::api_get( '/plugins/' . $name );
-      if ( is_object( $result ) ) {
-        $report['plugins'][ $name ]['vulnerabilities'] = self::get_vulnerabilities( $result, $details['Version'] );
-        $report['plugins']['total'] += count( $report['plugins'][ $name ]['vulnerabilities'] );
-      } elseif( $result ===  401 ) {
-        array_push( $errors, 401 );
-      } elseif( $result ===  403 ) {
-        array_push( $errors, 403 );
-      }
-    }
-
-    // Themes
-    $report['themes'] = array();
-    $report['themes']['total'] = 0;
-    foreach ( wp_get_themes() as $name => $details ) {
-      $result = self::api_get( '/themes/' . $name );
-      if ( is_object( $result ) ) {
-        $report['themes'][ $name ]['vulnerabilities'] = self::get_vulnerabilities( $result, $details['Version'] );
-        $report['themes']['total'] += count( $report['themes'][ $name ]['vulnerabilities'] );
-      } elseif( $result ===  401 ) {
-        array_push( $errors, 401 );
-      } elseif( $result ===  403 ) {
-        array_push( $errors, 403 );
-      }
     }
 
     // Caching
@@ -393,12 +445,60 @@ class WPScan {
   * Sanitize plugin name
   *
   * @param string $name - plugin name "folder/file.php" or "hello.php"
+  * @param string $details
   * @return string
   */
-  static public function sanitize_plugin_name( $name ) {
+  static public function sanitize_plugin_name( $name, $details ) {
+
+    $name = self::sanitize_name( $name );
+    $name = self::get_real_slug( $name, $details['PluginURI'] );
+    return $name;
+
+  }
+
+  /*
+  * Sanitize theme name
+  *
+  * @param string $name - plugin name "folder/file.php" or "hello.php"
+  * @param string $details
+  * @return string
+  */
+  static public function sanitize_theme_name( $name, $details ) {
+
+    $name = self::sanitize_name( $name );
+    $name = self::get_real_slug( $name, $details['ThemeURI'] );
+    return $name;
+
+  }
+
+  /*
+  * Sanitize name
+  *
+  * @param string $name - plugin name "folder/file.php" or "hello.php"
+  * @return string
+  */
+  static private function sanitize_name( $name ) {
 
     return strstr( $name, '/' ) ? dirname($name) : $name;
 
+  }
+
+  /*
+  * The name returned by get_plugins or get_themes is not always the real slug
+  * If the pluginURI is a wordpress url, we take the slug from there
+  * this also fixes folder renames on plugins if the readme is correct.
+  *
+  * @param string $name - asset name from get_plugins or wp_get_themes
+  * @param string $url - either the value or ThemeURI or PluginURI
+  * @return string
+  */
+  static private function get_real_slug( $name, $url ) {
+    $slug = $name;
+    $match = preg_match( '/https?:\/\/wordpress\.org\/(?:extend\/)?(?:plugins|themes)\/([^\/]+)\/?/', $url, $matches );
+    if ( $match === 1 ) {
+      $slug = $matches[1];
+    }
+    return $slug;
   }
 
 }

@@ -43,7 +43,7 @@ class WPScan_Summary extends WPScan {
     ?>
 
     <p>
-      <?php _e( 'Last request to the', 'wpscan' ) ?> <a href="https://wpvulndb.com/" target="_blank">WPScan Vulnerability Database</a>
+      <?php _e( 'The last request to the', 'wpscan' ) ?> <a href="https://wpvulndb.com/" target="_blank">WPScan Vulnerability Database</a> <?php _e( 'was:', 'wpscan' ) ?> 
     </p>
     <p>
       <span class="dashicons dashicons-calendar-alt"></span> <strong><?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), self::$report['cache'] ) ?></strong>
@@ -52,21 +52,20 @@ class WPScan_Summary extends WPScan {
     <?php
     if ( $errorset ) {
       foreach( self::$report['error'] as $err ) {
-        // $err should not contain user input. If you like to add an esc_html() here, be sure to update
-        // the error texts that use HTML
-        echo '<p class="is-red"><span class="dashicons dashicons-megaphone"></span> <strong>' . $err . '</strong></p>';
+        // $err should not contain user input. If you like to add an esc_html() here, be sure to update the error text that use HTML
+        echo '<p class="wpscan-summary-res is-red"><span class="dashicons dashicons-megaphone"></span> <strong>' . $err . '</strong></p>';
       }
     } elseif ( ! $errorset && $total == 0 ) {
-      echo '<p class="is-green"><span class="dashicons dashicons-awards"></span> <strong>' . __( 'No known vulnerabilities found', 'wpscan' ) . '</strong></p>';
+      echo '<p class="wpscan-summary-res is-green"><span class="dashicons dashicons-awards"></span> <strong>' . __( 'No known vulnerabilities found', 'wpscan' ) . '</strong></p>';
     } elseif( ! get_option( self::OPT_API_TOKEN ) ) {
-      echo '<p class="is-red"><span class="dashicons dashicons-megaphone"></span> <strong>' . __( 'You need to add a WPVulnDB API Token to the settings page', 'wpscan' ) . '</strong></p>';
+      echo '<p class="wpscan-summary-res is-red"><span class="dashicons dashicons-megaphone"></span> <strong>' . __( 'You need to add a WPVulnDB API Token to the settings page', 'wpscan' ) . '</strong></p>';
     } else {
-      echo '<p class="is-red"><span class="dashicons dashicons-megaphone"></span> <strong>' . __( 'Requires your attention', 'wpscan' ) . '</strong></p>';
+      echo '<p class="wpscan-summary-res is-red"><span class="dashicons dashicons-megaphone"></span> <strong>' . __( 'Some vulnerabilities were found', 'wpscan' ) . '</strong></p>';
     }
     ?>
 
     <p class="description">
-      <?php _e( 'Some premium plugins and themes, or developed exclusively for this website and not shared to the public, may not be reported by WPScan.', 'wpscan' ) ?>
+      <?php _e( 'Click the Check Now button to run a vulnerability scan against your WordPress version, installed plugins and themes.', 'wpscan' ) ?>
     </p>
 
     <?php if ( get_option( self::OPT_API_TOKEN ) ) : ?>

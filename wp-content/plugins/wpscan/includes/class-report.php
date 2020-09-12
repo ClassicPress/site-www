@@ -37,7 +37,7 @@ class WPScan_Report extends WPScan {
   */
   static public function page() {
 
-    include 'report.php';
+    include self::$plugin_dir . '/views/report.php';
 
   }
 
@@ -50,35 +50,105 @@ class WPScan_Report extends WPScan {
   */
   static public function list_vulnerabilities( $type, $name ) {
 
-    $null_text = '- -';
+    $null_text = __( 'No known vulnerabilities found to affect this version', 'wpscan' );
+    $not_checked_text = __( 'Not checked yet. Click the Check Now button to run a scan', 'wpscan' );
 
+    if ( empty( self::$report ) ) return null;
+
+    $report = self::$report[ $type ];
+    
+    if ( array_key_exists( $name, $report ) ) {
+      $report = $report[ $name ];
+    } else {
+      echo $not_checked_text;
+      return;
+    }
+
+    if ( isset( $report['vulnerabilities'] ) ) {
+
+      $list = array();
+    
+      usort($report['vulnerabilities'], array('self', 'sort_vulnerabilities'));
+  
+      foreach ( $report['vulnerabilities'] as $item ) {
+        $html = '<div class="vulnerability">';
+  
+        $html .= self::vulnerability_severity( $item );
+  
+        $html .= '<a href="' . esc_url( 'https://wpvulndb.com/vulnerabilities/' . $item->id ) . '" target="_blank">';
+        $html .= esc_html( self::get_vulnerability_title( $item ) );
+        $html .= '</a>';
+      
+        $html .= '</div>';
+  
+        $list[] = $html;
+      }
+  
+      echo empty( $list ) ? $null_text : join( '<br>', $list );
+  
+    } else {
+      echo $null_text;
+    }
+  }
+
+ /**
+  * Sort vulnerabilities by severity
+  */
+  static public function sort_vulnerabilities( $a, $b ) {
+    $a = isset($a->cvss->score) ? intval($a->cvss->score) : 0;
+    $b = isset($b->cvss->score) ? intval($b->cvss->score) : 0;
+
+    return $b > $a ? 1 : -1;
+  }
+
+  /*
+  * vulnerability severity
+  *
+  * @return string
+  */
+  static public function vulnerability_severity( $vulnerability ) {
+
+    $plan = WPScan_Account::get_account_status()['plan'];
+    
+    if ( $plan !== 'enterprise' ) {
+      return;
+    }
+
+    $html = "<div class='vulnerability-severity'>";
+    
+    // Severity
+    if ( isset($vulnerability->cvss->severity)) {
+      $severity = $vulnerability->cvss->severity;
+      
+      $html .= "<span class='wpscan-$severity'>$severity</span>";
+    }
+
+    $html .= "</div>";
+
+    return $html;
+  
+  }
+
+  /**
+  * Is the plugin/theme is closed
+  *
+  * @return boolean
+  */
+  static public function is_item_closed( $type, $name ) {
+    
     if ( empty( self::$report ) )
-      return null;
+    return null;
 
     $report = self::$report[ $type ];
     if ( array_key_exists( $name, $report ) ) {
       $report = $report[ $name ];
     }
-
-    if ( ! isset( $report['vulnerabilities'] ) ) {
-      echo $null_text;
-      return;
-    }
-
-    $list = array();
-
-    foreach ( $report['vulnerabilities'] as $item ) {
-      $html = '<a href="' . esc_url( 'https://wpvulndb.com/vulnerabilities/' . $item->id ) . '" target="_blank">';
-      $html .= esc_html( self::get_vulnerability_title( $item ) );
-      $html .= '</a>';
-      $list[] = $html;
-    }
-
-    echo empty( $list ) ? $null_text : join( '<br>', $list );
+    
+    return isset($report['closed']) ? $report['closed'] : false;
 
   }
 
-  /*
+  /**
   * Get all vulnerabilities
   *
   * @return array
@@ -116,7 +186,7 @@ class WPScan_Report extends WPScan {
 
   }
 
-  /*
+  /**
   * Show status icons: checked, attention and error
   *
   * @param string $type - Type of report: wordpress, plugins, themes

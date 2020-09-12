@@ -99,7 +99,7 @@ class WPScan_Notification extends WPScan {
   */
   static public function introduction() {
 
-    echo '<p>' . __( 'Fill the options below if you want to be notified by mail about new vulnerabilities. Add multiple e-mail addresses separating them by a comma.', 'wpscan' ) . '</p>';
+    echo '<p>' . __( 'Fill in the options below if you want to be notified by mail about new vulnerabilities. To add multiple e-mail addresses comma separate them.', 'wpscan' ) . '</p>';
 
   }
 
@@ -146,11 +146,11 @@ class WPScan_Notification extends WPScan {
     self::list_vulnerabilities_to_ignore( 'wordpress', get_bloginfo( 'version' ) );
 
     foreach ( get_plugins() as $name => $details ) {
-      self::list_vulnerabilities_to_ignore( 'plugins', self::sanitize_plugin_name( $name ) );
+      self::list_vulnerabilities_to_ignore( 'plugins', self::sanitize_plugin_name( $name, $details ) );
     }
 
     foreach ( wp_get_themes() as $name => $details ) {
-      self::list_vulnerabilities_to_ignore( 'themes', $name );
+      self::list_vulnerabilities_to_ignore( 'themes', self::sanitize_theme_name( $name, $details ) );
     }
 
   }
@@ -322,7 +322,7 @@ class WPScan_Notification extends WPScan {
     // Plugins
     if ( $report['plugins']['total'] > 0 ) {
       foreach ( get_plugins() as $name => $details ) {
-        $name = self::sanitize_plugin_name( $name );
+        $name = self::sanitize_plugin_name( $name, $details );
         $list = self::email_vulnerabilities( 'plugins', $name );
         if ( ! empty( $list ) ) {
           $has_vulnerabilities = true;
@@ -335,6 +335,7 @@ class WPScan_Notification extends WPScan {
     // Themes
     if ( $report['themes']['total'] > 0 ) {
       foreach ( wp_get_themes() as $name => $details ) {
+        $name = self::sanitize_theme_name( $name, $details );
         $list = self::email_vulnerabilities( 'themes', $name );
         if ( ! empty( $list ) ) {
           $has_vulnerabilities = true;
