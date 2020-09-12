@@ -35,3 +35,12 @@ add_filter(
 	10,
 	3
 );
+
+
+// Hide "Continue shopping" link after adding a donation to the cart
+// https://stackoverflow.com/questions/49058914/removing-continue-shopping-button-from-added-to-cart-notice
+add_filter( 'wc_add_to_cart_message', function( $string, $product_id = 0 ) {
+	$start = strpos( $string, '<a href=' ) ?: 0;
+	$end = strpos( $string, '</a>', $start ) ?: 0;
+	return substr( $string, $end ) ?: $string;
+} );
