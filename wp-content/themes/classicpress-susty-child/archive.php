@@ -25,7 +25,7 @@ get_header();
 
 				endwhile; ?>
 
-			</div> <?php
+			</div><!-- .blog-list --> <?php
 
 			the_posts_navigation();
 
@@ -36,9 +36,9 @@ get_header();
 		endif;
 		?>
 
-		</main>
+		</main><!-- #main -->
 		<?php get_template_part( 'template-parts/sidebar', 'blog' ); ?>
-	</div>
+	</div><!-- #primary -->
 
 <?php
 get_footer();
