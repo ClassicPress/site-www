@@ -152,6 +152,7 @@ RedirectMatch 301 ^/our-mission/?$ /about/
 RedirectMatch 301 ^/translating-classicpress/?$ /blog/classicpress-localization/
 RedirectMatch 301 ^/increase-your-plugin-audience-with-classicpress-users/?$ /for-plugin-developers/
 RedirectMatch 301 ^/join-discord/?$ /community/
+RedirectMatch 301 ^/blog/category/classicpress-blog/? /blog/
 # END 301 Redirects
 
 # BEGIN 302 Redirects
