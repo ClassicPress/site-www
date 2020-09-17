@@ -380,6 +380,10 @@ button {
 	font-weight: 600;
 }
 
+#content .widget-container ul li.cat-item.current-cat a {
+	color:#040402;
+}
+
 /* External link icon */
 article a[target='_blank']::after {
 	font-size: 60%;
