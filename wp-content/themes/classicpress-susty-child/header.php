@@ -100,12 +100,15 @@
 	} ?>
 
 	<?php if(!is_front_page()) {
-			$category = get_the_category();
+			$category = single_cat_title("", false);
 			echo '<header id="page-title">';
 			if (is_blog()) {
 				echo '<h1>';
-				esc_html_e( 'ClassicPress Blog: ', 'susty' );
-				echo esc_html( ucwords( $category[0]->name ) );
+				esc_html_e( 'ClassicPress Blog', 'susty' );
+				if ( $category != '' ) {
+					esc_html_e( ': ', 'susty' );
+					echo esc_html( ucwords( $category ) );
+				}
 				echo '</h1>';
 			} elseif (is_single()) {
 				the_title( '<h1>', '</h1>' );
