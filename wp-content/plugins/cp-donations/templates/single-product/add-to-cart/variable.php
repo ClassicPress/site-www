@@ -1,14 +1,7 @@
 <?php
 /**
  * Variable product add to cart
- *
- * This template can be overridden by copying it to yourtheme/woocommerce/single-product/add-to-cart/variable.php.
- *
- * Template Overrides: https://docs.woocommerce.com/document/template-structure/#section-1
- *
- * @see     https://docs.woocommerce.com/document/template-structure/
  * @package ClassicCommerce/Templates
- * @version WC-3.5.5
  */
 
 defined( 'ABSPATH' ) || exit;

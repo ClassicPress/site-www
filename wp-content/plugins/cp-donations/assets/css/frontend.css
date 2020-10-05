@@ -2,19 +2,15 @@
 .cpdo-active .variations_form .variations, .cpdo-variations + .variations {
     display: none;
 }
-
 .cpdo-active.cpdo-show-price .variations_form .single_variation .woocommerce-variation-price {
     display: none !important;
 }
-
 .cpdo-active.cpdo-show-description .variations_form .single_variation .woocommerce-variation-description {
     display: none !important;
 }
-
 .cpdo-active.cpdo-show-availability .variations_form .single_variation .woocommerce-variation-availability {
     display: none !important;
 }
-
 .cpdo-variations {
     padding: 15px;
 	background:#f6f6f6;
@@ -23,67 +19,54 @@
 	display:table;
 	width:100%;
 }
-
 .cpdo-variations .cpdo-variation {
     display: flex;
     align-items: center;
     cursor: pointer;
+	padding-left:20px;
 }
-
 .cpdo-variations .cpdo-variation:hover {
     background-color: #ffffff;
 }
-
 .cpdo-variations .cpdo-variation > div {
     padding-right: 10px;
     padding-top: 5px;
     padding-bottom: 5px;
 }
-
 .cpdo-variations .cpdo-variation > div:last-child {
     padding-right: 0;
 }
-
-
 .cpdo-variation-selector input {
     outline: none;
 }
-
 .cpdo-variation-selector ul {
     padding: 0 !important;
     margin: 0 !important;
     list-style: none !important;
 }
-
 .cpdo-variation-info, .cpdo-variation-selector {
     flex-grow: 1;
 }
-
 .cpdo-variation-name p {
     margin-bottom: 0;
     font-size: 12px;
 }
-
 .cpdo-variation-radio .cpdo-variation-selector {
     width: 30px;
     flex: 0 0 30px;
 }
-
 .cpdo-variation-radio .cpdo-variation-availability p {
     margin-bottom: 0;
 }
-
 .cpdo-variation-radio .cpdo-variation-name {
     font-weight: 400;
 	font-size:16px;
 }
-
 .cpdo-variation-radio .cpdo-variation-info .cpdo-variation-price, .cpdo-variation-radio .cpdo-variation-info .cpdo-variation-availability {
     display: inline-block;
     margin-right: 10px;
     font-size: 14px;
 }
-
 .cpdo-variation-radio .cpdo-variation-info .cpdo-variation-description {
     font-size: 14px;
 }
@@ -97,10 +80,22 @@
 .cpdo-col.cpdo-col-2 {
 	padding-left:1%;
 }
+.woocommerce a.button.wpdo_return {
+	padding-left:0;
+}
+#content .woocommerce a.remove {
+	color: #ff0000 !important;
+}
+#content .woocommerce a.remove:hover {
+	background: #ff0000 !important;
+	color:#fff !important;
+	text-decoration: none;
+}
 .woocommerce .donations button.button.alt {
 	border: 2px solid #338084;
+	color:#fff;
 }
-.woocommerce .donations button.button.alt:hover {
+.woocommerce .donations .woocommerce-variation-add-to-cart-enabled button.button.alt:hover {
 	background-color: #fff;
 	color: #338084;
 	border: 2px solid #338084;
@@ -112,15 +107,40 @@
 }
 .woocommerce div.product div.summary.donations form.cart .woocommerce-variation-add-to-cart {
 	width:auto;
+	min-width:280px;
 	display:table-cell;
 	float:right;
 }
 .woocommerce div.product div.summary.donations form.cart .button {
 	vertical-align: middle;
 	float: right;
+	min-width:280px;
+	font-size: 1.3em;
+	padding: 0.8em;
 }
 .woocommerce div.product div.summary.donations .woocommerce-variation.single_variation {
 	width:auto;
 	display:table-cell!important;
 	float:left;
+}
+.woocommerce div.product p.price, .woocommerce div.product span.price {
+	color: #843358;
+	font-size: 1.3em;
+	font-weight:600;
+}
+
+/* Stripe stuff */
+body.cpdo_checkout.woocommerce-checkout #payment ul.payment_methods li img.stripe-icon {
+	max-width: 40px;
+	height: auto;
+	padding: 0 0 0 3px;
+	margin: 0;
+	vertical-align: middle;
+	position: relative;
+}
+
+@media (max-width:768px) {
+	.cpdo-variations .cpdo-variation {
+		padding-left:0;
+	}
 }
