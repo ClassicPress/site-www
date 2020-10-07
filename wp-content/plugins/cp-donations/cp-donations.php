@@ -3,7 +3,7 @@
  * Plugin Name: Donations for ClassicPress
  * Plugin URI: https://github.com/timbocode/cc-donations
  * Description: Frontend interface for donations and subscriptions
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: timbocode
  * Author URI: https://github.com/timbocode
  * Text Domain: cp-donations
@@ -17,11 +17,11 @@
  * License: GPL v2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
- 
+
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'CPDO_VERSION' ) && define( 'CPDO_VERSION', '1.0.0' );
+! defined( 'CPDO_VERSION' ) && define( 'CPDO_VERSION', '1.1.0' );
 ! defined( 'CPDO_URI' ) && define( 'CPDO_URI', plugin_dir_url( __FILE__ ) );
 ! defined( 'CPDO_PATH' ) && define( 'CPDO_PATH', plugin_dir_path( __FILE__ ) );
 
@@ -50,10 +50,18 @@ if ( ! function_exists( 'cpdo_init' ) ) {
 					add_action( 'wp_enqueue_scripts', array( $this, 'cpdo_enqueue_scripts' ), 99 );
 					add_action( 'woocommerce_before_variations_form', array( $this, 'cpdo_before_variations_form' ) );
 					add_action( 'woocommerce_before_single_product', array( $this, 'cpdo_remove_wc_hooks' ) );
-					
+					add_action( 'wp_loaded', array( $this, 'cpdo_empty_cart' ), 20 );
+
+					add_filter( 'woocommerce_add_to_cart_redirect', array( $this, 'cpdo_add_to_cart_redirect' ) );
+					add_filter( 'woocommerce_product_single_add_to_cart_text', array( $this, 'cpdo_cart_button_text' ) );
+					add_filter( 'body_class', array( $this, 'cpdo_add_class_to_body' ) );
+					add_filter( 'woocommerce_is_sold_individually', array( $this, 'cpdo_remove_quantity_field' ), 10, 2 );
+					add_filter( 'wc_add_to_cart_message_html', '__return_null' );
+
 					$this->cpdo_set_options();
 				}
-				
+
+
 				// TODO: Add to settings page
 				function cpdo_set_options() {
 					add_option( '_cpdo_donations_page', '2153' );			// The page where the donations are displayed
@@ -68,7 +76,7 @@ if ( ! function_exists( 'cpdo_init' ) ) {
 					$menu_slug  = 'cp-donations';
 					$function   = array( $this, 'cpdo_admin_settings_page');
 					$icon_url   = 'dashicons-money';
-					$position   = 30; 
+					$position   = 30;
 
 					add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position );
 				}
@@ -187,6 +195,38 @@ if ( ! function_exists( 'cpdo_init' ) ) {
 						echo '</div><!-- /cpdo-variation-info -->';
 					}
 				}
+
+				/*
+				 * Overrides for standard CC / WC behavior
+				 */
+				function cpdo_add_to_cart_redirect() {
+					return wc_get_checkout_url();
+				}
+
+				function cpdo_cart_button_text() {
+					return __( 'Donate Now', 'cp-donations' );
+				}
+
+				function cpdo_add_class_to_body( $classes ) {
+					if( is_checkout() ) {
+						$classes[] = 'cpdo_checkout';
+					}
+					return $classes;
+				}
+
+				function cpdo_remove_quantity_field( $return, $product ) {
+					return true;
+				}
+
+				function cpdo_empty_cart() {
+					if ( isset( $_GET['empty_cart'] ) && 'yes' === esc_html( $_GET['empty_cart'] ) ) {
+						WC()->cart->empty_cart();
+
+						$referer  = wp_get_referer() ? esc_url( remove_query_arg( 'empty_cart' ) ) : wc_get_cart_url();
+						wp_safe_redirect( $referer );
+					}
+				}
+
 			}
 
 			new CP_Donations();
@@ -195,19 +235,13 @@ if ( ! function_exists( 'cpdo_init' ) ) {
 }
 
 
-function startsWith($string, $startString) { 
-	$len = strlen($startString); 
-	return (substr($string, 0, $len) === $startString); 
-} 
-
-
-function cpdo_remove_quantity_field( $return, $product ) {
-	return true;
+function startsWith($string, $startString) {
+	$len = strlen($startString);
+	return (substr($string, 0, $len) === $startString);
 }
-add_filter( 'woocommerce_is_sold_individually', 'cpdo_remove_quantity_field', 10, 2 );
 
 
-// Override Template Parts. Props @ozfiddler
+// Override Template Parts. Props @ozfiddler/@simplycomputing
 function override_woocommerce_template_part( $template, $slug, $name ) {
 	$template_directory = plugin_dir_path( __FILE__ ) . 'templates/';
 	if ( $name ) {
@@ -220,7 +254,7 @@ function override_woocommerce_template_part( $template, $slug, $name ) {
 add_filter( 'wc_get_template_part', 'override_woocommerce_template_part', 10, 3 );
 
 
-// Override Templates. Props @ozfiddler
+// Override Templates. Props @ozfiddler/@simplycomputing
 function override_woocommerce_template( $template, $template_name, $template_path ) {
 	$template_directory = plugin_dir_path( __FILE__ ) . 'templates/';
 	$path = $template_directory . $template_name;
