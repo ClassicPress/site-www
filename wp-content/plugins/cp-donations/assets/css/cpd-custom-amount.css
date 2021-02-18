@@ -1,0 +1,243 @@
+.woocommerce .cpd-product-single div.product {
+	width: 100%;
+	clear: both;
+	display: flex;
+}
+
+.woocommerce .cpd-product-single div.product div.summary {
+	float: right;
+	width: 100%;
+	clear: none;
+}
+
+.cpd-active .variations_form .variations, .cpd-variations + .variations {
+	display: none;
+}
+
+.cpd-active.cpd-show-price .variations_form .single_variation .woocommerce-variation-price {
+	display: none !important;
+}
+
+.cpd-active.cpd-show-description .variations_form .single_variation .woocommerce-variation-description {
+	display: none !important;
+}
+
+.cpd-active.cpd-show-availability .variations_form .single_variation .woocommerce-variation-availability {
+	display: none !important;
+}
+
+.cpd-variations {
+	padding: 15px;
+	background: #f6f6f6;
+	border: 1px solid #ddd;
+	margin-bottom: 20px;
+	display: table;
+	width: 100%;
+}
+
+.cpd-variations .cpd-variation {
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+}
+
+.cpd-variations .cpd-variation:hover {
+	background-color: #ffffff;
+}
+
+.cpd-variations .cpd-variation > div {
+	padding-right: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.cpd-variations .cpd-variation > div:last-child {
+	padding-right: 0;
+}
+
+.cpd-variation-selector input {
+	outline: none;
+}
+
+.cpd-variation-selector ul {
+	padding: 0 !important;
+	margin: 0 !important;
+	list-style: none !important;
+}
+
+.cpd-variation-info, .cpd-variation-selector {
+	flex-grow: 1;
+}
+
+.cpd-variation-name p {
+	margin-bottom: 0;
+	font-size: 12px;
+}
+
+.cpd-variation-radio .cpd-variation-selector, .cpd-variation-radio-custom .cpd-variation-selector {
+	width: 30px;
+	flex: 0 0 30px;
+}
+
+.cpd-variation-radio .cpd-variation-availability p, .cpd-variation-radio-custom .cpd-variation-availability p {
+	margin-bottom: 0;
+}
+
+.cpd-variation-radio .cpd-variation-name, .cpd-variation-radio-custom .cpd-variation-name, .cpd-variation-radio-custom .cpd-custom-amount-min {
+	font-weight: 400;
+	font-size: 16px;
+}
+
+.cpd-variation-radio .cpd-variation-info .cpd-variation-price,
+.cpd-variation-radio-custom .cpd-variation-info .cpd-variation-price,
+.cpd-variation-radio .cpd-variation-info .cpd-variation-availability {
+	display: inline-block;
+	margin-right: 10px;
+	font-size: 14px;
+}
+
+.cpd-variation-radio .cpd-variation-info .cpd-variation-description, .cpd-variation-radio-custom .cpd-variation-info .cpd-variation-description {
+	font-size: 14px;
+}
+
+.cpd-col {
+	display: table-cell;
+	width: 49%;
+}
+
+.cpd-col.cpd-col-1 {
+	padding-right: 1%;
+}
+
+.cpd-col.cpd-col-2 {
+	padding-left: 1%;
+}
+
+.woocommerce .donations button.button {
+	padding: 20px 8px;
+}
+
+.woocommerce .cpd-product-single div.product div.summary form.cart .button,
+.woocommerce div.product div.summary.donations form.cart .button {
+	vertical-align: middle;
+	float: right;
+	min-width: 280px;
+	font-size: 1.3em;
+	padding: .8em;
+	border: 2px solid #338084;
+}
+
+.woocommerce .donations button.button.alt {
+	background-color: #338084;
+	border: 2px solid #338084;
+	color: #fff;
+}
+
+.woocommerce .cpd-product-single div.product div.summary form.cart .button:hover,
+.woocommerce .donations .woocommerce-variation-add-to-cart-enabled button.button.alt:hover {
+	background-color: #fff;
+	color: #338084;
+	border: 2px solid #338084;
+}
+
+.woocommerce div.product div.summary.donations {
+	float: none;
+	width: 100%;
+	clear: both;
+}
+
+.woocommerce div.product div.summary.donations form.cart .woocommerce-variation-add-to-cart {
+	width: auto;
+	display: table-cell;
+	float: right;
+}
+
+.woocommerce div.product div.summary.donations form.cart .button {
+	vertical-align: middle;
+	float: right;
+}
+
+.woocommerce div.product div.summary.donations .woocommerce-variation.single_variation {
+	width: auto;
+	display: table-cell!important;
+	float: left;
+}
+
+.woocommerce div.product p.price, .woocommerce div.product span.price {
+	color: #843358;
+	font-size: 1.3em;
+	font-weight: 600;
+}
+
+.product .cpd-disabled {
+	opacity: .2;
+}
+
+.product .single_variation_wrap {
+	padding: 15px;
+	background: #f6f6f6;
+	border: 1px solid #ddd;
+	margin-bottom: 20px;
+	display: table;
+	width: 100%;
+	min-height: 94px;
+}
+
+.product .single_variation_wrap .cpd {
+	display: none;
+	width: auto;
+	float: left;
+	clear: none;
+	margin-bottom: 0;
+}
+
+.product .cpd {
+	margin-bottom: 1.5em;
+}
+
+.product .cpd label {
+	font-weight: 700;
+	display: block;
+}
+
+.product .cpd .cpd-input {
+	display: inline-block;
+	margin-bottom: 0;
+	text-align: left;
+	font-weight: 400;
+	min-width: 7em;
+}
+
+.product .cpd .minimum-price {
+	margin: 0;
+	color: inherit;
+	font-size: .75em;
+	opacity: .7;
+}
+
+.product .cpd .woocommerce-cpd-message {
+	margin: 1em 0!important;
+}
+
+.product .cpd:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+
+/* Stripe stuff */
+body.cpd_checkout.woocommerce-checkout #payment ul.payment_methods li img.stripe-icon {
+	max-width: 40px;
+	height: auto;
+	padding: 0 0 0 3px;
+	margin: 0;
+	vertical-align: middle;
+	position: relative;
+}
+
+@media (max-width:768px) {
+	.cpd-variations .cpd-variation {
+		padding-left: 0;
+	}
+}
