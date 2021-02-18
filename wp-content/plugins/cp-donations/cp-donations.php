@@ -3,13 +3,13 @@
  * Plugin Name: Donations for ClassicPress
  * Plugin URI: https://github.com/timbocode/cc-donations
  * Description: Frontend interface for donations and subscriptions
- * Version: 1.1.0
+ * Version: 2.0.0
  * Author: timbocode
  * Author URI: https://github.com/timbocode
- * Text Domain: cp-donations
+ * Text Domain: cp_donations_domain
  * Domain Path: /languages/
  * Requires at least: 1.0.0
- * Tested up to: 5.5
+ * Requires PHP: 7.2
  * WC requires at least: 3.5.3
  * WC tested up to: 3.5.3
  * CC requires at least: 1.0.0
@@ -21,265 +21,157 @@
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'CPDO_VERSION' ) && define( 'CPDO_VERSION', '1.1.0' );
-! defined( 'CPDO_URI' ) && define( 'CPDO_URI', plugin_dir_url( __FILE__ ) );
-! defined( 'CPDO_PATH' ) && define( 'CPDO_PATH', plugin_dir_path( __FILE__ ) );
+
+/**
+ * Main CP_Donations class.
+ */
+class CP_Donations {
+
+	public $version = '2.0.0';
+	public $db_version = '1';
+	private $min_cp_version = '1.0.2';
+	private $php_version = '7.0';
+
+	protected static $instance = null;
 
 
-if ( !file_exists( WP_PLUGIN_DIR . '/classic-commerce/classic-commerce.php' ) || !is_plugin_active( 'classic-commerce/classic-commerce.php' ) ) {
-	add_action( 'admin_notices', 'cc_active_notice' );
-	return;
-}
+	public static function instance() {
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
 
 
-if ( ! function_exists( 'cpdo_init' ) ) {
-	add_action( 'plugins_loaded', 'cpdo_init', 11 );
+	public function __construct() {
+		$this->cpd_define_constants();
+		include_once $this->plugin_path() . '/includes/class-cpd-admin-notices.php';
 
-	function cpdo_init() {
-		if ( ! function_exists( 'WC' ) ) {
-			add_action( 'admin_notices', 'cpdo_notice_wc' );
+		if ( ! $this->cpd_requirements() ) {
 			return;
 		}
 
-		if ( ! class_exists( 'CP_Donations' ) && class_exists( 'WC_Product' ) ) {
+		$this->cpd_includes();
+		$this->cpd_main_actions();
 
-			class CP_Donations {
+		CPD_Custom_Amount_Display::instance();
+		CPD_Custom_Amount_Cart::instance();
 
-				function __construct() {
-					add_action( 'admin_menu', array( $this, 'cpdo_admin_menu' ) );
-					add_action( 'wp_enqueue_scripts', array( $this, 'cpdo_enqueue_scripts' ), 99 );
-					add_action( 'woocommerce_before_variations_form', array( $this, 'cpdo_before_variations_form' ) );
-					add_action( 'woocommerce_before_single_product', array( $this, 'cpdo_remove_wc_hooks' ) );
-					add_action( 'wp_loaded', array( $this, 'cpdo_empty_cart' ), 20 );
-
-					add_filter( 'woocommerce_add_to_cart_redirect', array( $this, 'cpdo_add_to_cart_redirect' ) );
-					add_filter( 'woocommerce_product_single_add_to_cart_text', array( $this, 'cpdo_cart_button_text' ) );
-					add_filter( 'body_class', array( $this, 'cpdo_add_class_to_body' ) );
-					add_filter( 'woocommerce_is_sold_individually', array( $this, 'cpdo_remove_quantity_field' ), 10, 2 );
-					add_filter( 'wc_add_to_cart_message_html', '__return_null' );
-
-					$this->cpdo_set_options();
-				}
+		//do_action( 'cpd_loaded' );
+	}
 
 
-				// TODO: Add to settings page
-				function cpdo_set_options() {
-					add_option( '_cpdo_donations_page', '2153' );			// The page where the donations are displayed
-					add_option( '_cpdo_donations_product_id', '3031' );		// The subscriptions product
-				}
-
-
-				function cpdo_admin_menu() {
-					$page_title = 'Donations for ClassicPress';
-					$menu_title = 'CP Donations';
-					$capability = 'manage_options';
-					$menu_slug  = 'cp-donations';
-					$function   = array( $this, 'cpdo_admin_settings_page');
-					$icon_url   = 'dashicons-money';
-					$position   = 30;
-
-					add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position );
-				}
-
-
-				function cpdo_remove_wc_hooks() {
-					remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_title', 5 );
-					remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_price', 10 );
-					remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_excerpt', 20 );
-					remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40 );
-				}
-
-
-				function cpdo_admin_settings_page() {
-				?>
-					<div class="cpdonations_settings_page wrap">
-						<h1 class="cpdonations_settings_page_title"><?php echo esc_html__( 'Donations for ClassicPress', 'cp-donations' ) . ' ' . CPDO_VERSION; ?></h1>
-						<div class="cpdonations_settings_page_content">
-							<p>No settings at present but there might be some day.</p>
-						</div>
-					</div>
-				<?php
-				}
-
-
-				function cpdo_enqueue_scripts() {
-					wp_enqueue_style( 'cpdo-frontend', CPDO_URI . 'assets/css/frontend.css', false, CPDO_VERSION );
-					wp_enqueue_script( 'cpdo-frontend', CPDO_URI . 'assets/js/frontend.js', array( 'jquery' ), CPDO_VERSION, true );
-				}
-
-
-				function cpdo_before_variations_form() {
-					global $product;
-					$product_id = $product->get_id();
-					$this->cpdo_variations_form( $product );
-				}
-
-
-				static function cpdo_data_attributes( $attrs ) {
-					$attrs_arr = array();
-					foreach ( $attrs as $key => $attr ) {
-						$attrs_arr[] = 'data-' . sanitize_title( $key ) . '="' . esc_attr( $attr ) . '"';
-					}
-					return implode( ' ', $attrs_arr );
-				}
-
-
-				public static function cpdo_variations_form( $product ) {
-					$product_id = $product->get_id();
-
-					$df_attrs_arr = array();
-					$df_attrs     = $product->get_default_attributes();
-
-					if ( ! empty( $df_attrs ) ) {
-						foreach ( $df_attrs as $key => $val ) {
-							$df_attrs_arr[ 'attribute_' . $key ] = $val;
-						}
-					}
-
-					$children = $product->get_children();
-
-					if ( is_array( $children ) && count( $children ) > 0 ) {
-						// Choose an option
-						echo '<div class="cpdo-variations cpdo-variations-default" data-click="0" >';
-
-						foreach ( $children as $child ) {
-							$child_product = wc_get_product( $child );
-							if ( startsWith( $child_product->get_sku(), 'recurring' ) ) {
-								$recurring[] = $child;
-							}
-							else {
-								$oneoff[] = $child;
-							}
-						}
-
-						echo '<div class="cpdo-col cpdo-col-1">';
-						echo '<h4>Recurring donations</h4>';
-						self::cpdo_display_donations( $recurring, $product_id );
-						echo '</div>';
-
-						echo '<div  class="cpdo-col cpdo-col-2">';
-						echo '<h4>One-time donations</h4>';
-						self::cpdo_display_donations( $oneoff, $product_id );
-						echo '</div>';
-
-						echo '</div><!-- /cpdo-variations -->';
-					}
-				}
-
-
-				public static function cpdo_display_donations( $don_data, $product_id ) {
-					foreach ($don_data as $child ) {
-						$child_product = wc_get_product( $child );
-
-						if ( ! $child_product || ! $child_product->variation_is_visible() ) {
-							continue;
-						}
-
-						$child_attrs	= htmlspecialchars( json_encode( $child_product->get_variation_attributes() ), ENT_QUOTES, 'UTF-8' );
-						$child_class	= 'cpdo-variation cpdo-variation-radio';
-						$child_name		= wc_get_formatted_variation( $child_product, true, false, false );
-
-						$data_attrs = apply_filters( 'cpdo_data_attributes', array(
-							'id'            => $child,
-							'sku'           => $child_product->get_sku(),
-							'attrs'         => $child_attrs,
-							'price'         => wc_get_price_to_display( $child_product ),
-							'regular-price' => wc_get_price_to_display( $child_product, array( 'price' => $child_product->get_regular_price() ) ),
-						), $child_product );
-
-						echo '<div class="' . esc_attr( $child_class ) . '" ' . self::cpdo_data_attributes( $data_attrs ) . '>';
-						echo apply_filters( 'cpdo_variation_radio_selector', '<div class="cpdo-variation-selector"><input type="radio" name="cpdo_variation_' . $product_id . '"/></div>', $product_id );
-						echo '<div class="cpdo-variation-info">';
-						echo '<div class="cpdo-variation-name">' . $child_name . '</div>';
-						echo '</div><!-- /cpdo-variation-name -->';
-						echo '</div><!-- /cpdo-variation-info -->';
-					}
-				}
-
-				/*
-				 * Overrides for standard CC / WC behavior
-				 */
-				function cpdo_add_to_cart_redirect() {
-					return wc_get_checkout_url();
-				}
-
-				function cpdo_cart_button_text() {
-					return __( 'Donate Now', 'cp-donations' );
-				}
-
-				function cpdo_add_class_to_body( $classes ) {
-					if( is_checkout() ) {
-						$classes[] = 'cpdo_checkout';
-					}
-					return $classes;
-				}
-
-				function cpdo_remove_quantity_field( $return, $product ) {
-					return true;
-				}
-
-				function cpdo_empty_cart() {
-					if ( isset( $_GET['empty_cart'] ) && 'yes' === esc_html( $_GET['empty_cart'] ) ) {
-						WC()->cart->empty_cart();
-
-						$referer  = wp_get_referer() ? esc_url( remove_query_arg( 'empty_cart' ) ) : wc_get_cart_url();
-						wp_safe_redirect( $referer );
-					}
-				}
-
-			}
-
-			new CP_Donations();
+	public function cpd_define_constants() {
+		if ( ! defined( 'CC_PLUGIN_DIR' ) ) {
+			define( 'CC_PLUGIN_DIR', plugin_dir_path( __DIR__ ) . 'classic-commerce' );
+		}
+		if ( ! defined( 'CPD_PLUGIN_FILE' ) ) {
+			define( 'CPD_PLUGIN_FILE', __FILE__ );
+		}
+		if ( ! defined( 'CPD_VERSION' ) ) {
+			define( 'CPD_VERSION', $this->version );
 		}
 	}
-}
 
 
-function startsWith($string, $startString) {
-	$len = strlen($startString);
-	return (substr($string, 0, $len) === $startString);
-}
-
-
-// Override Template Parts. Props @ozfiddler/@simplycomputing
-function override_woocommerce_template_part( $template, $slug, $name ) {
-	$template_directory = plugin_dir_path( __FILE__ ) . 'templates/';
-	if ( $name ) {
-		$path = $template_directory . "{$slug}-{$name}.php";
-	} else {
-		$path = $template_directory . "{$slug}.php";
+	public function plugin_url() {
+		return untrailingslashit( plugins_url( '/', CPD_PLUGIN_FILE ) );
 	}
-	return file_exists( $path ) ? $path : $template;
-}
-add_filter( 'wc_get_template_part', 'override_woocommerce_template_part', 10, 3 );
 
 
-// Override Templates. Props @ozfiddler/@simplycomputing
-function override_woocommerce_template( $template, $template_name, $template_path ) {
-	$template_directory = plugin_dir_path( __FILE__ ) . 'templates/';
-	$path = $template_directory . $template_name;
-	return file_exists( $path ) ? $path : $template;
-}
-add_filter( 'woocommerce_locate_template', 'override_woocommerce_template', 10, 3 );
-
-
-if ( ! function_exists( 'cc_active_notice' ) ) {
-	function cc_active_notice() {
-		echo '<div class="notice error is-dismissible">';
-		echo '<p><strong>';
-		echo esc_html__( 'Donations for ClassicPress: Classic Commerce must be installed and active.', 'cp-donations' );
-		echo '</strong></p>';
-		echo '</div>';
+	public function plugin_path() {
+		return untrailingslashit( plugin_dir_path( CPD_PLUGIN_FILE ) );
 	}
-}
 
 
-if ( ! function_exists( 'cpdo_notice_wc' ) ) {
-	function cpdo_notice_wc() {
-		?>
-		<div class="error">
-			<p><strong>Donations for ClassicPress</strong> requires Classic Commerce version 1.0.0 or greater.</p>
-		</div>
-		<?php
+	public function cpd_requirements() {
+		if ( ! class_exists( 'WC_Product' ) || ! function_exists( 'WC' ) ) {
+			$notice = sprintf(__( 'Donations for ClassicPress: Classic Commerce must be installed and active.', 'cp_donations_domain' ) );
+			CPD_Admin_Notices::add_notice( $notice, 'error' );
+			return false;
+		}
+
+		if ( ! file_exists( WP_PLUGIN_DIR . '/classic-commerce/classic-commerce.php' ) || !is_plugin_active( 'classic-commerce/classic-commerce.php' ) ) {
+			$notice = sprintf(__( 'Donations for ClassicPress: Classic Commerce must be installed and active.', 'cp_donations_domain' ) );
+			CPD_Admin_Notices::add_notice( $notice, 'error' );
+			return false;
+		}
+
+		// Check ClassicPress version.
+		if ( version_compare( get_bloginfo( 'version' ), $this->min_cp_version, '<' ) ) {
+			$notice = sprintf(
+				// Translators: %s ClassicPress version number.
+				__( '<strong>CP Donations requires ClassicPress version %s or above. Please update ClassicPress.', 'cp_donations_domain' ),
+				$this->min_cp_version,
+			);
+			CPD_Admin_Notices::add_notice( $notice, 'error' );
+			return false;
+		}
+
+		// Check PHP version.
+		if ( version_compare( phpversion(), $this->php_version, '<' ) ) {
+			$notice = sprintf(
+				// Translators: %s PHP version number.
+				__( 'CP Donations requires PHP version %s or above. Please update PHP.', 'cp_donations_domain' ),
+				$this->php_version
+			);
+			CPD_Admin_Notices::add_notice( $notice, 'error' );
+			return false;
+		}
+
+		return true;
 	}
+
+
+	public function cpd_includes() {
+		include_once $this->plugin_path() . '/includes/class-cpd-custom-amount-helpers.php';
+
+		// Admin
+		if ( is_admin() ) {
+			include_once $this->plugin_path() . '/includes/class-cpd-admin-notices.php';
+			include_once $this->plugin_path() . '/includes/class-cpd-custom-amount-admin.php';
+			include_once $this->plugin_path() . '/includes/class-cpd-custom-amount-product-meta.php';
+		}
+		include_once $this->plugin_path() . '/includes/class-cpd-custom-amount-display.php';
+		include_once $this->plugin_path() . '/includes/class-cpd-custom-amount-shortcode.php';
+		include_once $this->plugin_path() . '/includes/class-cpd-custom-amount-cart.php';
+
+		// TODO: Add Update Client
+		include_once $this->plugin_path() . '/includes/class-cpd-update-client.php';
+	}
+
+
+	private function cpd_main_actions() {
+		add_filter( 'woocommerce_add_to_cart_redirect', array( $this, 'cpd_add_to_cart_redirect' ) );
+		add_action( 'wp_loaded', array( $this, 'cpd_woocommerce_empty_cart_action' ), 20 );
+		add_filter( 'wc_add_to_cart_message_html', '__return_null' );
+		add_filter( 'default_checkout_billing_country', '__return_empty_string' );
+	}
+
+
+	// Redirects to checkout page after add to cart / donate button clicked
+	function cpd_add_to_cart_redirect() {
+		global $woocommerce;
+        return wc_get_checkout_url();
+	}
+
+
+	function cpd_woocommerce_empty_cart_action() {
+		if ( isset( $_GET['empty_cart'] ) && 'yes' === esc_html( $_GET['empty_cart'] ) ) {
+			WC()->cart->empty_cart();
+			$referer  = wp_get_referer() ? esc_url( remove_query_arg( 'empty_cart' ) ) : wc_get_cart_url();
+			wp_safe_redirect( $referer );
+		}
+	}
+
+}  // End class
+
+
+
+// Returns the main instance of CP_Donations.
+function CP_Donations() {
+	return CP_Donations::instance();
 }
+// Let's go.
+CP_Donations();
+
