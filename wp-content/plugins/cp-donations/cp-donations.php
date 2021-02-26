@@ -3,7 +3,7 @@
  * Plugin Name: Donations for ClassicPress
  * Plugin URI: https://github.com/timbocode/cc-donations
  * Description: Frontend interface for donations and subscriptions
- * Version: 2.0.0
+ * Version: 2.0.1
  * Author: timbocode
  * Author URI: https://github.com/timbocode
  * Text Domain: cp_donations_domain
@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class CP_Donations {
 
-	public $version = '2.0.0';
+	public $version = '2.0.1';
 	public $db_version = '1';
 	private $min_cp_version = '1.0.2';
 	private $php_version = '7.0';
@@ -101,8 +101,8 @@ class CP_Donations {
 		if ( version_compare( get_bloginfo( 'version' ), $this->min_cp_version, '<' ) ) {
 			$notice = sprintf(
 				// Translators: %s ClassicPress version number.
-				__( '<strong>CP Donations requires ClassicPress version %s or above. Please update ClassicPress.', 'cp_donations_domain' ),
-				$this->min_cp_version,
+				__( 'CP Donations requires ClassicPress version %s or above. Please update ClassicPress.', 'cp_donations_domain' ),
+				$this->min_cp_version
 			);
 			CPD_Admin_Notices::add_notice( $notice, 'error' );
 			return false;
