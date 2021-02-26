@@ -1,3 +1,6 @@
+#### v 2.0.1 / 2021-02-26
+* fix for PHP Parse error:  syntax error, unexpected ')' in cp-donations.php on line 106
+
 #### v 2.0.0 / 2021-02-17
 * Addition of custom amount feature to allow donations of any amount.
 * Shortcode now accepts product ID as parameter.
