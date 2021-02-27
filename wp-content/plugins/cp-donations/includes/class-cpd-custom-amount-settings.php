@@ -49,6 +49,26 @@ if ( ! class_exists( 'CPD_Custom_Amount_Admin_Settings' ) ) {
 						'id'   => 'cpd_options_general',
 					],
 					[
+						'title' => __( 'Page setup', 'cp_donations_domain' ),
+						'desc'  => __( 'Configure pages to be used in CP Donations.', 'cp_donations_domain' ),
+						'type'  => 'title',
+						'id'    => 'cpd_page_options',
+					],
+					[
+						'title'    => __( 'Donations page', 'cp_donations_domain' ),
+						'desc'     => __( 'Page contents: [cp_donations product_id="xxx"]', 'cp_donations_domain' ),
+						'id'       => 'cpd_donations_page',
+						'type'     => 'single_select_page',
+						'default'  => '',
+						'class'    => 'wc-enhanced-select-nostd',
+						'css'      => 'min-width:300px;',
+						'desc_tip' => true,
+					],
+					[
+						'type' => 'sectionend',
+						'id'   => 'cpd_page_options',
+					],
+					[
 						'title' => __( 'Custom Amount Setup', 'cp_donations_domain' ),
 						'type'  => 'title',
 						'desc'  => __( 'Settings specific to custom amounts', 'cp_donations_domain' ),

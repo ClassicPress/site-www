@@ -3,7 +3,7 @@
  * Plugin Name: Donations for ClassicPress
  * Plugin URI: https://github.com/timbocode/cc-donations
  * Description: Frontend interface for donations and subscriptions
- * Version: 2.0.1
+ * Version: 2.1.0
  * Author: timbocode
  * Author URI: https://github.com/timbocode
  * Text Domain: cp_donations_domain
@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class CP_Donations {
 
-	public $version = '2.0.1';
+	public $version = '2.1.0';
 	public $db_version = '1';
 	private $min_cp_version = '1.0.2';
 	private $php_version = '7.0';
@@ -146,13 +146,14 @@ class CP_Donations {
 		add_action( 'wp_loaded', array( $this, 'cpd_woocommerce_empty_cart_action' ), 20 );
 		add_filter( 'wc_add_to_cart_message_html', '__return_null' );
 		add_filter( 'default_checkout_billing_country', '__return_empty_string' );
+		add_filter( 'woocommerce_locate_template', array( $this, 'override_woocommerce_template' ), 10, 3 );
+		add_filter( 'wc_get_template_part', array( $this, 'override_woocommerce_template_part' ), 10, 3 );
 	}
 
 
 	// Redirects to checkout page after add to cart / donate button clicked
 	function cpd_add_to_cart_redirect() {
-		global $woocommerce;
-        return wc_get_checkout_url();
+		return wc_get_checkout_url();
 	}
 
 
@@ -162,6 +163,27 @@ class CP_Donations {
 			$referer  = wp_get_referer() ? esc_url( remove_query_arg( 'empty_cart' ) ) : wc_get_cart_url();
 			wp_safe_redirect( $referer );
 		}
+	}
+
+
+
+	// Override Template Parts. Props @ozfiddler
+	function override_woocommerce_template_part( $template, $slug, $name ) {
+		$template_directory = plugin_dir_path( __FILE__ ) . 'templates/';
+		if ( $name ) {
+			$path = $template_directory . "{$slug}-{$name}.php";
+		} else {
+			$path = $template_directory . "{$slug}.php";
+		}
+		return file_exists( $path ) ? $path : $template;
+	}
+
+
+	// Override Templates. Props @ozfiddler
+	function override_woocommerce_template( $template, $template_name, $template_path ) {
+		$template_directory = plugin_dir_path( __FILE__ ) . 'templates/';
+		$path = $template_directory . $template_name;
+		return file_exists( $path ) ? $path : $template;
 	}
 
 }  // End class

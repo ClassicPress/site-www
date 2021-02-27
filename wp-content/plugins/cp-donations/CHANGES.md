@@ -1,3 +1,10 @@
+#### v 2.1.0 / 2021-02-27
+* Fix for donations page redirecting back to itself after "add to cart" button clicked
+* Fixes bug where minimum amount text was being displayed for product variations with no minimum amount
+* Add various useful features on the checkout page such as a "Back to donations page" link and clear cart link
+* Add template overrides
+* Update README.md
+
 #### v 2.0.1 / 2021-02-26
 * fix for PHP Parse error:  syntax error, unexpected ')' in cp-donations.php on line 106
 
