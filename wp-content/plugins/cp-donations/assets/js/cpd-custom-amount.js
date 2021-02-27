@@ -429,7 +429,7 @@ jQuery.fn.cpd_get_script_object = function() {
 			form.$el.on( 'reset_image', self.resetVariations );
 			form.$el.on( 'click', '.reset_variations', self.resetVariations );
 		}
-console.log(cpd);
+
 		// When variation is found, decide if it is CPD or not.
 		this.onFoundVariation = function( event, variation ) {
 			// Hide any existing error message.

@@ -14,12 +14,15 @@ Instead of showing the donation options as a dropdown, this plugin converts them
 
 ## Minimum Requirements
 
-- ClassicPress 1.0.2
-- PHP 7.0
+- ClassicPress 1.2.0
+- Classic Commerce 1.0.3
+- PHP 7.2
 
 ## Settings
 
 This plugin adds a CP Donations tab in Classic Commerce settings:
+
+**Donations page** - Select the page to be used as the main Donations page where the shortcode (see below) is placed.
 
 **Checkout message (US Only)** - Checkout message shown to visitors from the United States only. This is intended to be a note about donations being tax-deductible.
 
@@ -34,7 +37,7 @@ This plugin adds a CP Donations tab in Classic Commerce settings:
 ## Setting up a donation product
 
 1. Create a variable product.
-2. Add product to the Donations category.
+2. Add product to the Donations category (create category if necessary).
 3. Set up attributes for the donation amounts. For example:
 
 `Recurring: $5/month | Recurring: $15/month | Recurring: $30/month | Recurring: $60/month | Recurring: $90/month | Recurring: $custom/month | One-time: $5 | One-time: $15 | One-time: $30 | One-time: $60 | One-time: $90 | One-time: $custom`
@@ -43,6 +46,7 @@ This plugin adds a CP Donations tab in Classic Commerce settings:
 5. On the variations tab, select "`Create variations from all attributes`" from the dropdown.
 6. Set the SKU to something beginning with '`recurring_`' or '`once_`', depending on whether this is a recurring or one-off variation.
 7. For variations with a custom amount, select the "`Custom amount`" checkbox. This then replaces the "`Regular price`" and "`Sale price`" input boxes with a single "`Minimum amount`" box.
+8. Enter a minimum amount for custom amount variations.
 
 The minimum amount can be used to prevent customers making a donation of a value that is less than it costs to process the donation.
 

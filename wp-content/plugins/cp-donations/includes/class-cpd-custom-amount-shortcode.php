@@ -311,7 +311,7 @@ class CPD_Custom_Amount_Shortcode {
 			foreach ($don_data as $child ) {
 
 				$child_product		= wc_get_product( $child );
-				$is_custom_amount	= $child_product->get_meta( 'cpd_custom_amount_enabled', true );
+				$is_custom_amount	= $child_product->get_meta( 'cpd_custom_amount_enabled' );
 				$custom_html		= '';
 				$custom_min_html	= '';
 				$data_attrs_arr		= [];
@@ -321,9 +321,8 @@ class CPD_Custom_Amount_Shortcode {
 					continue;
 				}
 
-				$child_attrs		= htmlspecialchars( json_encode( $child_product->get_variation_attributes() ), ENT_QUOTES, 'UTF-8' );
-
-				if ( $is_custom_amount ) {
+				if ( $is_custom_amount == 'yes' ) {
+					$child_attrs	= htmlspecialchars( json_encode( $child_product->get_variation_attributes() ), ENT_QUOTES, 'UTF-8' );
 					$min_amount		= $child_product->get_meta( 'cpd_custom_amount_min', true );
 					$currency		= get_woocommerce_currency_symbol();
 					$permonth		= '';
@@ -332,7 +331,7 @@ class CPD_Custom_Amount_Shortcode {
 						'sku'			=> $child_product->get_sku(),
 						'attrs'			=> $child_attrs,
 						'price'			=> wc_get_price_to_display( $child_product ),
-						'custom-amount'	=> $child_product->get_meta( 'cpd_custom_amount_enabled', true ),
+						'custom-amount'	=> $child_product->get_meta( 'cpd_custom_amount_enabled' ),
 						'min-amount'	=> $min_amount,
 					];
 					$data_attrs		= apply_filters( 'cpd_data_attributes', $data_attrs_arr, $child_product );
@@ -346,10 +345,13 @@ class CPD_Custom_Amount_Shortcode {
 					$html .= '<div class="cpd-variation-selector"><input value="custom" class="custom-amount-selector" type="radio" name="cpd_variation_' . $product_id . '"/></div>';
 					$html .= '<div class="cpd-variation-info">';
 					$html .= '<div class="cpd-variation-name">' . esc_attr( $child_name ) . '</div>';
-					$html .= '<div class="cpd-custom-amount-min">(Minimum amount: ' . $currency . $min_amount . ')</div>';
+					if ( $min_amount ) {
+						$html .= '<div class="cpd-custom-amount-min">(Minimum amount: ' . $currency . $min_amount . ')</div>';
+					}
 					$html .= '</div>';
 					$html .= '</div>';
 				} else {
+					$child_attrs	= htmlspecialchars( json_encode( $child_product->get_variation_attributes() ), ENT_QUOTES, 'UTF-8' );
 					$data_attrs_arr	= [
 						'id'			=> $child,
 						'sku'			=> $child_product->get_sku(),
