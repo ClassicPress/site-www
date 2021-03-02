@@ -9,8 +9,71 @@
     */
 
     "use strict";
-    
+	function getSelector(el){
+	  var $el = jQuery(el);
+
+	  var id = $el.attr("id");
+	  if (id) { //"should" only be one of these if theres an ID
+	      return "#"+ id;
+	  }
+
+	  var selector = $el.parents()
+	              .map(function() { return this.tagName; })
+	              .get().reverse().join(" ");
+
+	  if (selector) {
+	      selector += " "+ $el[0].nodeName;
+	  }
+
+	  var classNames = $el.attr("class");
+	  if (classNames) {
+	      selector += "." + jQuery.trim(classNames).replace(/\s/gi, ".");
+	  }
+
+	  var name = $el.attr('name');
+	  if (name) {
+	      selector += "[name='" + name + "']";
+	  }
+	  if (!name){
+	      var index = $el.index();
+	      if (index) {
+	          index = index + 1;
+	          selector += ":nth-child(" + index + ")";
+	      }
+	  }
+	  return selector;
+	}
+	function enableMobileMenuElementPicker(){
+		const p = new Picker({
+		    elm: document.getElementById('elm1'),
+		    mode: 'cover',
+		    excludeElmName: ['body'],
+		    events: [{
+		        key: 'contextmenu',
+		        fn(event) {
+		            event.preventDefault();
+		        },
+		    }],
+		    onInit() {
+		    },
+		    onClick(event) {
+		      var selector = getSelector(event.target).toLowerCase();
+		      window.parent.receivePickedElement(selector);
+		      jQuery(selector).hide();
+		    },
+		    onHover(event) {
+		    },
+		});
+
+	}
+
     jQuery( document ).ready( function($) {
+
+      const urlParams = new URLSearchParams( window.location.search );
+
+      if ( urlParams.get( 'mobmenu-action' ) == 'find-element' ) {
+        enableMobileMenuElementPicker();
+      }
 
       function mobmenuOpenSubmenus( menu ) {
         var submenu = $(menu).parent().next();
@@ -61,7 +124,8 @@
       // Double Check the the menu display classes where added to the body.
       var menu_display_type = $( '.mob-menu-header-holder' ).attr( 'data-menu-display' );
 
-      if ( menu_display_type != '' && !$( 'body' ).hasClass( menu_display_type ) ) {
+      
+      if ( menu_display_type != '' && !$( 'body' ).hasClass( 'mob-menu-slideout' ) && !$( 'body' ).hasClass( 'mob-menu-slideout-over' ) && !$( 'body' ).hasClass( 'mob-menu-slideout-top' ) && !$( 'body' ).hasClass( 'mob-menu-overlay' ) ) {
         $( 'body' ).addClass( menu_display_type );
       }
 
@@ -128,10 +192,13 @@
 
       $( document ).on( 'click', '.mobmenu-trigger-action', function(e){
         e.preventDefault();
+        
         var targetPanel = $( this ).attr( 'data-panel-target' );
-
-        if ( 'mobmenu-filter-panel' !==  targetPanel ) {
-          mobmenuOpenPanel( targetPanel );
+        
+        if ( ! $( 'body' ).hasClass( 'show-nav-left' ) &&  ! $( 'body' ).hasClass( 'show-nav-right' )  ) {
+          if ( 'mobmenu-filter-panel' !==  targetPanel ) {
+            mobmenuOpenPanel( targetPanel );
+          }
         }
 
       });
@@ -161,7 +228,6 @@
      
       $('.mobmenu a[href*="#"], .mobmenu-panel a[href*="#"]')
         // Remove links that don't actually link to anything
-        .not('[href="#"]')
         .not('[href="#0"]')
         .on( 'click', function(event) {
           // On-page links  
@@ -173,19 +239,29 @@
           &&
           $(this).parents('.mobmenu-content').length > 0
         ) {
-          // Figure out element to scroll to
-          var target = $(this.hash);
-          target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+          // Figure out element to scroll to.
+          var target;
+
+          try {
+	          target = decodeURIComponent( this.hash );
+          } catch(e) {
+ 	          target = this.hash;
+          }
+
+          $( 'html' ).css( 'overflow', '' );
+
           // Does a scroll target exist?
           if (target.length) {
-            if ( 0 < $(this).parents('.mobmenu-left-panel').length ) {
-              mobmenuClosePanel( 'mobmenu-left-panel' );
-            } else {
-              mobmenuClosePanel( 'mobmenu-right-panel' );
-            }
 
-            $( 'html' ).css( 'overflow', '' );
-  
+            
+          if ( 0 < $(this).parents('.mobmenu-left-panel').length ) {
+            mobmenuClosePanel( 'mobmenu-left-panel' );
+          } else {
+            mobmenuClosePanel( 'mobmenu-right-panel' );
+          }
+
+            target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+
             $('body,html').animate({
               scrollTop: target.offset().top - $(".mob-menu-header-holder").height() - 50
             }, 1000);
@@ -193,12 +269,18 @@
         }
       });
       function mobmenuClosePanel( target ) {
+
         $( '.' + target ).toggleClass( 'show-panel' );
         $( 'html' ).removeClass( 'show-mobmenu-filter-panel' );
         $( 'body' ).removeClass( 'show-nav-right' );
         $( 'body' ).removeClass( 'show-nav-left' );
         $( 'html' ).removeClass( 'mob-menu-no-scroll' ); 
-    
+
+        setTimeout(function(){
+          $('.mob-menu-sliding-menus [data-menu-level]').scrollTop( '0' );
+          $('.mobmenu-content .show-sub-menu').removeClass( 'show-sub-menu' );
+        }, 400);
+
       }
     
       function mobmenuOpenPanel( target) {
@@ -216,5 +298,141 @@
     
       }
     });
+
+window.Picker = class Picker {
+  constructor(options = {}) {
+      this.elm = options.elm || document.querySelector('body');
+      this.mode = options.mode || 'target';
+      this.excludeElmName = options.excludeElmName || [];
+      this.switch = typeof options.switch === 'boolean' ? options.switch : true;
+
+      this.events = options.events || [];
+      this.onInit = options.onInit;
+      this.onClick = options.onClick ? options.onClick.bind(this) : null;
+      this.onHover = options.onHover ? options.onHover.bind(this) : null;
+
+
+      // Internal handler
+      this.fn_bind_clickHandle = null;
+      this.fn_bind_hoverHandle = null;
+      this.fn_bind_contextmenuHandle = null;
+      this._init();
+  }
+  on() {
+      this.switch = true;
+  }
+  off() {
+      this.switch = false;
+      this._removeTargetShowPos();
+      this._removeCoverShowPos();
+  }
+  changeMode(mode) {
+      let modeArr = ['cover', 'target'];
+      if (modeArr.includes(mode)) {
+          this.mode = mode;
+          this._removeTargetShowPos();
+          this._removeCoverShowPos();
+      } else {
+          console.error(`Mode error, only includes [ ${modeArr.join(" | ")} ]`);
+      }
+  }
+  destroy() {
+      this.events.forEach((eo) => {
+          eo.fn_bind = eo.fn.bind(this);
+          this.elm.removeEventListener(eo.key, this[`_${eo.key}_Handle`], false);
+      });
+
+      this.elm.removeEventListener('mouseover', this.fn_bind_hoverHandle, false);
+      this.elm.removeEventListener('click', this.fn_bind_clickHandle, false);
+
+      this._removeTargetShowPos();
+      document.querySelector("#_picker_cover_wrap_box").remove();
+  }
+  _init() {
+      let wrapDom = document.createElement('div');
+      wrapDom.setAttribute("id", "_picker_cover_wrap_box");
+      wrapDom.innerHTML = '<svg></svg>';
+      document.body.appendChild(wrapDom);
+      this._initEvent();
+      this.onInit && this.onInit();
+  }
+  _initEvent() {
+      this.events.forEach((eo) => {
+          this[`_${eo.key}_Handle`] = (event) => {
+              if (this._triggerEvent(event) === false) return;
+              eo.fn && eo.fn(event);
+          };
+          eo.fn_bind = this[`_${eo.key}_Handle`].bind(this);
+          this.elm.addEventListener(eo.key, this[`_${eo.key}_Handle`], false);
+      });
+
+      this.fn_bind_hoverHandle = this._hoverHandle.bind(this);
+      this.fn_bind_clickHandle = this._clickHandle.bind(this);
+
+      this.elm.addEventListener('mouseover', this.fn_bind_hoverHandle, false);
+      this.elm.addEventListener('click', this.fn_bind_clickHandle, false);
+
+  }
+  _triggerEvent(event) {
+      let tipsDom = document.querySelector("#_pick_tips_content");
+      if (
+          this.switch &&
+          !this.excludeElmName.includes(event.target.localName.toLocaleLowerCase()) &&
+          !(tipsDom ? tipsDom.contains(event.target) : 0)
+      ) {
+          event.stopPropagation();
+          event.preventDefault();
+          return true;
+      } else {
+          return false;
+      }
+  }
+  _hoverHandle(event) {
+      if (this._triggerEvent(event) === false) return;
+      switch (this.mode) {
+          case 'cover':
+              this._coverShowPos(event);
+              break;
+          case 'target':
+              this._targetShowPos(event);
+              break;
+      }
+      this.onHover && this.onHover(event);
+  }
+  _clickHandle(event) {
+      if (this._triggerEvent(event) === false) return;
+      this.onClick && this.onClick(event);
+  }
+  _targetShowPos(event) {
+      this._removeTargetShowPos();
+      if (event.target.localName === 'body') return;
+      event.target.classList.add("_picker_target_elm");
+  }
+  _removeTargetShowPos() {
+      document.querySelectorAll("._picker_target_elm").forEach((elm) => {
+          elm.classList.remove("_picker_target_elm");
+      });
+  }
+  _coverShowPos(event) {
+      let elm = event.target;
+      let W_W = window.screen.availWidth;
+      let W_H = window.screen.availHeight;
+      let pos = elm.getBoundingClientRect();
+      let p = {
+          tX: pos.left > 0 ? pos.left : 0,
+          tY: pos.top > 0 ? pos.top : 0,
+          w: pos.right - pos.left,
+          h: pos.bottom - pos.top,
+      };
+      let path_W = `M 0 0 h ${W_W} v ${W_H} h -${W_W} Z`;
+      let path_box = `M ${p.tX} ${p.tY} h ${p.w} v ${p.h} h -${p.w} Z`;
+      let elm_path1 = `<path d="${path_W} ${path_box}"></path>`;
+      let elm_path2 = `<path d="${path_box}"></path>`;
+      document.querySelector("#_picker_cover_wrap_box svg").innerHTML = elm_path1 + elm_path2;
+  }
+  _removeCoverShowPos() {
+      document.querySelector("#_picker_cover_wrap_box svg").innerHTML = '';
+  }
+};
   
 

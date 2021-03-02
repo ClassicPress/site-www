@@ -3,11 +3,11 @@
 /**
  * Plugin Name: Mobile Menu
  * Description: An easy to use WordPress responsive mobile menu. Keep your mobile visitors engaged.
- * Version: 2.8
+ * Version: 2.8.1.8.1
  * Plugin URI: https://www.wpmobilemenu.com/
  * Author: Rui Guerreiro
  * Author URI: https://www.jedipress.com/
- * Tested up to: 5.3
+ * Tested up to: 5.6
  * Text Domain: mobile-menu
  * Domain Path: /languages/
  * License: GPLv2
@@ -16,7 +16,7 @@
 if ( !defined( 'ABSPATH' ) ) {
     die;
 }
-define( 'WP_MOBILE_MENU_VERSION', '2.8' );
+define( 'WP_MOBILE_MENU_VERSION', '2.8.1.8.1' );
 define( 'WP_MOBILE_MENU_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WP_MOBILE_MENU_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 if ( !class_exists( 'WP_Mobile_Menu' ) ) {
@@ -82,6 +82,8 @@ if ( !class_exists( 'WP_Mobile_Menu' ) ) {
             add_action( 'wp_loaded', array( $this->mobmenu_core, 'register_sidebar' ) );
             // Register Menus.
             add_action( 'init', array( $this->mobmenu_core, 'register_menus' ) );
+            // Find Elements to Hide.
+            add_action( 'init', array( $this->mobmenu_core, 'find_elements_mobmenu' ) );
             // Load frontend assets.
             if ( !is_admin() ) {
                 add_action( 'init', array( $this, 'load_frontend_assets' ) );
@@ -170,8 +172,13 @@ if ( !class_exists( 'WP_Mobile_Menu' ) ) {
             $mobmenu_options = TitanFramework::getInstance( 'mobmenu' );
             $is_mobile_only = $mobmenu_options->getOption( 'only_mobile_devices' );
             $is_testing_mode = $mobmenu_options->getOption( 'only_testing_mode' );
-            
-            if ( $is_testing_mode && current_user_can( 'administrator' ) || !$is_testing_mode && (!$is_mobile_only || $is_mobile_only && wp_is_mobile()) ) {
+            $mobmenu_action = '';
+
+			if ( isset($_GET['mobmenu-action']) ) {
+				$mobmenu_action =  $_GET['mobmenu-action'];
+			}
+
+            if ( $mobmenu_action == 'find-element' || $is_testing_mode && current_user_can( 'administrator' ) || !$is_testing_mode && (!$is_mobile_only || $is_mobile_only && wp_is_mobile()) ) {
                 // Enqueue Html to the Footer.
                 add_action( 'wp_footer', array( $this->mobmenu_core, 'load_menu_html_markup' ) );
                 // Frontend Scripts.
@@ -204,6 +211,7 @@ if ( !class_exists( 'WP_Mobile_Menu' ) ) {
             add_action( 'wp_ajax_dismiss_wp_mobile_notice', array( $this->mobmenu_core, 'dismiss_wp_mobile_notice' ) );
             add_action( 'wp_ajax_nopriv_dismiss_wp_mobile_notice', array( $this->mobmenu_core, 'dismiss_wp_mobile_notice' ) );
             add_action( 'wp_ajax_save_menu_item_icon', array( $this->mobmenu_core, 'save_menu_item_icon' ) );
+            add_action( 'wp_ajax_dismiss_wp_mobile_upgrade_notice', array( $this->mobmenu_core, 'dismiss_wp_mobile_upgrade_notice' ) );
             add_action( 'wp_ajax_nopriv_save_menu_item_icon', array( $this->mobmenu_core, 'save_menu_item_icon' ) );
             add_action( 'wp_ajax_mobile_menu_search__premium_only', array( $this->mobmenu_core, 'mobile_menu_search__premium_only' ) );
             add_action( 'wp_ajax_nopriv_mobile_menu_search__premium_only', array( $this->mobmenu_core, 'mobile_menu_search__premium_only' ) );
@@ -247,6 +255,23 @@ if ( !class_exists( 'WP_Mobile_Menu' ) ) {
     
     }
 }
-// Instanciate the WP_Mobile_Menu.
-$mobile_menu_instance = new WP_Mobile_Menu();
-$mobile_menu_instance->init_mobile_menu();
+$current_options = get_option( 'mobmenu_options' );
+$admin_options = unserialize( $current_options );
+
+if ( isset( $admin_options['only_mobile_devices'] ) ) {
+    $is_mobile_only = $admin_options['only_mobile_devices'];
+} else {
+    $is_mobile_only = false;
+}
+
+$mobmenu_action = '';
+
+if ( isset($_GET['mobmenu-action']) ) {
+    $mobmenu_action =  $_GET['mobmenu-action'];
+}
+
+if ( $mobmenu_action == 'find-element' || is_admin() || (!$is_mobile_only || $is_mobile_only && wp_is_mobile()) ) {
+    // Instanciate the WP_Mobile_Menu.
+    $mobile_menu_instance = new WP_Mobile_Menu();
+    $mobile_menu_instance->init_mobile_menu();
+}

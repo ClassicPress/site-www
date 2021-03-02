@@ -650,6 +650,7 @@ if ( ! function_exists( 'titan_get_googlefonts' ) ) {
 			array( 'name' => 'Russo One', 'subsets' => array( 'latin-ext', 'latin', 'cyrillic' ), 'variants' => array( '400' ) ),
 			array( 'name' => 'Ruthie', 'subsets' => array( 'latin-ext', 'latin' ), 'variants' => array( '400' ) ),
 			array( 'name' => 'Rye', 'subsets' => array( 'latin-ext', 'latin' ), 'variants' => array( '400' ) ),
+			array( 'name' => 'Sarabun', 'subsets' => array( 'latin-ext', 'latin', 'thay' ), 'variants' => array( '400' ) ),
 			array( 'name' => 'Sacramento', 'subsets' => array( 'latin-ext', 'latin' ), 'variants' => array( '400' ) ),
 			array( 'name' => 'Sahitya', 'subsets' => array( 'latin', 'devanagari' ), 'variants' => array( '400', '700' ) ),
 			array( 'name' => 'Sail', 'subsets' => array( 'latin' ), 'variants' => array( '400' ) ),

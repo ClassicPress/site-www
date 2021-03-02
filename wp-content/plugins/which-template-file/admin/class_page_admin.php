@@ -91,11 +91,6 @@ abstract class class_page_admin {
 	function display_links_footer() {
         $this->set_links_footer();
         
-        // Pour ne pas afficher de lien vers la page en cours
-        if (isset($this->links_footer[_URL_COURANTE])) {
-            unset($this->links_footer[_URL_COURANTE]);
-        }
-        
 		$count_links = count($this->links_footer);
 		if ($count_links) {
             echo '<div id="links_footer_container" style="padding:10px 3px;margin:12px 3px;">';
