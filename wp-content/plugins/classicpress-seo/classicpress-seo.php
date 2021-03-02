@@ -3,7 +3,7 @@
  * Plugin Name:          Classic SEO
  * Plugin URI:           https://github.com/ClassicPress-plugins/classicpress-seo
  * Description:          Classic SEO is the first SEO plugin built specifically to work with ClassicPress. The plugin contains many essential SEO tools to help optimize your website.
- * Version:              1.0.0
+ * Version:              2.0.1
  * Author:               ClassicPress
  * Author URI:           https://github.com/ClassicPress-plugins/classicpress-seo
  * License:              GPL v2 or later
@@ -33,14 +33,14 @@ class Classic_SEO {
 	 *
 	 * @var string
 	 */
-	public $version = '1.0.0';
+	public $version = '2.0.1';
 	
 	/**
 	 * Classic SEO database version.
 	 *
 	 * @var string
 	 */
-	public $db_version = '1';
+	public $db_version = '2';
 
 	/**
 	 * Minimum version of ClassicPress required to run Classic SEO.
@@ -369,13 +369,6 @@ class Classic_SEO {
 	 */
 	public function fix_update_manager_images( $folder ) {
 		return preg_replace( '/' . basename( CPSEO_PATH ) . '\/images$/', basename( CPSEO_PATH ) . '/assets/images', $folder );
-	}
-
-	/**
-	 * Add functionality on succeessful login.
-	 */
-	public function on_login() {
-		\Classic_SEO\Search_Console\Client::get()->refresh_auth_token_on_login();
 	}
 
 	/**
