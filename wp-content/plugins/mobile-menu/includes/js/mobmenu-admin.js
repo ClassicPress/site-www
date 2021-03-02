@@ -19,6 +19,9 @@
  jQuery( document ).ready( function(){
     var editorSettings = null;
 
+    $( '#mobmenu_hide_elements' ).after( '<a href="#" class="mobmenu-find-element">Find element</a>' );
+    $('body').append('<iframe class="mobmenu-preview-iframe" scrolling="no" id="mobmenu-preview-iframe" width="380" height="650" >');
+
     // Initilialize the CodeMirror on the custom CSS option.
     if ( $('#mobmenu_custom_css').length > 0 ) {
         editorSettings = wp.codeEditor.defaultSettings ? _.clone( wp.codeEditor.defaultSettings ) : {};
@@ -447,7 +450,27 @@
                       security: $( this ).parent().attr( 'data-ajax-nonce' )
                       }
               });
-        });
+    });
+
+    $( document ).on( 'click', ' .mobmenu-find-element' , function( e ) {
+
+        e.preventDefault();
+        var href    = window.location.href;
+        var index   = href.indexOf('/wp-admin');
+        var homeUrl = href.substring(0, index);
+        $( '#mobmenu-preview-iframe' ).attr( 'src', homeUrl + '/?mobmenu-action=find-element' );
+        $( '#mobmenu-preview-iframe' ).show();
+    });
+
 });
-    
+
 }(jQuery));
+// In Parent
+function receivePickedElement (el) {
+    var hideElements = jQuery( '#mobmenu_hide_elements').val().trim();
+    if ( hideElements == '' ) { 
+        jQuery( '#mobmenu_hide_elements').val( el );
+    } else {
+        jQuery( '#mobmenu_hide_elements').val( hideElements + ' , ' + el );
+    }
+  }

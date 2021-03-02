@@ -78,6 +78,10 @@ class TitanFrameworkOptionColor extends TitanFrameworkOption {
 			
 			?>
 			<script>
+
+			wpColorPicker_i18n = {"clear":"Clear","defaultString":"Default","pick":"Select Color","current":"Current Color"};
+			wpColorPickerL10n = wpColorPicker_i18n;
+
 			jQuery(document).ready(function() {
 				'use strict';
 				if ( typeof jQuery.fn.wpColorPicker !== 'undefined' ) {

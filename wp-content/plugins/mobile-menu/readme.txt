@@ -3,8 +3,8 @@ Contributors: takanakui, freemius
 link: http://profiles.wordpress.org/takanakui
 Tags:   mobile, navigation, responsive, menu,  responsive menu, mobile menu,  tablet menu, hamburger menu, hamburger, wordpress responsive menu, wordpress mobile menu, canvas menu
 Requires at least: 4.4
-Tested up to: 5.3
-Stable tag: 2.8
+Tested up to: 5.6
+Stable tag: 2.8.1.8.1
 Requires PHP: 5.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -132,6 +132,63 @@ Not available at the moment
  
 == Changelog ==
 
+= 2.8.1.8.1 =
+* Fix! - Remove piece of premium option
+
+= 2.8.1.8 =
+* Fix! - 403 error when quick editing
+* Fix! - Visual tool fix
+
+= 2.8.1.7 =
+* New! - Visual tool to identify menus and other elements to hide
+
+
+= 2.8.1.6.1 =
+* Fix! - Fix error on function that doesn't exist
+
+= 2.8.1.6 =
+* Improvment! - Update Freemius SDK
+* Improvment! - Add CSS to prevent issues with PageOptimize
+* Improvment! - Fix z-index of menu panel
+* Improvment! - Fix Parent link issue
+
+= 2.8.1.5 =
+* Improvment! - Update Freemius SDK
+* Improvment! - Center images inside the menu panels
+* New!        - New filter in the close icon
+* New!        - Hide Elementor Widget by default
+
+= 2.8.1.4 =
+* Improvment! - Massive reduction of the file size of the icon fonts
+* Improvment! - Massive reduction of the plugin zip file size
+* Improvment! - Check if option Enable only in mobile devices is set before using it
+* Improvment! - UX improvments on the settings page
+* Improvment! - Replace free demo content
+* New!        - Add new hooks to the top of the left and right menu panel
+* New!        - Option to cache the Dynamic CSS
+
+= 2.8.1.3 =
+* Fix!        - Fix menu display type bug
+* Fix!        - Fix uncachable dynamic-mobmenu CSS
+* Fix!        - Fix Color Picker admin field compatibility with WP 5.5
+* Improvment! - Exclude Fusion Header
+* Improvment! - Update stable tab and tested up version
+
+= 2.8.1.2 =
+* Fix!        - Fix empty mobmenul-container
+* Fix!        - Fix fonts issues that weren't being applied
+* Fix!        - Validate if the target of an menu URL exists before calling it
+* Fix!        - Remove customizer CSS regeneration
+* Fix!        - Fix the close of the menu panel when clicking in internal links
+* Improvment! - Hide more theme/plugin menus by default (Elementor, Ocean WP, Square theme, Genesis theme)
+* Improvment! - Make the code mirror fields resizable
+* Improvment! - Update Freemius SDK
+* Improvment! - Include Aria Label for acessibility reasons
+* Improvment! - Decode the URL Hash so it can be handled by Javascript.
+
+= 2.8.1.1 =
+* Fix!        - Avoid undefined index when acessing to an array position
+* Fix!        - Fix the header font CSS typo
 
 = 2.8 =
 * New!        - Testing Mode. Only admins can see the new Mobile Menu

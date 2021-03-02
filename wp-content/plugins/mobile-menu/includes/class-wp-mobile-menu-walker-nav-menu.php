@@ -61,6 +61,9 @@ class WP_Mobile_Menu_Walker_Nav_Menu extends Walker_Nav_Menu
         
         $item_output .= '</a>';
         $item_output .= $args->after;
+        // Execute only in the footer menu.
+        if ( $this->footer_li_class !== '' ) {
+        }
         $output .= apply_filters(
             'walker_nav_menu_start_el',
             $item_output,

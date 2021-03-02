@@ -32,16 +32,11 @@ class TitanFrameworkCSS
         $this->frameworkInstance = $frameworkInstance;
         $css = get_option( $this->getCSSSlug() );
         $generated_css = $this->getCSSFilePath();
-        if ( !file_exists( $generated_css ) || get_option( 'mobmenu_latest_update_version', '' ) !== WP_MOBILE_MENU_VERSION ) {
-            add_action( 'admin_init', array( $this, '_generateMissingCSS' ), 10 );
-        }
         // Gather all the options
         add_action( 'tf_create_option_' . $frameworkInstance->optionNamespace, array( $this, 'getOptionsWithCSS' ) );
         // display our CSS
         add_action( 'wp_head', array( $this, 'printCSS' ), 99 );
         add_action( 'wp_enqueue_scripts', array( $this, 'enqueueCSS' ) );
-        // Trigger new compile when theme customizer settings were saved
-        add_action( 'customize_save_after', array( $this, 'generateSaveCSS' ) );
         // Trigger new compile when admin option settings were saved
         add_action( 'tf_admin_options_saved_' . $frameworkInstance->optionNamespace, array( $this, 'generateSaveCSS' ) );
         // Trigger compile when there are no default options saved yet
@@ -100,20 +95,38 @@ class TitanFrameworkCSS
         $mobmenu_options = TitanFramework::getInstance( 'mobmenu' );
         $is_mobile_only = $mobmenu_options->getOption( 'only_mobile_devices' );
         $is_testing_mode = $mobmenu_options->getOption( 'only_testing_mode' );
-        if ( $is_testing_mode && current_user_can( 'administrator' ) || !$is_testing_mode && (!$is_mobile_only || $is_mobile_only && wp_is_mobile()) ) {
+        
+        $mobmenu_action = '';
+
+        if ( isset($_GET['mobmenu-action']) ) {
+            $mobmenu_action =  $_GET['mobmenu-action'];
+        }
+
+        if ( $mobmenu_action == 'find-element' || $is_testing_mode && current_user_can( 'administrator' ) || !$is_testing_mode && (!$is_mobile_only || $is_mobile_only && wp_is_mobile()) ) {
             // Only enqueue the generated css if we have the settings for it.
             
             if ( $this->frameworkInstance->settings['css'] == 'generate' ) {
                 $css = get_option( $this->getCSSSlug() );
                 $generated_css = $this->getCSSFilePath();
                 
-                if ( file_exists( $generated_css ) && get_option( 'mobmenu_latest_update_version', '' ) === WP_MOBILE_MENU_VERSION ) {
-                    wp_enqueue_style(
-                        'tf-compiled-options-' . $this->frameworkInstance->optionNamespace,
-                        $this->getCSSFileURL(),
-                        '',
-                        WP_MOBILE_MENU_VERSION . '-' . rand( 100, 999 )
-                    );
+                if ( file_exists( $generated_css ) ) {
+                    
+                    if ( !$mobmenu_options->getOption( 'cache_dynamic_css', false ) ) {
+                        wp_enqueue_style(
+                            'tf-compiled-options-' . $this->frameworkInstance->optionNamespace,
+                            $this->getCSSFileURL(),
+                            '',
+                            WP_MOBILE_MENU_VERSION . '-' . rand( 100, 999 )
+                        );
+                    } else {
+                        wp_enqueue_style(
+                            'tf-compiled-options-' . $this->frameworkInstance->optionNamespace,
+                            $this->getCSSFileURL(),
+                            '',
+                            WP_MOBILE_MENU_VERSION
+                        );
+                    }
+                
                 } else {
                     $titan = TitanFramework::getInstance( 'mobmenu' );
                     echo  '<style id="dynamic-mobmenu-inline-css" type="text/css">' ;
@@ -159,8 +172,8 @@ class TitanFrameworkCSS
      */
     public function getCSSFilePath()
     {
-        $uploads = wp_upload_dir();
-        $uploadsFolder = trailingslashit( $uploads['basedir'] );
+        $upload_dir = wp_upload_dir();
+        $uploadsFolder = $upload_dir['basedir'] . '/';
         $namespace = $this->frameworkInstance->optionNamespace;
         return apply_filters( "tf_css_get_css_file_path_{$namespace}", $uploadsFolder . $this->getCSSSlug() . '.css' );
     }
@@ -174,7 +187,11 @@ class TitanFrameworkCSS
     private function getCSSFileURL()
     {
         $uploads = wp_upload_dir();
-        return trailingslashit( $uploads['baseurl'] ) . $this->getCSSSlug() . '.css';
+        $url = trailingslashit( $uploads['baseurl'] ) . $this->getCSSSlug() . '.css';
+        if ( is_ssl() ) {
+            $url = str_replace( 'http://', 'https://', $url );
+        }
+        return $url;
     }
     
     /**

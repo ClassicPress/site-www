@@ -44,6 +44,23 @@ class WP_Mobile_Menu_Options
         add_action( 'tf_create_options', array( $this, 'create_plugin_options' ) );
     }
     
+    private function scan_alert()
+    {
+        // For sample purposes, we set this to 1. But typically, you should have another
+        // area in your plugin that increments this number to display a notification on the menu.
+        $num_notifications = 0;
+        // Do all processment to find issues and create alerts
+        if ( $num_notifications > 0 ) {
+            return sprintf(
+                '<span class="update-plugins count-%s"><span class="plugin-count" aria-hidden="true">%s</span><span class="screen-reader-text">%s</span></span>',
+                $num_notifications,
+                $num_notifications,
+                sprintf( _n( '%s notification', '%s notifications', $num_notifications ), $num_notifications )
+            );
+        }
+        return '';
+    }
+    
     /**
      *
      * Create Plugin options.
@@ -92,14 +109,14 @@ class WP_Mobile_Menu_Options
         // Create my admin options panel.
         $panel = $titan->createAdminPanel( array(
             'name'  => 'Mobile Menu Options',
-            'title' => __( 'Mobile Menu Options', 'mobile-menu' ),
+            'title' => __( 'Mobile Menu Options', 'mobile-menu' ) . $this->scan_alert(),
             'icon'  => 'dashicons-smartphone',
         ) );
         // Premium options.
         // Create options in My Meta Box.
         $mobmenu_metabox = $titan->createMetaBox( array(
             'name'      => __( 'WP Mobile Menu Meta options', 'mobile-menu' ),
-            'post_type' => array( 'page' ),
+            'post_type' => array( 'page', 'post' ),
         ) );
         global  $mm_fs ;
         // Create WP Mobile Menu Meta Box options.
@@ -165,6 +182,52 @@ class WP_Mobile_Menu_Options
                 'type' => 'iframe',
                 'url'  => $doc_url,
             ) );
+            $general_tab->createOption( array(
+                'name' => __( 'Main Options', 'mobile-menu' ),
+                'type' => 'heading',
+            ) );
+            // Enable/Disable Left Header Menu.
+            $general_tab->createOption( array(
+                'name'     => __( 'Enable Left Menu', 'mobile-menu' ),
+                'id'       => 'enable_left_menu',
+                'type'     => 'enable',
+                'default'  => true,
+                'desc'     => __( 'Enable or disable the WP Mobile Menu Left Menu.', 'mobile-menu' ),
+                'enabled'  => __( 'On', 'mobile-menu' ),
+                'disabled' => __( 'Off', 'mobile-menu' ),
+            ) );
+            // Left Menu.
+            $general_tab->createOption( array(
+                'name'    => __( 'Left Menu', 'mobile-menu' ),
+                'id'      => 'left_menu',
+                'type'    => 'select',
+                'desc'    => __( 'Select the menu that will open in the left side.', 'mobile-menu' ),
+                'options' => $menus_options,
+                'default' => $titan->getOption( 'left_menu' ),
+            ) );
+            // Enable/Disable Right Header Menu.
+            $general_tab->createOption( array(
+                'name'     => __( 'Enable Right Menu', 'mobile-menu' ),
+                'id'       => 'enable_right_menu',
+                'type'     => 'enable',
+                'default'  => false,
+                'desc'     => __( 'Enable or disable the WP Mobile Menu without deactivate the plugin.', 'mobile-menu' ),
+                'enabled'  => __( 'On', 'mobile-menu' ),
+                'disabled' => __( 'Off', 'mobile-menu' ),
+            ) );
+            // Right Menu.
+            $general_tab->createOption( array(
+                'name'    => __( 'Right Menu', 'mobile-menu' ),
+                'id'      => 'right_menu',
+                'type'    => 'select',
+                'desc'    => __( 'Select the menu that will open in the right side.', 'mobile-menu' ),
+                'options' => $menus_options,
+                'default' => $titan->getOption( 'right_menu' ),
+            ) );
+            $general_tab->createOption( array(
+                'name' => __( 'Visibility Options', 'mobile-menu' ),
+                'type' => 'heading',
+            ) );
             // Width trigger.
             $general_tab->createOption( array(
                 'name'    => __( 'Mobile Menu Visibility(Width Trigger)', 'mobile-menu' ),
@@ -200,33 +263,9 @@ class WP_Mobile_Menu_Options
                 'enabled'  => __( 'On', 'mobile-menu' ),
                 'disabled' => __( 'Off', 'mobile-menu' ),
             ) );
-            // Enable/Disable Left Header Menu.
-            $general_tab->createOption( array(
-                'name'     => __( 'Enable Left Menu', 'mobile-menu' ),
-                'id'       => 'enable_left_menu',
-                'type'     => 'enable',
-                'default'  => true,
-                'desc'     => __( 'Enable or disable the WP Mobile Menu Left Menu.', 'mobile-menu' ),
-                'enabled'  => __( 'On', 'mobile-menu' ),
-                'disabled' => __( 'Off', 'mobile-menu' ),
-            ) );
-            // Enable/Disable Right Header Menu.
-            $general_tab->createOption( array(
-                'name'     => __( 'Enable Right Menu', 'mobile-menu' ),
-                'id'       => 'enable_right_menu',
-                'type'     => 'enable',
-                'default'  => false,
-                'desc'     => __( 'Enable or disable the WP Mobile Menu without deactivate the plugin.', 'mobile-menu' ),
-                'enabled'  => __( 'On', 'mobile-menu' ),
-                'disabled' => __( 'Off', 'mobile-menu' ),
-            ) );
             $general_tab->createOption( array(
                 'name' => __( 'Hide Original Theme Menu', 'mobile-menu' ),
                 'type' => 'heading',
-            ) );
-            $general_tab->createOption( array(
-                'type' => 'note',
-                'desc' => __( 'If you need help identifying the correct elements just create a new ticket in our <a href="https://www.wpmobilemenu.com/support-contact/?utm_source=wprepo-dash&utm_medium=user%20website&utm_campaign=hide_original_menu_help" target="_blank">support page</a> with your site url and a screenshot of the element you want to hide. We reply fast.', 'mobile-menu' ),
             ) );
             // Hide Html Elements.
             $general_tab->createOption( array(
@@ -234,7 +273,11 @@ class WP_Mobile_Menu_Options
                 'id'      => 'hide_elements',
                 'type'    => 'text',
                 'default' => '',
-                'desc'    => __( '<p>This will hide the desired elements when the Mobile menu is trigerred at the chosen width.</p><p>You can use css class or IDs.</p><p> Example: .menu , #nav</p>', 'mobile-menu' ),
+                'desc'    => __( '<p>Use the Find element button and click in the elements you want to hide. When you are done hit the Save Changes button.<p> Example: .menu , #nav</p>', 'mobile-menu' ),
+            ) );
+            $general_tab->createOption( array(
+                'type' => 'note',
+                'desc' => __( 'If you somehow couldn\'t find the necessary elements using the visual tool to pick elements just create a new ticket in our <a href="https://www.wpmobilemenu.com/support-contact/?utm_source=wprepo-dash&utm_medium=user%20website&utm_campaign=hide_original_menu_help" target="_blank">support page</a> with your site url and a screenshot of the element you want to hide. We reply fast.', 'mobile-menu' ),
             ) );
             $general_tab->createOption( array(
                 'name'    => __( 'Hide elements by default', 'mobile-menu' ),
@@ -242,15 +285,23 @@ class WP_Mobile_Menu_Options
                 'type'    => 'multicheck',
                 'desc'    => __( 'Check the desired elements', 'mobile-menu' ),
                 'options' => array(
-                '1' => '.nav',
-                '2' => '.main-navigation',
-                '3' => '.genesis-nav-menu',
-                '4' => '#main-header',
-                '5' => '#et-top-navigation',
-                '6' => '.site-header',
-                '7' => '.site-branding',
-                '8' => '.ast-mobile-menu-buttons',
-                '9' => '.storefront-handheld-footer-bar',
+                '1'  => '.nav',
+                '2'  => '.main-navigation',
+                '3'  => '.genesis-nav-menu',
+                '4'  => '#main-header',
+                '5'  => '#et-top-navigation',
+                '6'  => '.site-header',
+                '7'  => '.site-branding',
+                '8'  => '.ast-mobile-menu-buttons',
+                '9'  => '.storefront-handheld-footer-bar',
+                '10' => '.elementor-menu-toggle',
+                '11' => '#site-header-inner',
+                '12' => '#sq-masthead',
+                '13' => '.menu-toggle',
+                '14' => '.fusion-header',
+                '15' => '#site-header',
+                '16' => '.elementor-widget-nav-menu',
+                '17' => '.fl-nav',
             ),
                 'default' => array(
                 '1',
@@ -261,7 +312,15 @@ class WP_Mobile_Menu_Options
                 '6',
                 '7',
                 '8',
-                '9'
+                '9',
+                '10',
+                '11',
+                '12',
+                '13',
+                '14',
+                '15',
+                '16',
+                '17'
             ),
             ) );
             $general_tab->createOption( array(
@@ -347,6 +406,16 @@ class WP_Mobile_Menu_Options
             $general_tab->createOption( array(
                 'name' => __( 'Advanced Options', 'mobile-menu' ),
                 'type' => 'heading',
+            ) );
+            // Automatically Close Sub Menus.
+            $general_tab->createOption( array(
+                'name'     => __( 'Cache Dynamic CSS', 'mobile-menu' ),
+                'id'       => 'cache_dynamic_css',
+                'type'     => 'enable',
+                'desc'     => __( 'This will able to cache the dynamic CSS. If enable it you might not see the changes you unless you purge the cache of your cache plugin.', 'mobile-menu' ),
+                'default'  => false,
+                'enabled'  => __( 'On', 'mobile-menu' ),
+                'disabled' => __( 'Off', 'mobile-menu' ),
             ) );
             // Sticky Html Elements.
             $general_tab->createOption( array(
@@ -614,18 +683,13 @@ class WP_Mobile_Menu_Options
                 'show_color'          => false,
                 'show_line_height'    => false,
                 'default'             => array(
-                'font-family' => 'Roboto',
+                'font-family' => 'Dosis',
                 'font-size'   => $def_value,
             ),
             ) );
-            // Left Menu.
             $left_menu_tab->createOption( array(
-                'name'    => __( 'Left Menu', 'mobile-menu' ),
-                'id'      => 'left_menu',
-                'type'    => 'select',
-                'desc'    => __( 'Select the menu that will open in the left side.', 'mobile-menu' ),
-                'options' => $menus_options,
-                'default' => $titan->getOption( 'left_menu' ),
+                'name' => __( 'Menu Icon', 'mobile-menu' ),
+                'type' => 'heading',
             ) );
             // Click Menu Parent link to open Sub menu.
             $left_menu_tab->createOption( array(
@@ -637,9 +701,49 @@ class WP_Mobile_Menu_Options
                 'enabled'  => __( 'Yes', 'mobile-menu' ),
                 'disabled' => __( 'No', 'mobile-menu' ),
             ) );
+            
+            if ( true === $titan->getOption( 'left_menu_icon_opt' ) ) {
+                $icon_type = 'image';
+            } else {
+                $icon_type = 'icon';
+            }
+            
+            // Icon Image/text Option.
             $left_menu_tab->createOption( array(
-                'name' => __( 'Menu Icon', 'mobile-menu' ),
-                'type' => 'heading',
+                'name'    => __( 'Icon Type', 'mobile-menu' ),
+                'id'      => 'left_menu_icon_new',
+                'type'    => 'select',
+                'default' => $icon_type,
+                'desc'    => __( 'Choose if you want to display an image, icon or an animated icon.', 'mobile-menu' ),
+                'options' => $icon_types,
+            ) );
+            // Left Menu Icon Font.
+            $left_menu_tab->createOption( array(
+                'name'    => __( 'Icon Font', 'mobile-menu' ),
+                'id'      => 'left_menu_icon_font',
+                'type'    => 'text',
+                'desc'    => __( '<div class="mobmenu-icon-holder"></div><a href="#" class="mobmenu-icon-picker button">Select menu icon</a>', 'mobile-menu' ),
+                'default' => 'menu',
+            ) );
+            // Left Menu Icon Font Size.
+            $left_menu_tab->createOption( array(
+                'name'    => __( 'Icon Font Size', 'mobile-menu' ),
+                'id'      => 'left_icon_font_size',
+                'type'    => 'number',
+                'desc'    => __( 'Enter the Left Icon Font Size', 'mobile-menu' ),
+                'default' => '30',
+                'max'     => '100',
+                'min'     => '0',
+                'unit'    => 'px',
+            ) );
+            // Left Menu Icon.
+            $left_menu_tab->createOption( array(
+                'name'        => __( 'Icon Image', 'mobile-menu' ),
+                'id'          => 'left_menu_icon',
+                'type'        => 'upload',
+                'placeholder' => 'Click here to select the icon',
+                'desc'        => __( 'Upload your left menu icon image', 'mobile-menu' ),
+                'default'     => 'menu',
             ) );
             // Text After Left Icon.
             $left_menu_tab->createOption( array(
@@ -696,57 +800,13 @@ class WP_Mobile_Menu_Options
                 'enabled'  => 'Self',
                 'disabled' => 'Blank',
             ) );
-            
-            if ( true === $titan->getOption( 'left_menu_icon_opt' ) ) {
-                $icon_type = 'image';
-            } else {
-                $icon_type = 'icon';
-            }
-            
-            // Icon Image/text Option.
-            $left_menu_tab->createOption( array(
-                'name'    => __( 'Icon Type', 'mobile-menu' ),
-                'id'      => 'left_menu_icon_new',
-                'type'    => 'select',
-                'default' => $icon_type,
-                'desc'    => __( 'Choose if you want to display an image, icon or an animated icon.', 'mobile-menu' ),
-                'options' => $icon_types,
-            ) );
-            // Left Menu Icon Font.
-            $left_menu_tab->createOption( array(
-                'name'    => __( 'Icon Font', 'mobile-menu' ),
-                'id'      => 'left_menu_icon_font',
-                'type'    => 'text',
-                'desc'    => __( '<div class="mobmenu-icon-holder"></div><a href="#" class="mobmenu-icon-picker button">Select menu icon</a>', 'mobile-menu' ),
-                'default' => 'menu',
-            ) );
-            // Left Menu Icon Font Size.
-            $left_menu_tab->createOption( array(
-                'name'    => __( 'Icon Font Size', 'mobile-menu' ),
-                'id'      => 'left_icon_font_size',
-                'type'    => 'number',
-                'desc'    => __( 'Enter the Left Icon Font Size', 'mobile-menu' ),
-                'default' => '30',
-                'max'     => '100',
-                'min'     => '0',
-                'unit'    => 'px',
-            ) );
-            // Left Menu Icon.
-            $left_menu_tab->createOption( array(
-                'name'        => __( 'Icon Image', 'mobile-menu' ),
-                'id'          => 'left_menu_icon',
-                'type'        => 'upload',
-                'placeholder' => 'Click here to select the icon',
-                'desc'        => __( 'Upload your left menu icon image', 'mobile-menu' ),
-                'default'     => 'menu',
-            ) );
             // Left Menu Icon Top Margin.
             $left_menu_tab->createOption( array(
                 'name'    => __( 'Icon Top Margin', 'mobile-menu' ),
                 'id'      => 'left_icon_top_margin',
                 'type'    => 'number',
                 'desc'    => __( 'Enter the Left Icon Top Margin', 'mobile-menu' ),
-                'default' => '0',
+                'default' => '10',
                 'max'     => '450',
                 'min'     => '0',
                 'unit'    => 'px',
@@ -873,14 +933,10 @@ class WP_Mobile_Menu_Options
                 'font-family' => 'Dosis',
             ),
             ) );
-            // Right Menu.
+            // Icon Heading.
             $right_menu_tab->createOption( array(
-                'name'    => __( 'Right Menu', 'mobile-menu' ),
-                'id'      => 'right_menu',
-                'type'    => 'select',
-                'desc'    => __( 'Select the menu that will open in the right side.', 'mobile-menu' ),
-                'options' => $menus_options,
-                'default' => $titan->getOption( 'right_menu' ),
+                'name' => __( 'Menu Icon', 'mobile-menu' ),
+                'type' => 'heading',
             ) );
             // Click Menu Parent link to open Sub menu.
             $right_menu_tab->createOption( array(
@@ -892,10 +948,48 @@ class WP_Mobile_Menu_Options
                 'enabled'  => __( 'Yes', 'mobile-menu' ),
                 'disabled' => __( 'No', 'mobile-menu' ),
             ) );
-            // Icon Heading.
+            
+            if ( true === $titan->getOption( 'right_menu_icon_opt' ) ) {
+                $icon_type = 'image';
+            } else {
+                $icon_type = 'icon';
+            }
+            
+            // Icon Image/text Option.
             $right_menu_tab->createOption( array(
-                'name' => __( 'Menu Icon', 'mobile-menu' ),
-                'type' => 'heading',
+                'name'    => __( 'Icon Type', 'mobile-menu' ),
+                'id'      => 'right_menu_icon_new',
+                'type'    => 'select',
+                'default' => $icon_type,
+                'desc'    => __( 'Choose if you want to display an image, icon or an animated icon.', 'mobile-menu' ),
+                'options' => $icon_types,
+            ) );
+            // Right Menu Icon Font.
+            $right_menu_tab->createOption( array(
+                'name'    => __( 'Icon Font', 'mobile-menu' ),
+                'id'      => 'right_menu_icon_font',
+                'type'    => 'text',
+                'desc'    => __( '<div class="mobmenu-icon-holder"></div><a href="#" class="mobmenu-icon-picker button">Select menu icon</a>', 'mobile-menu' ),
+                'default' => 'menu',
+            ) );
+            // Right Menu Icon Font Size.
+            $right_menu_tab->createOption( array(
+                'name'    => __( 'Icon Font Size', 'mobile-menu' ),
+                'id'      => 'right_icon_font_size',
+                'type'    => 'number',
+                'desc'    => __( 'Enter the Right Icon Font Size', 'mobile-menu' ),
+                'default' => '30',
+                'max'     => '100',
+                'min'     => '0',
+                'unit'    => 'px',
+            ) );
+            // Right Menu Icon.
+            $right_menu_tab->createOption( array(
+                'name'    => __( 'Icon Image', 'mobile-menu' ),
+                'id'      => 'right_menu_icon',
+                'type'    => 'upload',
+                'desc'    => __( 'Upload your right menu icon image', 'mobile-menu' ),
+                'default' => 'menu',
             ) );
             // Text Before Right Icon.
             $right_menu_tab->createOption( array(
@@ -953,56 +1047,13 @@ class WP_Mobile_Menu_Options
                 'enabled'  => 'Self',
                 'disabled' => 'Blank',
             ) );
-            
-            if ( true === $titan->getOption( 'right_menu_icon_opt' ) ) {
-                $icon_type = 'image';
-            } else {
-                $icon_type = 'icon';
-            }
-            
-            // Icon Image/text Option.
-            $right_menu_tab->createOption( array(
-                'name'    => __( 'Icon Type', 'mobile-menu' ),
-                'id'      => 'right_menu_icon_new',
-                'type'    => 'select',
-                'default' => $icon_type,
-                'desc'    => __( 'Choose if you want to display an image, icon or an animated icon.', 'mobile-menu' ),
-                'options' => $icon_types,
-            ) );
-            // Right Menu Icon Font.
-            $right_menu_tab->createOption( array(
-                'name'    => __( 'Icon Font', 'mobile-menu' ),
-                'id'      => 'right_menu_icon_font',
-                'type'    => 'text',
-                'desc'    => __( '<div class="mobmenu-icon-holder"></div><a href="#" class="mobmenu-icon-picker button">Select menu icon</a>', 'mobile-menu' ),
-                'default' => 'menu',
-            ) );
-            // Right Menu Icon Font Size.
-            $right_menu_tab->createOption( array(
-                'name'    => __( 'Icon Font Size', 'mobile-menu' ),
-                'id'      => 'right_icon_font_size',
-                'type'    => 'number',
-                'desc'    => __( 'Enter the Right Icon Font Size', 'mobile-menu' ),
-                'default' => '30',
-                'max'     => '100',
-                'min'     => '0',
-                'unit'    => 'px',
-            ) );
-            // Right Menu Icon.
-            $right_menu_tab->createOption( array(
-                'name'    => __( 'Icon Image', 'mobile-menu' ),
-                'id'      => 'right_menu_icon',
-                'type'    => 'upload',
-                'desc'    => __( 'Upload your right menu icon image', 'mobile-menu' ),
-                'default' => 'menu',
-            ) );
             // Right Menu Icon Top Margin.
             $right_menu_tab->createOption( array(
                 'name'    => __( 'Icon Top Margin', 'mobile-menu' ),
                 'id'      => 'right_icon_top_margin',
                 'type'    => 'number',
                 'desc'    => __( 'Enter the Right Icon Top Margin', 'mobile-menu' ),
-                'default' => '0',
+                'default' => '10',
                 'max'     => '450',
                 'min'     => '0',
                 'unit'    => 'px',
@@ -1165,7 +1216,7 @@ class WP_Mobile_Menu_Options
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
-                'default' => '#f7f7f7',
+                'default' => '#111111',
             ) );
             // Header Text color.
             $colors_tab->createOption( array(
@@ -1174,7 +1225,7 @@ class WP_Mobile_Menu_Options
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
-                'default' => '#222',
+                'default' => '#FFF',
             ) );
             // Header Left Menu Section.
             $colors_tab->createOption( array(
@@ -1188,7 +1239,7 @@ class WP_Mobile_Menu_Options
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
-                'default' => '#666',
+                'default' => '#FFF',
             ) );
             // Header Text After Left Icon.
             $colors_tab->createOption( array(
@@ -1274,7 +1325,7 @@ class WP_Mobile_Menu_Options
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
-                'default' => '#222',
+                'default' => '#FFF',
             ) );
             // Header Text Before Right Icon.
             $colors_tab->createOption( array(
@@ -1448,7 +1499,7 @@ class WP_Mobile_Menu_Options
         $mm_woo_tab = $panel->createTab( array(
             'name' => __( 'Woocommerce', 'mobile-menu' ),
         ) );
-        $custom_html = '<div class="mm-business-features-holder"><div class="mm-bussiness-features"><h3>' . __( 'WooCommerce Features (Business Version)', 'mobile-menu' ) . '</h3>';
+        $custom_html = '<div class="mm-business-features-holder"><div class="mm-bussiness-features"><h3>' . __( 'Increase your shop revenue (Business Version)', 'mobile-menu' ) . '</h3>';
         $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>Menu Cart Icon</strong> - Product counter notification buble, upload the desired icon.</p>';
         $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>Mobile Product Filter</strong> - Advanced product filter for mobile users.</p>';
         $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>Show only products</strong> - In the Header Live Search.</p>';
@@ -1485,7 +1536,7 @@ class WP_Mobile_Menu_Options
         $footer_tab = $panel->createTab( array(
             'name' => __( 'Footer', 'mobile-menu' ),
         ) );
-        $custom_html = '<div class="mm-business-features-holder"><div class="mm-bussiness-features"><h3>' . __( 'Footer Features', 'mobile-menu' ) . '</h3>';
+        $custom_html = '<div class="mm-business-features-holder"><div class="mm-bussiness-features"><h3>' . __( 'Give your Website an App look and feel', 'mobile-menu' ) . '</h3>';
         $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>Fixed Footer Bar</strong></p>';
         $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>Auto-hide on Scroll</strong></p>';
         $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>Highlight current page</strong></p>';

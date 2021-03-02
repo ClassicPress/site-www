@@ -143,6 +143,11 @@ class TitanFrameworkMetaBox {
 			return false;
 		}
 
+		// Don't save on inline edit.
+		if ( !empty( $_POST['action'] ) && $_POST['action'] == 'inline-save' ) {
+			return false;
+		}
+
 		// Don't save on autosave
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return false;

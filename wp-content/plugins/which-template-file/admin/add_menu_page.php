@@ -161,7 +161,9 @@ class wtf_admin_page extends class_page_admin {
 	* Génération des liens de bas de page
 	*/
 	function set_links_footer() {
-
+		
+		$this->links_footer = [];
+		
         // // Lien vers page de tous les paiements
         // $this->links_footer[paiement_page::url()] = 'Les paiements';
 
