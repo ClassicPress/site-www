@@ -1,26 +1,24 @@
 == Classic SEO ==
 
 Description:       Classic SEO is the first SEO plugin built specifically to work with ClassicPress. The plugin contains many essential SEO tools to help optimize your website.
-Version:           1.0.0-rc.1
+Version:           2.0.1
 Text Domain:       cpseo
 Domain Path:       /languages
 Requires PHP:      7.0
 Requires:          1.0.0
 Tested:            4.9.99
-Author:            ClassicPress Research
+Author:            ClassicPress
 Author URI:        https://github.com/ClassicPress-plugins/
 Plugin URI:        https://github.com/ClassicPress-plugins/classicpress-seo
 License:           GPLv2
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+
 
 == Description ==
 
 **SEO Plugin For ClassicPress**
 
 Classic SEO is the first SEO plugin built specifically to work with ClassicPress. The plugin contains many essential SEO tools to help optimize your website.
-
-**As this plugin is still in the development & testing stage, use it on a production site at your own risk.**
-
 
 * * *
 
@@ -29,6 +27,7 @@ Classic SEO is the first SEO plugin built specifically to work with ClassicPress
 * 1. Head over to the [Releases section](https://github.com/ClassicPress-plugins/classicpress-seo/releases) of this GitHub repository.
 * 2. Expand the "Assets" dropdown by the latest release and download the `classicpress-seo.zip` file.
 * 3. Go to the "Plugins > Add New" section of your site's dashboard and upload the zip file there using the "Upload Plugin" button.
+
 
 == Key Features ==
 
@@ -43,16 +42,42 @@ Classic SEO is the first SEO plugin built specifically to work with ClassicPress
 * **404 Monitor**
 * **Support for ACF**
 * **Support for Classic Commerce**
-* **Support for WooCommerce**
 * **Internal Linking Suggestions**
 * **Role Manager**
 * **Importers for Rank Math, Yoast, All In One SEO and The SEO Framework**
-* **Google Search Console Integration**
 
-== Important note ==
-**As this plugin is still in the development & testing stage, use it on a production site at your own risk.**
+
+== Support ==
+
+If you need support for Classic SEO or find a bug, you have threee choices:
+* create an issue on the [issues page](https://github.com/ClassicPress-plugins/classicpress-seo/issues)
+* [create a topic](https://forums.classicpress.net/tags/classic-seo) in the ClassicPress forums.
+* Look out for the [#classic-seo channel on Slack](https://www.classicpress.net/join-slack/)
+
 
 == Changelog ==
+
+**v 2.0.0 / 2020-09-29**
+* FIXED: Missing semicolon
+
+**v 2.0.0 / 2020-09-29**
+* REMOVED: Google Search Console feature has been removed completely. See #112 for discussion. (#118)
+* UPDATED: Replaced references to "WooCommerce" with "Classic Commerce" (#114) (props @simplycomputing)
+* UPDATED: Update readme (#126)
+* IMPROVED Minor CSS tweaks and accessibility improvements (#128)
+* FIXED: Fix wrong field name in redirections cache (#119)
+* FIXED: Fix display of CPSEO icon in admin menu (#123)
+* FIXED: Fix display of icon and heading in CPSEO dashboard (#124)
+* FIXED: Cleaned up some left over code (#122, #127)
+
+**v 1.0.0 / 2020-08-30**
+* FIXED: Fix for misaligned Classic SEO icon in top admin toolbar when viewing site #103
+* FIXED: Remove empty title separator #104
+* REMOVED: Remove legacy Rank Math help images #106
+* UPDATED: Update language pot file #107
+* UPDATED: Minor updates to help pages #108
+* FIXED: Replace "ClassicPress-research" with "ClassicPress-plugins" #109
+
 **v 1.0.0-rc.1 / 2020-08-02**
 * IMPROVED: Clarify wording on Author Archives and Date Archives option settings #85
 * IMPROVED: Add clear installation instructions to readme #89 (props @nylen)
