@@ -165,4 +165,5 @@ RedirectMatch 302 ^/blog/meet-the-community-patrick-klein/?$ /blog/meet-the-comm
 RedirectMatch 302 ^/version/([^/]*)/?$ https://github.com/ClassicPress/ClassicPress-release/releases/tag/$1
 RedirectMatch 302 ^/shop/?$ /donate/#donate
 RedirectMatch 302 ^/product/donate-to-classicpress/?$ /donate/#donate
+RedirectMatch 302 ^/democracy/?$ /governance/
 # END 302 Redirects
