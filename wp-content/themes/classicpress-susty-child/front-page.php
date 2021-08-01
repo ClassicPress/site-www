@@ -44,19 +44,6 @@ get_header();
 	// (conditional opening <section> tag in header.php template)
 	?>
 
-<section class="homepanel1">
-	<article class="community-home">
-	<?php echo get_post_field('post_content'); ?>
-	<?php
-		$commlink = get_field('main_buttonlink');
-		$commlinktext = get_field('main_buttonlinktext');
-		if (($commlink) && ($commlinktext)) {
-			echo '<p class="button blue center"><a href="'.$commlink.'" target="_blank" rel="noreferrer noopener">'.$commlinktext.'</a></p>';
-		}
-	?>
-	</article>
-</section>
-
 <section class="homepanel2">
 	<article class="features-home">
 		<div class="feature">
@@ -124,6 +111,20 @@ get_header();
 			}
 		?>
 	</div>
+</section>
+
+<!-- Changed to second position so as first we have the features/download section-->
+<section class="homepanel1">
+	<article class="community-home">
+	<?php echo get_post_field('post_content'); ?>
+	<?php
+		$commlink = get_field('main_buttonlink');
+		$commlinktext = get_field('main_buttonlinktext');
+		if (($commlink) && ($commlinktext)) {
+			echo '<p class="button blue center"><a href="'.$commlink.'" target="_blank" rel="noreferrer noopener">'.$commlinktext.'</a></p>';
+		}
+	?>
+	</article>
 </section>
 
 <section class="homepanel3">
