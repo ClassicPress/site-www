@@ -3,8 +3,8 @@ Contributors: takanakui, freemius
 link: http://profiles.wordpress.org/takanakui
 Tags:   mobile, navigation, responsive, menu,  responsive menu, mobile menu,  tablet menu, hamburger menu, hamburger, wordpress responsive menu, wordpress mobile menu, canvas menu
 Requires at least: 4.4
-Tested up to: 5.6
-Stable tag: 2.8.1.8.1
+Tested up to: 5.8
+Stable tag: 2.8.2.3
 Requires PHP: 5.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -71,6 +71,10 @@ No coding knowledge is required. Works with all WordPress responsive themes.
 = Related Plugins =
 * [Menu Image](https://wordpress.org/plugins/menu-image/): Easily add an image or icon in a menu item. Creating a better website menu.
 
+* [Pay With Stripe](https://wordpress.org/plugins/payments-stripe-gateway/): Sell your products on your WordPress website without any other complex e-commerce plugin.
+
+###I need help or I have a doubt, check our Support
+
 ###I need help or I have a doubt, check our Support
 * Great Support, our free support is above the average. Only the Premium support is better and faster.
 
@@ -132,6 +136,29 @@ Not available at the moment
  
 == Changelog ==
 
+
+
+= 2.8.2.3 =
+* Fix! - Fix security issue in code from TitanFramework
+* Fix! - Fix typo
+* Fix! - Fix code editor spacing
+* Fix! - Show Select file for the import settings button
+* Fix! - Close submenus when closing menu
+
+= 2.8.2.2 =
+* Fix! - Fix Menu settings and widgetized areas in translated websites
+* Fix! - Fix Walker Menu filter
+
+= 2.8.2.1 =
+* Fix! - Change code that only worked with PHP 7.4
+
+= 2.8.2 =
+* Fix! - Remove metabox upgrade
+* New! - New Settings Design/UX
+* Improvment! - Remove metabox upgrade
+* Improvment! - Initial process of removing TitanFramework
+* Improvment! - Update Freemius SDK
+
 = 2.8.1.8.1 =
 * Fix! - Remove piece of premium option
 
@@ -141,7 +168,6 @@ Not available at the moment
 
 = 2.8.1.7 =
 * New! - Visual tool to identify menus and other elements to hide
-
 
 = 2.8.1.6.1 =
 * Fix! - Fix error on function that doesn't exist

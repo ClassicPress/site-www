@@ -406,7 +406,7 @@ class WP_Mobile_Menu_Core
                 ?>
 				<ul class="rightmtop">
 					<?php 
-                dynamic_sidebar( 'Right Menu Top' );
+                dynamic_sidebar( 'mobmrighttop' );
                 ?>
 				</ul>
 			<?php 
@@ -446,7 +446,7 @@ class WP_Mobile_Menu_Core
                 ?>
 				<ul class="rightmbottom">
 					<?php 
-                dynamic_sidebar( 'Right Menu Bottom' );
+                dynamic_sidebar( 'mobmrightbottom' );
                 ?>
 				</ul>
 			<?php 
@@ -491,7 +491,7 @@ class WP_Mobile_Menu_Core
             ?>
 			<ul class="leftmtop">
 				<?php 
-            dynamic_sidebar( 'Left Menu Top' );
+            dynamic_sidebar( 'mobmlefttop' );
             ?>
 			</ul>
 		<?php 
@@ -531,7 +531,7 @@ class WP_Mobile_Menu_Core
             ?>
 				<ul class="leftmbottom">
 					<?php 
-            dynamic_sidebar( 'Left Menu Bottom' );
+            dynamic_sidebar( 'mobmleftbottom' );
             ?>
 				</ul>
 		<?php 
@@ -556,7 +556,7 @@ class WP_Mobile_Menu_Core
             $current_menu = '';
         }
         
-        if ( has_nav_menu( $menu . '-wp-mobile-menu' ) ) {
+        if ( has_nav_menu( $menu . '-wp-mobile-menu' ) && $current_menu === '' ) {
             $current_menu = $menu . '-wp-mobile-menu';
             $menu_param = 'theme_location';
         } else {
@@ -667,7 +667,7 @@ class WP_Mobile_Menu_Core
     }
     
     /**
-     * Load the Find elements tool.
+     * Load the Finde elements tool.
      */
     public function find_elements_mobmenu()
     {

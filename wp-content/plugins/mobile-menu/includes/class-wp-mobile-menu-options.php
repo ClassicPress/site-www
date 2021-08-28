@@ -44,23 +44,6 @@ class WP_Mobile_Menu_Options
         add_action( 'tf_create_options', array( $this, 'create_plugin_options' ) );
     }
     
-    private function scan_alert()
-    {
-        // For sample purposes, we set this to 1. But typically, you should have another
-        // area in your plugin that increments this number to display a notification on the menu.
-        $num_notifications = 0;
-        // Do all processment to find issues and create alerts
-        if ( $num_notifications > 0 ) {
-            return sprintf(
-                '<span class="update-plugins count-%s"><span class="plugin-count" aria-hidden="true">%s</span><span class="screen-reader-text">%s</span></span>',
-                $num_notifications,
-                $num_notifications,
-                sprintf( _n( '%s notification', '%s notifications', $num_notifications ), $num_notifications )
-            );
-        }
-        return '';
-    }
-    
     /**
      *
      * Create Plugin options.
@@ -70,6 +53,7 @@ class WP_Mobile_Menu_Options
     public function create_plugin_options()
     {
         global  $mm_fs ;
+        global  $general_tab ;
         $prefix = '';
         $menus = get_terms( 'nav_menu', array(
             'hide_empty' => true,
@@ -106,85 +90,69 @@ class WP_Mobile_Menu_Options
             'search'    => 'Search',
             'left-menu' => 'Left Menu',
         );
+        $plugin_title = 'Mobile Menu Options';
         // Create my admin options panel.
         $panel = $titan->createAdminPanel( array(
             'name'  => 'Mobile Menu Options',
-            'title' => __( 'Mobile Menu Options', 'mobile-menu' ) . $this->scan_alert(),
+            'title' => __( $plugin_title, 'mobile-menu' ),
             'icon'  => 'dashicons-smartphone',
-        ) );
-        // Premium options.
-        // Create options in My Meta Box.
-        $mobmenu_metabox = $titan->createMetaBox( array(
-            'name'      => __( 'WP Mobile Menu Meta options', 'mobile-menu' ),
-            'post_type' => array( 'page', 'post' ),
-        ) );
-        global  $mm_fs ;
-        // Create WP Mobile Menu Meta Box options.
-        $custom_html = '<style>.dashicons-yes {color:#008000;font-size: 3em;padding-right: 20px;margin-top: -10px;}';
-        $custom_html .= '.mm-button-business-upgrade {margin-top: 20px!important;background-color: #FF015C!important;border-color: #fff;color: #fff!important;margin: 20px 10px 20px 10px;text-transform: uppercase;min-height: 35px;padding-top: 5px;border-radius: 6px;}';
-        $custom_html .= '</style><p>The features below are available in the Premium versions of WP Mobile Menu.</p>';
-        $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>' . __( 'Alternative Left Menu', 'mobile-menu' ) . '</strong></p>';
-        $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>' . __( 'Alternative Right Menu', 'mobile-menu' ) . '</strong></p>';
-        $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>' . __( 'Alternative Footer Menu', 'mobile-menu' ) . '</strong></p>';
-        $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>' . __( 'Use page title', 'mobile-menu' ) . '</strong></p>';
-        $custom_html .= '<p><a href="' . $mm_fs->get_upgrade_url() . '&cta=metabox-settings" class="button mm-button-business-upgrade">' . __( 'Upgrade Now!', 'mobile-menu' ) . '</a></p>';
-        $custom_html .= '</div></div>';
-        // Page Metabox Upgrade Content.
-        $mobmenu_metabox->createOption( array(
-            'name'   => '',
-            'type'   => 'custom',
-            'custom' => $custom_html,
         ) );
         // Only proceed if we are in the plugin page.
         
         if ( !is_admin() || isset( $_GET['page'] ) && 'mobile-menu-options' === sanitize_text_field( $_GET['page'] ) ) {
             // Create General Options panel.
-            $general_tab = $panel->createTab( array(
+            $general_tab2 = $panel->createTab( array(
                 'name' => __( 'General Options', 'mobile-menu' ),
+                'id'   => 'general-options',
             ) );
-            // Create Header Options panel.
-            $header_tab = $panel->createTab( array(
+            $general_tab = $panel->createTab( array(
                 'name' => __( 'Header', 'mobile-menu' ),
+                'id'   => 'header',
             ) );
-            $this->create_footer_options_upsell( $panel, $titan );
-            // Create Left Menu Options panel.
-            $left_menu_tab = $panel->createTab( array(
+            $general_tab = $panel->createTab( array(
+                'name' => __( 'Footer', 'mobile-menu' ),
+                'id'   => 'footer',
+            ) );
+            $general_tab = $panel->createTab( array(
                 'name' => __( 'Left Menu', 'mobile-menu' ),
+                'id'   => 'left-menu',
             ) );
-            // Create Right Menu Options panel.
-            $right_menu_tab = $panel->createTab( array(
+            $general_tab = $panel->createTab( array(
                 'name' => __( 'Right Menu', 'mobile-menu' ),
+                'id'   => 'right-menu',
             ) );
+            $general_tab = $panel->createTab( array(
+                'name' => __( 'WooCommerce', 'mobile-menu' ),
+                'id'   => 'woocommerce',
+            ) );
+            $general_tab = $panel->createTab( array(
+                'name' => __( 'Colors', 'mobile-menu' ),
+                'id'   => 'colors',
+            ) );
+            $general_tab = $general_tab2;
+            $this->create_footer_options_upsell( $panel, $titan );
             // Create Woocommerce options upsell.
             $this->create_woocommerce_options_upsell( $panel, $titan );
-            // Create Color Options panel.
-            $colors_tab = $panel->createTab( array(
-                'name' => __( 'Colors', 'mobile-menu' ),
-            ) );
-            // Create Fonts panel.
-            $fonts_tab = $panel->createTab( array(
-                'name' => __( 'Fonts', 'mobile-menu' ),
-            ) );
-            // Create Documentation panel.
-            $documentation_tab = $panel->createTab( array(
-                'name' => __( 'Documentation', 'mobile-menu' ),
-            ) );
-            // Check if it's HTTPS.
-            
-            if ( is_ssl() ) {
-                $doc_url = 'https://wpmobilemenu.com/documentation-iframe/';
-            } else {
-                $doc_url = 'http://wpmobilemenu.com/documentation-iframe/';
-            }
-            
-            // Documentation IFrame.
-            $documentation_tab->createOption( array(
-                'type' => 'iframe',
-                'url'  => $doc_url,
-            ) );
+            $custom_html = '<h3>' . __( 'Choose the style of your Mobile Menu', 'mobile-menu' ) . '</h3><div class="mm-mobile-header-type">';
+            $custom_html .= '<div><h4>' . __( 'Hamburger Menu', 'mobile-menu' ) . '</h4><img src="' . plugins_url( '/assets/mobile_hamburger_menu_option.png', __FILE__ ) . '" class="hamburger-menu"></div>';
+            $custom_html .= '<div><h4>' . __( 'Header Menu', 'mobile-menu' ) . '</h4><img src="' . plugins_url( '/assets/mobile_header.png', __FILE__ ) . '"></div></div>';
+            // Mobile Header type.
             $general_tab->createOption( array(
-                'name' => __( 'Main Options', 'mobile-menu' ),
-                'type' => 'heading',
+                'name'   => 'mobile-header-type',
+                'type'   => 'custom',
+                'custom' => $custom_html,
+                'class'  => 'general-options',
+            ) );
+            // Enable/Disable Naked Header.
+            $general_tab->createOption( array(
+                'name'     => __( 'Header Style', 'mobile-menu' ),
+                'id'       => 'enabled_naked_header',
+                'type'     => 'enable',
+                'default'  => false,
+                'desc'     => '',
+                'enabled'  => __( 'Hamburger Menu', 'mobile-menu' ),
+                'disabled' => __( 'Header Menu', 'mobile-menu' ),
+                'class'    => 'general-options header-options',
             ) );
             // Enable/Disable Left Header Menu.
             $general_tab->createOption( array(
@@ -192,9 +160,9 @@ class WP_Mobile_Menu_Options
                 'id'       => 'enable_left_menu',
                 'type'     => 'enable',
                 'default'  => true,
-                'desc'     => __( 'Enable or disable the WP Mobile Menu Left Menu.', 'mobile-menu' ),
-                'enabled'  => __( 'On', 'mobile-menu' ),
-                'disabled' => __( 'Off', 'mobile-menu' ),
+                'enabled'  => __( 'Yes', 'mobile-menu' ),
+                'disabled' => __( 'No', 'mobile-menu' ),
+                'class'    => 'general-options left-menu-options',
             ) );
             // Left Menu.
             $general_tab->createOption( array(
@@ -204,6 +172,7 @@ class WP_Mobile_Menu_Options
                 'desc'    => __( 'Select the menu that will open in the left side.', 'mobile-menu' ),
                 'options' => $menus_options,
                 'default' => $titan->getOption( 'left_menu' ),
+                'class'   => 'general-options left-menu-options',
             ) );
             // Enable/Disable Right Header Menu.
             $general_tab->createOption( array(
@@ -211,9 +180,9 @@ class WP_Mobile_Menu_Options
                 'id'       => 'enable_right_menu',
                 'type'     => 'enable',
                 'default'  => false,
-                'desc'     => __( 'Enable or disable the WP Mobile Menu without deactivate the plugin.', 'mobile-menu' ),
-                'enabled'  => __( 'On', 'mobile-menu' ),
-                'disabled' => __( 'Off', 'mobile-menu' ),
+                'enabled'  => __( 'Yes', 'mobile-menu' ),
+                'disabled' => __( 'No', 'mobile-menu' ),
+                'class'    => 'general-options right-menu-options',
             ) );
             // Right Menu.
             $general_tab->createOption( array(
@@ -223,10 +192,7 @@ class WP_Mobile_Menu_Options
                 'desc'    => __( 'Select the menu that will open in the right side.', 'mobile-menu' ),
                 'options' => $menus_options,
                 'default' => $titan->getOption( 'right_menu' ),
-            ) );
-            $general_tab->createOption( array(
-                'name' => __( 'Visibility Options', 'mobile-menu' ),
-                'type' => 'heading',
+                'class'   => 'general-options right-menu-options',
             ) );
             // Width trigger.
             $general_tab->createOption( array(
@@ -238,10 +204,12 @@ class WP_Mobile_Menu_Options
                 'max'     => '5000',
                 'min'     => '479',
                 'unit'    => 'px',
+                'class'   => 'general-visibility-options',
             ) );
             $general_tab->createOption( array(
-                'type' => 'note',
-                'desc' => __( 'The Width trigger field is very important because it determines the width that will show the Mobile Menu. If you want it always visible set it to 5000px', 'mobile-menu' ),
+                'type'  => 'note',
+                'desc'  => __( 'The Width trigger field is very important because it determines the width that will show the Mobile Menu. If you want it always visible set it to 5000px', 'mobile-menu' ),
+                'class' => 'general-visibility-options',
             ) );
             // Enable/Disable only in Mobile Devices.
             $general_tab->createOption( array(
@@ -252,6 +220,7 @@ class WP_Mobile_Menu_Options
                 'desc'     => __( 'Enable only in Mobiles devices. This will disable the Mobile Menu Visibilty option above (using resolution width trigger).', 'mobile-menu' ),
                 'enabled'  => __( 'On', 'mobile-menu' ),
                 'disabled' => __( 'Off', 'mobile-menu' ),
+                'class'    => 'general-visibility-options',
             ) );
             // Enable/Disable Testing Mode.
             $general_tab->createOption( array(
@@ -262,10 +231,7 @@ class WP_Mobile_Menu_Options
                 'desc'     => __( 'Enable only for admin users. This will disable the Mobile Menu for all the visitors of your site except the administrator users.', 'mobile-menu' ),
                 'enabled'  => __( 'On', 'mobile-menu' ),
                 'disabled' => __( 'Off', 'mobile-menu' ),
-            ) );
-            $general_tab->createOption( array(
-                'name' => __( 'Hide Original Theme Menu', 'mobile-menu' ),
-                'type' => 'heading',
+                'class'    => 'general-visibility-options',
             ) );
             // Hide Html Elements.
             $general_tab->createOption( array(
@@ -273,11 +239,13 @@ class WP_Mobile_Menu_Options
                 'id'      => 'hide_elements',
                 'type'    => 'text',
                 'default' => '',
-                'desc'    => __( '<p>Use the Find element button and click in the elements you want to hide. When you are done hit the Save Changes button.<p> Example: .menu , #nav</p>', 'mobile-menu' ),
+                'desc'    => __( 'Use the Find element button and click in the elements you want to hide. When you are done hit the Save Changes button.<br>Example: .menu , #nav</p>', 'mobile-menu' ),
+                'class'   => 'general-hide-elements',
             ) );
             $general_tab->createOption( array(
-                'type' => 'note',
-                'desc' => __( 'If you somehow couldn\'t find the necessary elements using the visual tool to pick elements just create a new ticket in our <a href="https://www.wpmobilemenu.com/support-contact/?utm_source=wprepo-dash&utm_medium=user%20website&utm_campaign=hide_original_menu_help" target="_blank">support page</a> with your site url and a screenshot of the element you want to hide. We reply fast.', 'mobile-menu' ),
+                'type'  => 'note',
+                'desc'  => __( 'If you somehow couldn\'t find the necessary elements using the visual tool to pick elements just create a new ticket in our <a href="https://www.wpmobilemenu.com/support-contact/?utm_source=wprepo-dash&utm_medium=user%20website&utm_campaign=hide_original_menu_help" target="_blank">support page</a> with your site url and a screenshot of the element you want to hide. We reply fast.', 'mobile-menu' ),
+                'class' => 'general-hide-elements',
             ) );
             $general_tab->createOption( array(
                 'name'    => __( 'Hide elements by default', 'mobile-menu' ),
@@ -322,10 +290,7 @@ class WP_Mobile_Menu_Options
                 '16',
                 '17'
             ),
-            ) );
-            $general_tab->createOption( array(
-                'name' => __( 'Miscelaneous Options', 'mobile-menu' ),
-                'type' => 'heading',
+                'class'   => 'general-hide-elements',
             ) );
             // Menu Display Type.
             $general_tab->createOption( array(
@@ -335,6 +300,7 @@ class WP_Mobile_Menu_Options
                 'desc'    => __( 'Choose the display type for the mobile menu.', 'mobile-menu' ),
                 'options' => $display_type,
                 'default' => 'slideout-over',
+                'class'   => 'general-misc-options',
             ) );
             // Automatically Close Sub Menus.
             $general_tab->createOption( array(
@@ -345,6 +311,7 @@ class WP_Mobile_Menu_Options
                 'default'  => false,
                 'enabled'  => __( 'On', 'mobile-menu' ),
                 'disabled' => __( 'Off', 'mobile-menu' ),
+                'class'    => 'general-misc-options',
             ) );
             // Menu Border Style.
             $general_tab->createOption( array(
@@ -356,6 +323,7 @@ class WP_Mobile_Menu_Options
                 'max'     => '5',
                 'min'     => '0',
                 'unit'    => 'px',
+                'class'   => 'general-misc-options',
             ) );
             // Close Menu Icon Font.
             $general_tab->createOption( array(
@@ -364,6 +332,7 @@ class WP_Mobile_Menu_Options
                 'type'    => 'text',
                 'desc'    => __( '<div class="mobmenu-icon-holder"></div><a href="#" class="mobmenu-icon-picker button">Select menu icon</a>', 'mobile-menu' ),
                 'default' => 'cancel-1',
+                'class'   => 'general-misc-options',
             ) );
             // Close Menu Icon Font Size.
             $general_tab->createOption( array(
@@ -375,6 +344,7 @@ class WP_Mobile_Menu_Options
                 'max'     => '100',
                 'min'     => '5',
                 'unit'    => 'px',
+                'class'   => 'general-misc-options',
             ) );
             // Submenu Open Icon Font.
             $general_tab->createOption( array(
@@ -383,6 +353,7 @@ class WP_Mobile_Menu_Options
                 'type'    => 'text',
                 'desc'    => __( '<div class="mobmenu-icon-holder"></div><a href="#" class="mobmenu-icon-picker button">Select menu icon</a>', 'mobile-menu' ),
                 'default' => 'down-open',
+                'class'   => 'general-misc-options',
             ) );
             // Submenu Close Icon Font.
             $general_tab->createOption( array(
@@ -391,6 +362,7 @@ class WP_Mobile_Menu_Options
                 'type'    => 'text',
                 'desc'    => __( '<div class="mobmenu-icon-holder"></div><a href="#" class="mobmenu-icon-picker button">Select menu icon</a>', 'mobile-menu' ),
                 'default' => 'up-open',
+                'class'   => 'general-misc-options',
             ) );
             // Submenu Icon Font Size.
             $general_tab->createOption( array(
@@ -402,10 +374,7 @@ class WP_Mobile_Menu_Options
                 'max'     => '100',
                 'min'     => '0',
                 'unit'    => 'px',
-            ) );
-            $general_tab->createOption( array(
-                'name' => __( 'Advanced Options', 'mobile-menu' ),
-                'type' => 'heading',
+                'class'   => 'general-misc-options',
             ) );
             // Automatically Close Sub Menus.
             $general_tab->createOption( array(
@@ -416,6 +385,7 @@ class WP_Mobile_Menu_Options
                 'default'  => false,
                 'enabled'  => __( 'On', 'mobile-menu' ),
                 'disabled' => __( 'Off', 'mobile-menu' ),
+                'class'    => 'general-advanced-options',
             ) );
             // Sticky Html Elements.
             $general_tab->createOption( array(
@@ -424,46 +394,42 @@ class WP_Mobile_Menu_Options
                 'type'    => 'text',
                 'default' => '',
                 'desc'    => __( '<p>If you are having issues with sticky elements that dont assume a sticky behaviour, enter the ids or class name that identify that element.</p>', 'mobile-menu' ),
+                'class'   => 'general-advanced-options',
             ) );
             // Custom css.
             $general_tab->createOption( array(
-                'name' => __( 'Custom CSS', 'mobile-menu' ),
-                'id'   => 'custom_css',
-                'type' => 'code',
-                'desc' => __( 'Put your custom CSS rules here', 'mobile-menu' ),
-                'lang' => 'css',
+                'name'  => __( 'Custom CSS', 'mobile-menu' ),
+                'id'    => 'custom_css',
+                'type'  => 'code',
+                'desc'  => __( 'Put your custom CSS rules here', 'mobile-menu' ),
+                'lang'  => 'css',
+                'class' => 'general-advanced-options',
             ) );
             // Custom js.
             $general_tab->createOption( array(
-                'name' => __( 'Custom JS', 'mobile-menu' ),
-                'id'   => 'custom_js',
-                'type' => 'code',
-                'desc' => __( 'Put your custom JS rules here', 'mobile-menu' ),
-                'lang' => 'javascript',
-            ) );
-            $general_tab->createOption( array(
-                'name' => __( 'Import and Export', 'mobile-menu' ),
-                'type' => 'heading',
+                'name'  => __( 'Custom JS', 'mobile-menu' ),
+                'id'    => 'custom_js',
+                'type'  => 'code',
+                'desc'  => __( 'Put your custom JS rules here', 'mobile-menu' ),
+                'lang'  => 'javascript',
+                'class' => 'general-advanced-options',
             ) );
             // Export settings.
             $general_tab->createOption( array(
                 'name'   => __( 'Export Settings', 'mobile-menu' ),
                 'type'   => 'custom',
                 'custom' => '<button class="button button-secondary export-mobile-menu-settings">' . __( 'Export', 'mobile-menu' ) . '</button>',
+                'class'  => 'general-import-export',
             ) );
             // Import settings.
             $general_tab->createOption( array(
                 'name'   => __( 'Import Settings', 'mobile-menu' ),
                 'type'   => 'custom',
                 'custom' => '<button class="button button-secondary import-mobile-menu-settings">' . __( 'Import', 'mobile-menu' ) . '</button>',
-            ) );
-            // Header Main Options.
-            $header_tab->createOption( array(
-                'name' => __( 'Main options', 'mobile-menu' ),
-                'type' => 'heading',
+                'class'  => 'general-import-export',
             ) );
             // Enable/Disable Sticky Header.
-            $header_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'     => __( 'Sticky Header', 'mobile-menu' ),
                 'id'       => 'enabled_sticky_header',
                 'type'     => 'enable',
@@ -471,19 +437,10 @@ class WP_Mobile_Menu_Options
                 'desc'     => __( 'Choose if you want to have the Header Fixed or scrolling with the content.', 'mobile-menu' ),
                 'enabled'  => __( 'Yes', 'mobile-menu' ),
                 'disabled' => __( 'No', 'mobile-menu' ),
-            ) );
-            // Enable/Disable Naked Header.
-            $header_tab->createOption( array(
-                'name'     => __( 'Naked Header', 'mobile-menu' ),
-                'id'       => 'enabled_naked_header',
-                'type'     => 'enable',
-                'default'  => false,
-                'desc'     => __( 'Choose if you want to display a naked header with no background color(transparent).', 'mobile-menu' ),
-                'enabled'  => __( 'Yes', 'mobile-menu' ),
-                'disabled' => __( 'No', 'mobile-menu' ),
+                'class'    => 'header-options',
             ) );
             // Enable/Disable Logo Url.
-            $header_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'     => __( 'Disable Logo/Text', 'mobile-menu' ),
                 'id'       => 'disabled_logo_text',
                 'type'     => 'enable',
@@ -491,13 +448,10 @@ class WP_Mobile_Menu_Options
                 'desc'     => __( 'Choose if you want to disable the logo/text so it will only display the menu icons in the header.', 'mobile-menu' ),
                 'enabled'  => __( 'Yes', 'mobile-menu' ),
                 'disabled' => __( 'No', 'mobile-menu' ),
-            ) );
-            $header_tab->createOption( array(
-                'name' => __( 'Header options', 'mobile-menu' ),
-                'type' => 'heading',
+                'class'    => 'header-options',
             ) );
             // Header Shadow.
-            $header_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'     => __( 'Header Shadow.', 'mobile-menu' ),
                 'id'       => 'header_shadow',
                 'type'     => 'enable',
@@ -505,9 +459,10 @@ class WP_Mobile_Menu_Options
                 'desc'     => __( 'Choose if you want to enable the header shadow at the bottom of the header.', 'mobile-menu' ),
                 'enabled'  => __( 'Yes', 'mobile-menu' ),
                 'disabled' => __( 'No', 'mobile-menu' ),
+                'class'    => 'header-options',
             ) );
             // Header Height.
-            $header_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Header Height', 'mobile-menu' ),
                 'id'      => 'header_height',
                 'type'    => 'number',
@@ -516,17 +471,19 @@ class WP_Mobile_Menu_Options
                 'max'     => '500',
                 'min'     => '20',
                 'unit'    => 'px',
+                'class'   => 'header-options',
             ) );
             // Header Text.
-            $header_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Header Text', 'mobile-menu' ),
                 'id'      => 'header_text',
                 'type'    => 'text',
                 'desc'    => __( 'Enter the desired text for the Mobile Header. If not specified it will use the site title.', 'mobile-menu' ),
                 'default' => '',
+                'class'   => 'header-options',
             ) );
             // Header Text Font Size.
-            $fonts_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Header Text Font Size', 'mobile-menu' ),
                 'id'      => 'header_font_size',
                 'type'    => 'number',
@@ -535,9 +492,10 @@ class WP_Mobile_Menu_Options
                 'max'     => '100',
                 'min'     => '5',
                 'unit'    => 'px',
+                'class'   => 'header-options',
             ) );
             // Header Logo/Text Alignment.
-            $header_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => 'Header Logo/Text Alignment',
                 'id'      => 'header_text_align',
                 'type'    => 'select',
@@ -548,9 +506,10 @@ class WP_Mobile_Menu_Options
                 'right'  => __( 'Right', 'mobile-menu' ),
             ),
                 'default' => 'center',
+                'class'   => 'header-options',
             ) );
             // Header Logo/Text Left Margin.
-            $header_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Header Logo/Text Left Margin', 'mobile-menu' ),
                 'id'      => 'header_text_left_margin',
                 'type'    => 'number',
@@ -559,9 +518,10 @@ class WP_Mobile_Menu_Options
                 'max'     => '200',
                 'min'     => '0',
                 'unit'    => 'px',
+                'class'   => 'header-options',
             ) );
             // Header Logo/Text Right Margin.
-            $header_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Header Logo/Text Right Margin', 'mobile-menu' ),
                 'id'      => 'header_text_right_margin',
                 'type'    => 'number',
@@ -570,20 +530,7 @@ class WP_Mobile_Menu_Options
                 'max'     => '200',
                 'min'     => '0',
                 'unit'    => 'px',
-            ) );
-            $header_tab->createOption( array(
-                'name' => __( 'Logo options', 'mobile-menu' ),
-                'type' => 'heading',
-            ) );
-            // Enable/Disable Site Logo.
-            $header_tab->createOption( array(
-                'name'     => __( 'Site Logo', 'mobile-menu' ),
-                'id'       => 'enabled_logo',
-                'type'     => 'enable',
-                'default'  => false,
-                'desc'     => __( 'Choose if you want to display an image has logo or text instead.', 'mobile-menu' ),
-                'enabled'  => __( 'Logo', 'mobile-menu' ),
-                'disabled' => __( 'Text', 'mobile-menu' ),
+                'class'   => 'header-options',
             ) );
             $header_branding = array(
                 'logo' => __( 'Logo', 'mobile-menu' ),
@@ -597,24 +544,26 @@ class WP_Mobile_Menu_Options
             }
             
             // Use the page title in the Header or Header Banner(global Option).
-            $header_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Site Logo', 'mobile-menu' ),
                 'id'      => 'header_branding',
                 'type'    => 'select',
                 'desc'    => __( 'Chose the Header Branding ( Logo/Text ).', 'mobile-menu' ),
                 'options' => $header_branding,
                 'default' => $default_header_branding,
+                'class'   => 'logo-options',
             ) );
             // Site Logo Image.
-            $header_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Logo', 'mobile-menu' ),
                 'id'      => 'logo_img',
                 'type'    => 'upload',
                 'desc'    => __( 'Upload your logo image', 'mobile-menu' ),
                 'default' => '',
+                'class'   => 'logo-options',
             ) );
             // Header Height.
-            $header_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Logo Height', 'mobile-menu' ),
                 'id'      => 'logo_height',
                 'type'    => 'number',
@@ -623,17 +572,19 @@ class WP_Mobile_Menu_Options
                 'max'     => '500',
                 'min'     => '0',
                 'unit'    => 'px',
+                'class'   => 'logo-options',
             ) );
             // Site Logo Retina Image.
-            $header_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Retina Logo', 'mobile-menu' ),
                 'id'      => 'logo_img_retina',
                 'type'    => 'upload',
                 'desc'    => __( 'Upload your logo image for retina devices', 'mobile-menu' ),
                 'default' => '',
+                'class'   => 'logo-options',
             ) );
             // Enable/Disable Logo Url.
-            $header_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'     => __( 'Disable Logo URL ', 'mobile-menu' ),
                 'id'       => 'disabled_logo_url',
                 'type'     => 'enable',
@@ -641,17 +592,19 @@ class WP_Mobile_Menu_Options
                 'desc'     => __( 'Choose if you want to disable the logo url to avoid being redirect to the homepage or alternative home url when touching the header logo.', 'mobile-menu' ),
                 'enabled'  => __( 'Yes', 'mobile-menu' ),
                 'disabled' => __( 'No', 'mobile-menu' ),
+                'class'    => 'logo-options',
             ) );
             // Alternative Site URL.
-            $header_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Alternative Logo URL', 'mobile-menu' ),
                 'id'      => 'logo_url',
                 'type'    => 'text',
                 'desc'    => __( 'Enter you alternative logo URL. If you leave it blank it will use the Site URL.', 'mobile-menu' ),
                 'default' => '',
+                'class'   => 'logo-options',
             ) );
             // Logo/text Top Margin.
-            $header_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Logo/Text Top Margin', 'mobile-menu' ),
                 'id'      => 'logo_top_margin',
                 'type'    => 'number',
@@ -660,6 +613,7 @@ class WP_Mobile_Menu_Options
                 'max'     => '450',
                 'min'     => '0',
                 'unit'    => 'px',
+                'class'   => 'logo-options',
             ) );
             $def_value = $titan->getOption( 'header_font_size' );
             
@@ -669,7 +623,7 @@ class WP_Mobile_Menu_Options
                 $def_value = '';
             }
             
-            $fonts_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'                => __( 'Header Menu Font', 'mobile-menu' ),
                 'id'                  => 'header_menu_font',
                 'type'                => 'font',
@@ -686,13 +640,10 @@ class WP_Mobile_Menu_Options
                 'font-family' => 'Dosis',
                 'font-size'   => $def_value,
             ),
-            ) );
-            $left_menu_tab->createOption( array(
-                'name' => __( 'Menu Icon', 'mobile-menu' ),
-                'type' => 'heading',
+                'class'               => 'font-options header-options',
             ) );
             // Click Menu Parent link to open Sub menu.
-            $left_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'     => __( 'Parent Link open submenu', 'mobile-menu' ),
                 'id'       => 'left_menu_parent_link_submenu',
                 'type'     => 'enable',
@@ -700,6 +651,7 @@ class WP_Mobile_Menu_Options
                 'desc'     => __( 'Choose if you want to open the submenu by click in the Parent Menu item.', 'mobile-menu' ),
                 'enabled'  => __( 'Yes', 'mobile-menu' ),
                 'disabled' => __( 'No', 'mobile-menu' ),
+                'class'    => 'left-menu-options',
             ) );
             
             if ( true === $titan->getOption( 'left_menu_icon_opt' ) ) {
@@ -709,24 +661,26 @@ class WP_Mobile_Menu_Options
             }
             
             // Icon Image/text Option.
-            $left_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Icon Type', 'mobile-menu' ),
                 'id'      => 'left_menu_icon_new',
                 'type'    => 'select',
                 'default' => $icon_type,
                 'desc'    => __( 'Choose if you want to display an image, icon or an animated icon.', 'mobile-menu' ),
                 'options' => $icon_types,
+                'class'   => 'left-menu-icon',
             ) );
             // Left Menu Icon Font.
-            $left_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Icon Font', 'mobile-menu' ),
                 'id'      => 'left_menu_icon_font',
                 'type'    => 'text',
                 'desc'    => __( '<div class="mobmenu-icon-holder"></div><a href="#" class="mobmenu-icon-picker button">Select menu icon</a>', 'mobile-menu' ),
                 'default' => 'menu',
+                'class'   => 'left-menu-icon',
             ) );
             // Left Menu Icon Font Size.
-            $left_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Icon Font Size', 'mobile-menu' ),
                 'id'      => 'left_icon_font_size',
                 'type'    => 'number',
@@ -735,26 +689,29 @@ class WP_Mobile_Menu_Options
                 'max'     => '100',
                 'min'     => '0',
                 'unit'    => 'px',
+                'class'   => 'left-menu-icon',
             ) );
             // Left Menu Icon.
-            $left_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'        => __( 'Icon Image', 'mobile-menu' ),
                 'id'          => 'left_menu_icon',
                 'type'        => 'upload',
                 'placeholder' => 'Click here to select the icon',
                 'desc'        => __( 'Upload your left menu icon image', 'mobile-menu' ),
                 'default'     => 'menu',
+                'class'       => 'left-menu-icon',
             ) );
             // Text After Left Icon.
-            $left_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Text After Icon', 'mobile-menu' ),
                 'id'      => 'left_menu_text',
                 'type'    => 'text',
                 'desc'    => __( 'Enter the text that will appear after the Icon.', 'mobile-menu' ),
                 'default' => '',
+                'class'   => 'left-menu-icon',
             ) );
             // Text After Left Icon Font Options.
-            $fonts_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'                => __( 'Text After Icon Font', 'mobile-menu' ),
                 'id'                  => 'text_after_left_icon_font',
                 'type'                => 'font',
@@ -771,9 +728,10 @@ class WP_Mobile_Menu_Options
                 'line-height' => '1.5em',
                 'font-family' => 'Dosis',
             ),
+                'class'               => 'font-options left-menu-icon',
             ) );
             // Icon Action Option.
-            $left_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'     => __( 'Icon Action', 'mobile-menu' ),
                 'id'       => 'left_menu_icon_action',
                 'type'     => 'enable',
@@ -781,17 +739,19 @@ class WP_Mobile_Menu_Options
                 'desc'     => __( 'Open the Left Menu Panel or open a Link url.', 'mobile-menu' ),
                 'enabled'  => __( 'Open Menu', 'mobile-menu' ),
                 'disabled' => __( 'Open Link Url', 'mobile-menu' ),
+                'class'    => 'left-menu-icon',
             ) );
             // Icon URL.
-            $left_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Icon Link URL', 'mobile-menu' ),
                 'id'      => 'left_icon_url',
                 'type'    => 'text',
                 'desc'    => __( 'Enter the Icon Link Url.', 'mobile-menu' ),
                 'default' => '',
+                'class'   => 'left-menu-icon',
             ) );
             // Icon URL Target.
-            $left_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'     => __( 'Icon Link Url Target', 'mobile-menu' ),
                 'id'       => 'left_icon_url_target',
                 'type'     => 'enable',
@@ -799,9 +759,10 @@ class WP_Mobile_Menu_Options
                 'desc'     => __( 'Choose it the link will open in the same window or in the new window.', 'mobile-menu' ),
                 'enabled'  => 'Self',
                 'disabled' => 'Blank',
+                'class'    => 'left-menu-icon',
             ) );
             // Left Menu Icon Top Margin.
-            $left_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Icon Top Margin', 'mobile-menu' ),
                 'id'      => 'left_icon_top_margin',
                 'type'    => 'number',
@@ -810,9 +771,10 @@ class WP_Mobile_Menu_Options
                 'max'     => '450',
                 'min'     => '0',
                 'unit'    => 'px',
+                'class'   => 'left-menu-icon',
             ) );
             // Left Menu Icon Left Margin.
-            $left_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Icon Left Margin', 'mobile-menu' ),
                 'id'      => 'left_icon_left_margin',
                 'type'    => 'number',
@@ -821,20 +783,18 @@ class WP_Mobile_Menu_Options
                 'max'     => '450',
                 'min'     => '0',
                 'unit'    => 'px',
-            ) );
-            $left_menu_tab->createOption( array(
-                'name' => __( 'Left Panel options', 'mobile-menu' ),
-                'type' => 'heading',
+                'class'   => 'left-menu-icon',
             ) );
             // Left Menu Background Image.
-            $left_menu_tab->createOption( array(
-                'name' => __( 'Panel Background Image', 'mobile-menu' ),
-                'id'   => 'left_menu_bg_image',
-                'type' => 'upload',
-                'desc' => __( 'Upload your left menu background image(this will override the Background color option)', 'mobile-menu' ),
+            $general_tab->createOption( array(
+                'name'  => __( 'Panel Background Image', 'mobile-menu' ),
+                'id'    => 'left_menu_bg_image',
+                'type'  => 'upload',
+                'desc'  => __( 'Upload your left menu background image(this will override the Background color option)', 'mobile-menu' ),
+                'class' => 'left-panel-options',
             ) );
             // Left Menu Background Image Opacity.
-            $left_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Panel Background Image Opacity', 'mobile-menu' ),
                 'id'      => 'left_menu_bg_opacity',
                 'type'    => 'number',
@@ -844,9 +804,10 @@ class WP_Mobile_Menu_Options
                 'min'     => '10',
                 'step'    => '10',
                 'unit'    => '%',
+                'class'   => 'left-panel-options',
             ) );
             // Left Menu Background Image Size.
-            $left_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Panel Background Image Size', 'mobile-menu' ),
                 'id'      => 'left_menu_bg_image_size',
                 'type'    => 'upload',
@@ -861,17 +822,19 @@ class WP_Mobile_Menu_Options
                 'unset'   => __( 'Unset', 'mobile-menu' ),
             ),
                 'default' => 'cover',
+                'class'   => 'left-panel-options',
             ) );
             // Left Menu Gradient css.
-            $left_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Panel Background Gradient Css', 'mobile-menu' ),
                 'id'      => 'left_menu_bg_gradient',
                 'type'    => 'text',
                 'desc'    => __( '<a href="https://webgradients.com/" target="_blank">Click here</a> to get your desired Gradient, just press the copy button and paste in this field.', 'mobile-menu' ),
                 'default' => '',
+                'class'   => 'left-panel-options',
             ) );
             // Left Menu Panel Width Units.
-            $left_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'     => __( 'Menu Panel Width Units', 'mobile-menu' ),
                 'id'       => 'left_menu_width_units',
                 'type'     => 'enable',
@@ -879,9 +842,10 @@ class WP_Mobile_Menu_Options
                 'desc'     => __( 'Choose the width units.', 'mobile-menu' ),
                 'enabled'  => 'Pixels',
                 'disabled' => __( 'Percentage', 'mobile-menu' ),
+                'class'    => 'left-panel-options',
             ) );
             // Left Menu Panel Width.
-            $left_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Menu Panel Width(Pixels)', 'mobile-menu' ),
                 'id'      => 'left_menu_width',
                 'type'    => 'number',
@@ -890,9 +854,10 @@ class WP_Mobile_Menu_Options
                 'max'     => '1000',
                 'min'     => '50',
                 'unit'    => 'px',
+                'class'   => 'left-panel-options',
             ) );
             // Left Menu Panel Width.
-            $left_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Menu Panel Width(Percentage)', 'mobile-menu' ),
                 'id'      => 'left_menu_width_percentage',
                 'type'    => 'number',
@@ -901,9 +866,10 @@ class WP_Mobile_Menu_Options
                 'max'     => '90',
                 'min'     => '0',
                 'unit'    => '%',
+                'class'   => 'left-panel-options',
             ) );
             // Left Menu Content Padding.
-            $left_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Left Menu Content Padding', 'mobile-menu' ),
                 'id'      => 'left_menu_content_padding',
                 'type'    => 'number',
@@ -913,9 +879,10 @@ class WP_Mobile_Menu_Options
                 'min'     => '0',
                 'step'    => '1',
                 'unit'    => '%',
+                'class'   => 'left-panel-options',
             ) );
             // Left Menu Font.
-            $fonts_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'                => __( 'Left Menu Font', 'mobile-menu' ),
                 'id'                  => 'left_menu_font',
                 'type'                => 'font',
@@ -932,14 +899,10 @@ class WP_Mobile_Menu_Options
                 'line-height' => '1.5em',
                 'font-family' => 'Dosis',
             ),
-            ) );
-            // Icon Heading.
-            $right_menu_tab->createOption( array(
-                'name' => __( 'Menu Icon', 'mobile-menu' ),
-                'type' => 'heading',
+                'class'               => 'font-options left-panel-options',
             ) );
             // Click Menu Parent link to open Sub menu.
-            $right_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'     => __( 'Parent Link open submenu', 'mobile-menu' ),
                 'id'       => 'right_menu_parent_link_submenu',
                 'type'     => 'enable',
@@ -947,6 +910,7 @@ class WP_Mobile_Menu_Options
                 'desc'     => __( 'Choose if you want to open the submenu by click in the Parent Menu item.', 'mobile-menu' ),
                 'enabled'  => __( 'Yes', 'mobile-menu' ),
                 'disabled' => __( 'No', 'mobile-menu' ),
+                'class'    => 'right-menu-options',
             ) );
             
             if ( true === $titan->getOption( 'right_menu_icon_opt' ) ) {
@@ -956,24 +920,26 @@ class WP_Mobile_Menu_Options
             }
             
             // Icon Image/text Option.
-            $right_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Icon Type', 'mobile-menu' ),
                 'id'      => 'right_menu_icon_new',
                 'type'    => 'select',
                 'default' => $icon_type,
                 'desc'    => __( 'Choose if you want to display an image, icon or an animated icon.', 'mobile-menu' ),
                 'options' => $icon_types,
+                'class'   => 'right-menu-icon',
             ) );
             // Right Menu Icon Font.
-            $right_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Icon Font', 'mobile-menu' ),
                 'id'      => 'right_menu_icon_font',
                 'type'    => 'text',
                 'desc'    => __( '<div class="mobmenu-icon-holder"></div><a href="#" class="mobmenu-icon-picker button">Select menu icon</a>', 'mobile-menu' ),
                 'default' => 'menu',
+                'class'   => 'right-menu-icon',
             ) );
             // Right Menu Icon Font Size.
-            $right_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Icon Font Size', 'mobile-menu' ),
                 'id'      => 'right_icon_font_size',
                 'type'    => 'number',
@@ -982,25 +948,19 @@ class WP_Mobile_Menu_Options
                 'max'     => '100',
                 'min'     => '0',
                 'unit'    => 'px',
+                'class'   => 'right-menu-icon',
             ) );
             // Right Menu Icon.
-            $right_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Icon Image', 'mobile-menu' ),
                 'id'      => 'right_menu_icon',
                 'type'    => 'upload',
                 'desc'    => __( 'Upload your right menu icon image', 'mobile-menu' ),
                 'default' => 'menu',
-            ) );
-            // Text Before Right Icon.
-            $right_menu_tab->createOption( array(
-                'name'    => __( 'Text Before Icon', 'mobile-menu' ),
-                'id'      => 'right_menu_text',
-                'type'    => 'text',
-                'desc'    => __( 'Enter the text that will appear before the Icon.', 'mobile-menu' ),
-                'default' => '',
+                'class'   => 'right-menu-icon',
             ) );
             // Icon Action Option.
-            $right_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'     => __( 'Icon Action', 'mobile-menu' ),
                 'id'       => 'right_menu_icon_action',
                 'type'     => 'enable',
@@ -1008,9 +968,19 @@ class WP_Mobile_Menu_Options
                 'desc'     => __( 'Open the Right Menu Panel or open a Link url.', 'mobile-menu' ),
                 'enabled'  => __( 'Open Menu', 'mobile-menu' ),
                 'disabled' => __( 'Open Link Url', 'mobile-menu' ),
+                'class'    => 'right-menu-icon',
+            ) );
+            // Text Before Right Icon.
+            $general_tab->createOption( array(
+                'name'    => __( 'Text Before Icon', 'mobile-menu' ),
+                'id'      => 'right_menu_text',
+                'type'    => 'text',
+                'desc'    => __( 'Enter the text that will appear before the Icon.', 'mobile-menu' ),
+                'default' => '',
+                'class'   => 'right-menu-icon',
             ) );
             // Text Before Right Icon Font Options.
-            $fonts_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'                => __( 'Text Before Icon Font', 'mobile-menu' ),
                 'id'                  => 'text_before_right_icon_font',
                 'type'                => 'font',
@@ -1028,17 +998,19 @@ class WP_Mobile_Menu_Options
                 'line-height' => '1.5em',
                 'font-family' => 'Dosis',
             ),
+                'class'               => 'font-options right-menu-icon',
             ) );
             // Icon URL.
-            $right_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Icon Link URL', 'mobile-menu' ),
                 'id'      => 'right_icon_url',
                 'type'    => 'text',
                 'desc'    => __( 'Enter the Icon Link Url.', 'mobile-menu' ),
                 'default' => '',
+                'class'   => 'right-menu-icon',
             ) );
             // Icon URL Target.
-            $right_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'     => __( 'Icon Link Url Target', 'mobile-menu' ),
                 'id'       => 'right_icon_url_target',
                 'type'     => 'enable',
@@ -1046,9 +1018,10 @@ class WP_Mobile_Menu_Options
                 'desc'     => __( 'Choose it the link will open in the same window or in the new window.', 'mobile-menu' ),
                 'enabled'  => 'Self',
                 'disabled' => 'Blank',
+                'class'    => 'right-menu-icon',
             ) );
             // Right Menu Icon Top Margin.
-            $right_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Icon Top Margin', 'mobile-menu' ),
                 'id'      => 'right_icon_top_margin',
                 'type'    => 'number',
@@ -1057,9 +1030,10 @@ class WP_Mobile_Menu_Options
                 'max'     => '450',
                 'min'     => '0',
                 'unit'    => 'px',
+                'class'   => 'right-menu-icon',
             ) );
             // Right Menu Icon Right Margin.
-            $right_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Icon Right Margin', 'mobile-menu' ),
                 'id'      => 'right_icon_right_margin',
                 'type'    => 'number',
@@ -1068,21 +1042,18 @@ class WP_Mobile_Menu_Options
                 'max'     => '450',
                 'min'     => '0',
                 'unit'    => 'px',
-            ) );
-            // Background Heading.
-            $right_menu_tab->createOption( array(
-                'name' => __( 'Right Panel options', 'mobile-menu' ),
-                'type' => 'heading',
+                'class'   => 'right-menu-icon',
             ) );
             // Right Menu Background Image.
-            $right_menu_tab->createOption( array(
-                'name' => __( 'Panel Background Image', 'mobile-menu' ),
-                'id'   => 'right_menu_bg_image',
-                'type' => 'upload',
-                'desc' => __( 'upload your right menu background image(this will override the Background color option)', 'mobile-menu' ),
+            $general_tab->createOption( array(
+                'name'  => __( 'Panel Background Image', 'mobile-menu' ),
+                'id'    => 'right_menu_bg_image',
+                'type'  => 'upload',
+                'desc'  => __( 'upload your right menu background image(this will override the Background color option)', 'mobile-menu' ),
+                'class' => 'right-panel-options',
             ) );
             // Right Menu Background Image Opacity.
-            $right_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Panel Background Image Opacity', 'mobile-menu' ),
                 'id'      => 'right_menu_bg_opacity',
                 'type'    => 'number',
@@ -1092,9 +1063,10 @@ class WP_Mobile_Menu_Options
                 'min'     => '10',
                 'step'    => '10',
                 'unit'    => '%',
+                'class'   => 'right-panel-options',
             ) );
             // Left Menu Background Image Size.
-            $right_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Panel Background Image Size', 'mobile-menu' ),
                 'id'      => 'right_menu_bg_image_size',
                 'type'    => 'select',
@@ -1108,17 +1080,19 @@ class WP_Mobile_Menu_Options
                 'unset'   => __( 'Unset', 'mobile-menu' ),
             ),
                 'default' => 'cover',
+                'class'   => 'right-panel-options',
             ) );
             // Right Menu Gradient css.
-            $right_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Panel Background Gradient Css', 'mobile-menu' ),
                 'id'      => 'right_menu_bg_gradient',
                 'type'    => 'text',
                 'desc'    => __( '<a href="https://webgradients.com/" target="_blank">Click here</a> to get your desired Gradient, just press the copy button and paste in this field.', 'mobile-menu' ),
                 'default' => '',
+                'class'   => 'right-panel-options',
             ) );
             // Right Menu Panel Width Units.
-            $right_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'     => __( 'Menu Panel Width Units', 'mobile-menu' ),
                 'id'       => 'right_menu_width_units',
                 'type'     => 'enable',
@@ -1126,9 +1100,10 @@ class WP_Mobile_Menu_Options
                 'desc'     => __( 'Choose the width units.', 'mobile-menu' ),
                 'enabled'  => __( 'Pixels', 'mobile-menu' ),
                 'disabled' => __( 'Percentage', 'mobile-menu' ),
+                'class'    => 'right-panel-options',
             ) );
             // Right Menu Panel Width.
-            $right_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Menu Panel Width(Pixels)', 'mobile-menu' ),
                 'id'      => 'right_menu_width',
                 'type'    => 'number',
@@ -1137,9 +1112,10 @@ class WP_Mobile_Menu_Options
                 'max'     => '450',
                 'min'     => '50',
                 'unit'    => 'px',
+                'class'   => 'right-panel-options',
             ) );
             // Right Menu Panel Width.
-            $right_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Menu Panel Width(Percentage)', 'mobile-menu' ),
                 'id'      => 'right_menu_width_percentage',
                 'type'    => 'number',
@@ -1148,9 +1124,10 @@ class WP_Mobile_Menu_Options
                 'max'     => '90',
                 'min'     => '0',
                 'unit'    => '%',
+                'class'   => 'right-panel-options',
             ) );
             // Right Menu Content Padding.
-            $right_menu_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Right Menu Content Padding', 'mobile-menu' ),
                 'id'      => 'right_menu_content_padding',
                 'type'    => 'number',
@@ -1160,9 +1137,10 @@ class WP_Mobile_Menu_Options
                 'min'     => '0',
                 'step'    => '1',
                 'unit'    => '%',
+                'class'   => 'right-panel-options',
             ) );
             // Right Menu Font.
-            $fonts_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'                => __( 'Right Menu Font', 'mobile-menu' ),
                 'id'                  => 'right_menu_font',
                 'type'                => 'font',
@@ -1180,301 +1158,312 @@ class WP_Mobile_Menu_Options
                 'line-height' => '1.5em',
                 'font-family' => 'Dosis',
             ),
-            ) );
-            // Header Left Menu Section.
-            $colors_tab->createOption( array(
-                'name' => __( 'General', 'mobile-menu' ),
-                'type' => 'heading',
+                'class'               => 'font-options right-panel-options',
             ) );
             // Overlay Background color.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Overlay Background Color', 'mobile-menu' ),
                 'id'      => 'overlay_bg_color',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => 'rgba(0, 0, 0, 0.83)',
+                'class'   => 'colors-options',
             ) );
             // Menu Items Border color.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Menu Items Border Color', 'mobile-menu' ),
                 'id'      => 'menu_items_border_color',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => 'rgba(0, 0, 0, 0.83)',
-            ) );
-            // Header Left Menu Section.
-            $colors_tab->createOption( array(
-                'name' => __( 'Header', 'mobile-menu' ),
-                'type' => 'heading',
+                'class'   => 'colors-options',
             ) );
             // Header Background color.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Header Background Color', 'mobile-menu' ),
                 'id'      => 'header_bg_color',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#111111',
+                'class'   => 'header-colors',
             ) );
             // Header Text color.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Header Text Color', 'mobile-menu' ),
                 'id'      => 'header_text_color',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#FFF',
+                'class'   => 'header-colors',
             ) );
-            // Header Left Menu Section.
-            $colors_tab->createOption( array(
-                'name' => __( 'Left Menu', 'mobile-menu' ),
-                'type' => 'heading',
+            $general_tab->createOption( array(
+                'name'  => __( 'Alerts', 'mobile-menu' ),
+                'type'  => 'note',
+                'class' => 'general-alerts heading',
             ) );
             // Left Menu Icon color.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Left Menu Icon Color', 'mobile-menu' ),
                 'id'      => 'left_menu_icon_color',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#FFF',
+                'class'   => 'left-menu-colors',
             ) );
             // Header Text After Left Icon.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Text After Left Icon', 'mobile-menu' ),
                 'id'      => 'header_text_after_icon',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#222',
+                'class'   => 'left-menu-colors',
             ) );
             // Left Panel Background color.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Background Color', 'mobile-menu' ),
                 'id'      => 'left_panel_bg_color',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#F7F7F7',
+                'class'   => 'left-menu-colors',
             ) );
             // Left Panel Text color.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Text Color', 'mobile-menu' ),
                 'id'      => 'left_panel_text_color',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#666',
+                'class'   => 'left-menu-colors',
             ) );
             // Left Panel Background Hover Color.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Background Hover Color', 'mobile-menu' ),
                 'id'      => 'left_panel_hover_bgcolor',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#666',
+                'class'   => 'left-menu-colors',
             ) );
             // Left Panel Text color Hover.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Hover Text Color', 'mobile-menu' ),
                 'id'      => 'left_panel_hover_text_color',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#FFF',
+                'class'   => 'left-menu-colors',
             ) );
             // Left Panel Sub-menu Background Color.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Submenu Background Color', 'mobile-menu' ),
                 'id'      => 'left_panel_submenu_bgcolor',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#3a3a3a',
+                'class'   => 'left-menu-colors',
             ) );
             // Left Panel Sub-menu Text Color.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Submenu Text Color', 'mobile-menu' ),
                 'id'      => 'left_panel_submenu_text_color',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#fff',
+                'class'   => 'left-menu-colors',
             ) );
             // Left Panel Cancel Button Color.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Cancel Button Color', 'mobile-menu' ),
                 'id'      => 'left_panel_cancel_button_color',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#666',
-            ) );
-            // Header Right Menu Section.
-            $colors_tab->createOption( array(
-                'name' => __( 'Right Menu', 'mobile-menu' ),
-                'type' => 'heading',
+                'class'   => 'left-menu-colors',
             ) );
             // Right Menu Icon color.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Right Menu Icon Color', 'mobile-menu' ),
                 'id'      => 'right_menu_icon_color',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#FFF',
+                'class'   => 'right-menu-colors',
             ) );
             // Header Text Before Right Icon.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Text Before Right Icon', 'mobile-menu' ),
                 'id'      => 'header_text_before_icon',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#222',
+                'class'   => 'right-menu-colors',
             ) );
             // Right Panel Background color.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Background Color', 'mobile-menu' ),
                 'id'      => 'right_panel_bg_color',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#F7F7F7',
+                'class'   => 'right-menu-colors',
             ) );
             // Right Panel Text color.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Text Color', 'mobile-menu' ),
                 'id'      => 'right_panel_text_color',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#666',
+                'class'   => 'right-menu-colors',
             ) );
             // Right Panel Background Hover Color.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Background Hover Color', 'mobile-menu' ),
                 'id'      => 'right_panel_hover_bgcolor',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#666',
+                'class'   => 'right-menu-colors',
             ) );
             // Right Panel Text color Hover.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Hover Text Color', 'mobile-menu' ),
                 'id'      => 'right_panel_hover_text_color',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#FFF',
+                'class'   => 'right-menu-colors',
             ) );
             // Right Panel Sub-menu Background Color.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Submenu Background Color', 'mobile-menu' ),
                 'id'      => 'right_panel_submenu_bgcolor',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#3a3a3a',
+                'class'   => 'right-menu-colors',
             ) );
             // Right Panel Sub-menu Text Color.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Submenu Text Color', 'mobile-menu' ),
                 'id'      => 'right_panel_submenu_text_color',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#fff',
+                'class'   => 'right-menu-colors',
             ) );
             // Right Panel Cancel Button Color.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Cancel Button Color', 'mobile-menu' ),
                 'id'      => 'right_panel_cancel_button_color',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#666',
-            ) );
-            // 3rd Level Right Menu Section.
-            $colors_tab->createOption( array(
-                'name' => __( '3rd Level Menu Colors', 'mobile-menu' ),
-                'type' => 'heading',
+                'class'   => 'right-menu-colors',
             ) );
             // Left Panel 3rd Level Left Menu Items Text color.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Left Menu Text Color', 'mobile-menu' ),
                 'id'      => 'left_panel_3rd_menu_text_color',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#fff',
+                'class'   => '3rd-level-menu-colors',
             ) );
             // Left Panel 3rd Level Left Menu Items Text color Hover.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Left Menu Text Color Hover', 'mobile-menu' ),
                 'id'      => 'left_panel_3rd_menu_text_color_hover',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#ccc',
+                'class'   => '3rd-level-menu-colors',
             ) );
             // Left Panel 3rd Level Left Menu Items Background color.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Left Menu Background Color', 'mobile-menu' ),
                 'id'      => 'left_panel_3rd_menu_bg_color',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#222',
+                'class'   => '3rd-level-menu-colors',
             ) );
             // Left Panel 3rd Level Left Menu Items Background color Hover.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Left Menu Background Color Hover', 'mobile-menu' ),
                 'id'      => 'left_panel_3rd_menu_bg_color_hover',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#666',
+                'class'   => '3rd-level-menu-colors',
             ) );
             // Right Panel 3rd Level Right Menu Items Text color.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Right Menu Text Color', 'mobile-menu' ),
                 'id'      => 'right_panel_3rd_menu_text_color',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#fff',
+                'class'   => '3rd-level-menu-colors',
             ) );
             // Right Panel 3rd Level Right Menu Items Text color Hover.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Right Menu Text Color Hover', 'mobile-menu' ),
                 'id'      => 'right_panel_3rd_menu_text_color_hover',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#ccc',
+                'class'   => '3rd-level-menu-colors',
             ) );
             // Right Panel 3rd Level Right Menu Items Background color.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Right Menu Background Color', 'mobile-menu' ),
                 'id'      => 'right_panel_3rd_menu_bg_color',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#222',
+                'class'   => '3rd-level-menu-colors',
             ) );
             // Right Panel 3rd Level Right Menu Items Background color Hover.
-            $colors_tab->createOption( array(
+            $general_tab->createOption( array(
                 'name'    => __( 'Right Menu Background Color Hover', 'mobile-menu' ),
                 'id'      => 'right_panel_3rd_menu_bg_color_hover',
                 'type'    => 'color',
                 'desc'    => '',
                 'alpha'   => true,
                 'default' => '#666',
+                'class'   => '3rd-level-menu-colors',
             ) );
             $panel->createOption( array(
                 'type' => 'save',
@@ -1495,10 +1484,7 @@ class WP_Mobile_Menu_Options
     public function create_woocommerce_options_upsell( $panel, $titan )
     {
         global  $mm_fs ;
-        // Create Woocommerce Options panel.
-        $mm_woo_tab = $panel->createTab( array(
-            'name' => __( 'Woocommerce', 'mobile-menu' ),
-        ) );
+        global  $general_tab ;
         $custom_html = '<div class="mm-business-features-holder"><div class="mm-bussiness-features"><h3>' . __( 'Increase your shop revenue (Business Version)', 'mobile-menu' ) . '</h3>';
         $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>Menu Cart Icon</strong> - Product counter notification buble, upload the desired icon.</p>';
         $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>Mobile Product Filter</strong> - Advanced product filter for mobile users.</p>';
@@ -1512,11 +1498,11 @@ class WP_Mobile_Menu_Options
         $custom_html .= '</div>';
         $custom_html .= '<div class="mm-business-image"><a href="https://shopdemo.wpmobilemenu.com/?utm_source=wprepo-dash&utm_medium=user%20website&utm_campaign=upsell_link" target="_blank"><img src="' . plugins_url( 'demo-content/assets/shopdemo-mobile-menu.png', __FILE__ ) . '">';
         $custom_html .= '</a><p><a href="https://shopdemo.wpmobilemenu.com/?utm_source=wprepo-dash&utm_medium=user%20website&utm_campaign=upsell_link"> ' . esc_html( 'See Demo Site', 'mobile-menu' ) . '</a></div></div>';
-        // Woocommerce Tab Upgrade Content.
-        $mm_woo_tab->createOption( array(
-            'name'   => '',
+        $general_tab->createOption( array(
+            'name'   => 'woo-premium-features',
             'type'   => 'custom',
             'custom' => $custom_html,
+            'class'  => 'woocommerce-options',
         ) );
     }
     
@@ -1532,10 +1518,7 @@ class WP_Mobile_Menu_Options
     public function create_footer_options_upsell( $panel, $titan )
     {
         global  $mm_fs ;
-        // Create Footer Options panel.
-        $footer_tab = $panel->createTab( array(
-            'name' => __( 'Footer', 'mobile-menu' ),
-        ) );
+        global  $general_tab ;
         $custom_html = '<div class="mm-business-features-holder"><div class="mm-bussiness-features"><h3>' . __( 'Give your Website an App look and feel', 'mobile-menu' ) . '</h3>';
         $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>Fixed Footer Bar</strong></p>';
         $custom_html .= '<p><span class="dashicons dashicons-yes"></span><strong>Auto-hide on Scroll</strong></p>';
@@ -1547,10 +1530,11 @@ class WP_Mobile_Menu_Options
         $custom_html .= '<div class="mm-business-image"><a href="https://prodemo.wpmobilemenu.com/?utm_source=wprepo-dash&utm_medium=user%20website&utm_campaign=upsell_link" target="_blank"><img src="' . plugins_url( 'demo-content/assets/prodemo-mobile-menu.png', __FILE__ ) . '">';
         $custom_html .= '</a><p><a href="https://prodemo.wpmobilemenu.com/?utm_source=wprepo-dash&utm_medium=user%20website&utm_campaign=upsell_link"> ' . esc_html( 'See Demo Site', 'mobile-menu' ) . '</a></div></div>';
         // Footer Tab Upgrade Content.
-        $footer_tab->createOption( array(
-            'name'   => '',
+        $general_tab->createOption( array(
+            'name'   => 'footer-upsell',
             'type'   => 'custom',
             'custom' => $custom_html,
+            'class'  => 'footer-options',
         ) );
     }
 

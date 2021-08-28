@@ -272,14 +272,17 @@ body.admin-bar .mobmenu, body.admin-bar .mobmenu-panel {
 }
 /* No menu assigned warning. */
 h4.no-mobile-menu {
-    padding: 50px;
+    padding: 22px;
     text-align: center;
-    width: 70%;
+    width: 90%;
     background: #fff;
     margin: auto;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 29px;
 }
 h4.no-mobile-menu a {
-    text-decoration: underline;
+    text-decoration: none;
     color:#000;
 }
 .mobmenu-content li a:focus {
