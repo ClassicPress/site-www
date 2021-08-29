@@ -3,11 +3,11 @@
 /**
  * Plugin Name: Mobile Menu
  * Description: An easy to use WordPress responsive mobile menu. Keep your mobile visitors engaged.
- * Version: 2.8.1.8.1
+ * Version: 2.8.2.3
  * Plugin URI: https://www.wpmobilemenu.com/
  * Author: Rui Guerreiro
- * Author URI: https://www.jedipress.com/
- * Tested up to: 5.6
+ * Author URI: https://www.freshlightlab.com/
+ * Tested up to: 5.8
  * Text Domain: mobile-menu
  * Domain Path: /languages/
  * License: GPLv2
@@ -16,7 +16,7 @@
 if ( !defined( 'ABSPATH' ) ) {
     die;
 }
-define( 'WP_MOBILE_MENU_VERSION', '2.8.1.8.1' );
+define( 'WP_MOBILE_MENU_VERSION', '2.8.2.3' );
 define( 'WP_MOBILE_MENU_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WP_MOBILE_MENU_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 if ( !class_exists( 'WP_Mobile_Menu' ) ) {
@@ -82,7 +82,7 @@ if ( !class_exists( 'WP_Mobile_Menu' ) ) {
             add_action( 'wp_loaded', array( $this->mobmenu_core, 'register_sidebar' ) );
             // Register Menus.
             add_action( 'init', array( $this->mobmenu_core, 'register_menus' ) );
-            // Find Elements to Hide.
+            // Find Elements to hide.
             add_action( 'init', array( $this->mobmenu_core, 'find_elements_mobmenu' ) );
             // Load frontend assets.
             if ( !is_admin() ) {
@@ -156,7 +156,7 @@ if ( !class_exists( 'WP_Mobile_Menu' ) ) {
          */
         private function include_required_files()
         {
-            require_once dirname( __FILE__ ) . '/options-framework/titan-framework/titan-framework-embedder.php';
+            require_once dirname( __FILE__ ) . '/options-framework/option-framework.php';
             require_once dirname( __FILE__ ) . '/includes/class-wp-mobile-menu-core.php';
             require_once dirname( __FILE__ ) . '/includes/class-wp-mobile-menu-options.php';
             require_once dirname( __FILE__ ) . '/includes/class-wp-mobile-menu-walker-nav-menu.php';
@@ -173,11 +173,10 @@ if ( !class_exists( 'WP_Mobile_Menu' ) ) {
             $is_mobile_only = $mobmenu_options->getOption( 'only_mobile_devices' );
             $is_testing_mode = $mobmenu_options->getOption( 'only_testing_mode' );
             $mobmenu_action = '';
-
-			if ( isset($_GET['mobmenu-action']) ) {
-				$mobmenu_action =  $_GET['mobmenu-action'];
-			}
-
+            if ( isset( $_GET['mobmenu-action'] ) ) {
+                $mobmenu_action = $_GET['mobmenu-action'];
+            }
+            
             if ( $mobmenu_action == 'find-element' || $is_testing_mode && current_user_can( 'administrator' ) || !$is_testing_mode && (!$is_mobile_only || $is_mobile_only && wp_is_mobile()) ) {
                 // Enqueue Html to the Footer.
                 add_action( 'wp_footer', array( $this->mobmenu_core, 'load_menu_html_markup' ) );
@@ -234,7 +233,12 @@ if ( !class_exists( 'WP_Mobile_Menu' ) ) {
             if ( 'nav-menus.php' === $hook || 'toplevel_page_mobile-menu-options' === $hook ) {
                 wp_enqueue_style( 'cssmobmenu-icons', plugins_url( 'includes/css/mobmenu-icons.css', __FILE__ ) );
                 wp_enqueue_style( 'cssmobmenu-admin', plugins_url( 'includes/css/mobmenu-admin.css', __FILE__ ) );
-                wp_register_script( 'mobmenu-admin-js', plugins_url( 'includes/js/mobmenu-admin.js', __FILE__ ), array( 'jquery' ) );
+                wp_register_script(
+                    'mobmenu-admin-js',
+                    plugins_url( 'includes/js/mobmenu-admin.js', __FILE__ ),
+                    array( 'jquery' ),
+                    WP_MOBILE_MENU_VERSION
+                );
                 wp_enqueue_script( 'mobmenu-admin-js' );
             }
             
@@ -265,9 +269,8 @@ if ( isset( $admin_options['only_mobile_devices'] ) ) {
 }
 
 $mobmenu_action = '';
-
-if ( isset($_GET['mobmenu-action']) ) {
-    $mobmenu_action =  $_GET['mobmenu-action'];
+if ( isset( $_GET['mobmenu-action'] ) ) {
+    $mobmenu_action = $_GET['mobmenu-action'];
 }
 
 if ( $mobmenu_action == 'find-element' || is_admin() || (!$is_mobile_only || $is_mobile_only && wp_is_mobile()) ) {

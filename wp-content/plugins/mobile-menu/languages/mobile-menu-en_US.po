@@ -584,7 +584,7 @@ msgid "Check the desired elements"
 msgstr ""
 
 #: includes/class-wp-mobile-menu-options.php:399
-msgid "Miscelaneous Options"
+msgid "Miscellaneous Options"
 msgstr ""
 
 #: includes/class-wp-mobile-menu-options.php:405
