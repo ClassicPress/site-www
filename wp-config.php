@@ -92,6 +92,8 @@ define( 'WP_DEBUG', getenv( 'WP_DEBUG' ) === 'true' );
 define( 'WP_HOME',    getenv( 'WP_HOME' ) );
 define( 'WP_SITEURL', getenv( 'WP_SITEURL' ) );
 
+define( 'WP_MEMORY_LIMIT', '512M' );
+
 /* That's all, stop editing! Happy blogging. */
 
 /** Absolute path to the ClassicPress directory. */
