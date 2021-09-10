@@ -28,3 +28,22 @@ Finally add a local administrative user, for example:
 ```
 wp user create admin admin@local.host --role=administrator --user_pass=changeme
 ```
+
+## Pull Requests
+
+* If you only have one PR open at a time then you can use the master branch on your fork.
+* If you want to have multiple PRs open at once (which sometimes happens without being planned for) then each one will need its own branch.
+* Best practice is to use a separate branch for each change but if you are only doing one change at a time it doesn't matter much.
+* Make sure to reset to `upstream/master` or the "latest official" code before starting a branch or PR.
+
+## CSS/JS Changes
+
+If you make any CSS or JS changes, you need to update version number in the functions.php to clear cache:
+
+```
+function cp_susty_get_asset_version() {
+    return '20200917.1';
+}
+```
+
+Use the date when the changes were made as the version number in the format `YYYYMMDD`. If there are multiple changes in one day, increment decimal version number (ex: 20200917.1, 20200917.2).
