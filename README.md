@@ -29,7 +29,7 @@ Finally add a local administrative user, for example:
 wp user create admin admin@local.host --role=administrator --user_pass=changeme
 ```
 
-## Pull Requests
+## Pull requests
 
 We accept pull requests for this website via GitHub. Many of the guidelines at https://github.com/ClassicPress/ClassicPress/blob/develop/.github/CONTRIBUTING.md also apply here, for example:
 
@@ -39,7 +39,7 @@ We accept pull requests for this website via GitHub. Many of the guidelines at h
 
 Please always use a **separate branch** for each change, to avoid issues with your `master` branch not being reset or updated correctly in between different pull requests. If you're not sure how to do this, you can use the GitHub web interface to edit files, open a new branch, and propose your changes as a pull request.
 
-## CSS/JS Changes
+## CSS/JS changes
 
 If you make any CSS or JS changes, you need to update version number in the functions.php to clear cache:
 
