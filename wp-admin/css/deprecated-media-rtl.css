@@ -107,19 +107,19 @@ th {
 /* specific to the image upload form */
 
 .image-align-none-label {
-	background: url(../images/align-none.png) no-repeat center left;
+	background: url(../images/align-none.png) no-repeat center right;
 }
 
 .image-align-left-label {
-	background: url(../images/align-left.png) no-repeat center left;
+	background: url(../images/align-left.png) no-repeat center right;
 }
 
 .image-align-center-label {
-	background: url(../images/align-center.png) no-repeat center left;
+	background: url(../images/align-center.png) no-repeat center right;
 }
 
 .image-align-right-label {
-	background: url(../images/align-right.png) no-repeat center left;
+	background: url(../images/align-right.png) no-repeat center right;
 }
 
 tr.image-size td {
@@ -204,6 +204,22 @@ span.required {
 
 #media-upload #filter .subsubsub {
 	margin: 8px 0;
+}
+
+#media-upload .tablenav-pages a,
+#media-upload .tablenav-pages .current {
+	display: inline-block;
+	padding: 4px 5px 6px;
+	font-size: 16px;
+	line-height: 1;
+	text-align: center;
+	text-decoration: none;
+}
+
+#media-upload .tablenav-pages a {
+	min-width: 17px;
+	border: 1px solid #ccc;
+	background: #f7f7f7;
 }
 
 #filter .tablenav select {
