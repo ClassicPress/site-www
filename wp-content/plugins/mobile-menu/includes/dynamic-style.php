@@ -9,20 +9,20 @@
  * CUSTOM CSS OUTPUT
  */
 global  $mm_fs ;
-$titan = TitanFramework::getInstance( 'mobmenu' );
+$plugin_settings = MobileMenuOptions::getInstance( 'mobmenu' );
 $default_elements = '';
 $logo_height = '';
 $header_logo_float = '';
-$def_el_arr = $titan->getOption( 'default_hided_elements' );
-$trigger_res = $titan->getOption( 'width_trigger' );
-$right_menu_width = $titan->getOption( 'right_menu_width' ) . 'px';
+$def_el_arr = $plugin_settings->getOption( 'default_hided_elements' );
+$trigger_res = $plugin_settings->getOption( 'width_trigger' );
+$right_menu_width = $plugin_settings->getOption( 'right_menu_width' ) . 'px';
 $right_menu_width_translate = '100%';
 $left_menu_width_translate = '100%';
 $left_menu_height_translate = '100%';
 $woo_menu_width_translate = '100%';
 $woo_menu_width = 0;
 $woo_menu_font = '';
-$search_results_font = $titan->getOption( 'search_results_font' );
+$search_results_font = $plugin_settings->getOption( 'search_results_font' );
 if ( in_array( '1', $def_el_arr, true ) ) {
     $default_elements .= '.nav, ';
 }
@@ -53,103 +53,104 @@ if ( in_array( '9', $def_el_arr, true ) ) {
 $default_elements .= '.hide';
 // Check if the Naked Header is enabled.
 
-if ( $titan->getOption( 'enabled_naked_header' ) ) {
+if ( $plugin_settings->getOption( 'enabled_naked_header' ) ) {
     $header_bg_color = 'transparent';
     $wrap_padding_top = '0';
+    $header_width = '10%';
     // If we are only using one of the menus without any logo.
-    if ( $titan->getOption( 'disabled_logo_text' ) && (!$titan->getOption( 'enable_left_menu' ) || !$titan->getOption( 'enable_right_menu' )) ) {
+    if ( $plugin_settings->getOption( 'disabled_logo_text' ) && (!$plugin_settings->getOption( 'enable_left_menu' ) || !$plugin_settings->getOption( 'enable_right_menu' )) ) {
         $header_width = '10%';
     }
 } else {
-    $header_bg_color = $titan->getOption( 'header_bg_color' );
-    $wrap_padding_top = $titan->getOption( 'header_height' );
+    $header_bg_color = $plugin_settings->getOption( 'header_bg_color' );
+    $wrap_padding_top = $plugin_settings->getOption( 'header_height' );
 }
 
 // Determine the Width of the Left menu panel.
 
-if ( $titan->getOption( 'left_menu_width_units' ) ) {
-    $left_menu_width = $titan->getOption( 'left_menu_width' ) . 'px';
-    $left_menu_width_translate = $titan->getOption( 'left_menu_width' ) - 1 . 'px';
+if ( $plugin_settings->getOption( 'left_menu_width_units' ) ) {
+    $left_menu_width = $plugin_settings->getOption( 'left_menu_width' ) . 'px';
+    $left_menu_width_translate = $plugin_settings->getOption( 'left_menu_width' ) - 1 . 'px';
 } else {
-    $left_menu_width = $titan->getOption( 'left_menu_width_percentage' ) . '%';
+    $left_menu_width = $plugin_settings->getOption( 'left_menu_width_percentage' ) . '%';
 }
 
 // Determine the Width of the Right menu panel.
 
-if ( $titan->getOption( 'right_menu_width_units' ) ) {
-    $right_menu_width = $titan->getOption( 'right_menu_width' ) . 'px';
+if ( $plugin_settings->getOption( 'right_menu_width_units' ) ) {
+    $right_menu_width = $plugin_settings->getOption( 'right_menu_width' ) . 'px';
 } else {
-    $right_menu_width = $titan->getOption( 'right_menu_width_percentage' ) . '%';
+    $right_menu_width = $plugin_settings->getOption( 'right_menu_width_percentage' ) . '%';
 }
 
 
-if ( $titan->getOption( 'logo_height' ) > 0 ) {
-    $logo_height = $titan->getOption( 'logo_height' );
+if ( $plugin_settings->getOption( 'logo_height' ) > 0 ) {
+    $logo_height = $plugin_settings->getOption( 'logo_height' );
 } else {
-    $logo_height = $titan->getOption( 'header_height' );
+    $logo_height = $plugin_settings->getOption( 'header_height' );
 }
 
 $logo_height = 'height:' . $logo_height . 'px!important;';
-$header_height = $titan->getOption( 'header_height' );
+$header_height = $plugin_settings->getOption( 'header_height' );
 $total_header_height = $header_height;
 $banner_height = 0;
-$header_margin_top = $titan->getOption( 'logo_top_margin' );
+$header_margin_top = $plugin_settings->getOption( 'logo_top_margin' );
 $header_banner_padding_top = 0;
 $header_width = '100%';
 // Left Menu Background Image.
-$left_menu_bg_image = $titan->getOption( 'left_menu_bg_image' );
+$left_menu_bg_image = $plugin_settings->getOption( 'left_menu_bg_image' );
 $left_menu_bg_image_size = 'initial';
 $cart_menu_icon_font_size = 0;
 $cart_icon_top_margin = 0;
 $woo_menu_panel_bg_color = 'initial';
 $search_icon_font_size = 0;
-if ( $titan->getOption( 'search_icon_font_size' ) ) {
-    $search_icon_font_size = $titan->getOption( 'search_icon_font_size' );
+if ( $plugin_settings->getOption( 'search_icon_font_size' ) ) {
+    $search_icon_font_size = $plugin_settings->getOption( 'search_icon_font_size' );
 }
-if ( $titan->getOption( 'woo_menu_panel_bg_color' ) ) {
-    $woo_menu_panel_bg_color = $titan->getOption( 'woo_menu_panel_bg_color' );
+if ( $plugin_settings->getOption( 'woo_menu_panel_bg_color' ) ) {
+    $woo_menu_panel_bg_color = $plugin_settings->getOption( 'woo_menu_panel_bg_color' );
 }
-if ( $titan->getOption( 'left_menu_bg_image_size' ) ) {
-    $left_menu_bg_image_size = $titan->getOption( 'left_menu_bg_image_size' );
+if ( $plugin_settings->getOption( 'left_menu_bg_image_size' ) ) {
+    $left_menu_bg_image_size = $plugin_settings->getOption( 'left_menu_bg_image_size' );
 }
-if ( $titan->getOption( 'mm_woo_menu_icon_font_size' ) ) {
-    $cart_menu_icon_font_size = $titan->getOption( 'mm_woo_menu_icon_font_size' );
+if ( $plugin_settings->getOption( 'mm_woo_menu_icon_font_size' ) ) {
+    $cart_menu_icon_font_size = $plugin_settings->getOption( 'mm_woo_menu_icon_font_size' );
 }
-if ( $titan->getOption( 'cart_icon_top_margin' ) ) {
-    $cart_icon_top_margin = $titan->getOption( 'cart_icon_top_margin' );
+if ( $plugin_settings->getOption( 'cart_icon_top_margin' ) ) {
+    $cart_icon_top_margin = $plugin_settings->getOption( 'cart_icon_top_margin' );
 }
 $header_margin_top = $header_margin_top . 'px';
 $header_margin_left = '0';
 $header_margin_right = '0';
 $header_text_position = 'absolute';
-$border_menu_size = $titan->getOption( 'menu_items_border_size' );
-$submenu_open_icon_font = $titan->getOption( 'submenu_open_icon_font' );
+$border_menu_size = $plugin_settings->getOption( 'menu_items_border_size' );
+$submenu_open_icon_font = $plugin_settings->getOption( 'submenu_open_icon_font' );
 // Sticky Header.
 
-if ( $titan->getOption( 'enabled_sticky_header' ) ) {
+if ( $plugin_settings->getOption( 'enabled_sticky_header' ) ) {
     $header_position = 'fixed';
 } else {
     $header_position = 'absolute';
 }
 
 
-if ( 'center' === $titan->getOption( 'header_text_align' ) ) {
+if ( 'center' === $plugin_settings->getOption( 'header_text_align' ) ) {
     $logo_header_position = 'absolute';
 } else {
     $logo_header_position = 'relative';
 }
 
 // Header Text alignment.
-if ( 'center' === $titan->getOption( 'header_text_align' ) ) {
+if ( 'center' === $plugin_settings->getOption( 'header_text_align' ) ) {
     $header_text_position = 'initial';
 }
-if ( 'left' === $titan->getOption( 'header_text_align' ) ) {
-    $header_margin_left = $titan->getOption( 'header_text_left_margin' ) . 'px;';
+if ( 'left' === $plugin_settings->getOption( 'header_text_align' ) ) {
+    $header_margin_left = $plugin_settings->getOption( 'header_text_left_margin' ) . 'px;';
 }
-if ( 'right' === $titan->getOption( 'header_text_align' ) ) {
-    $header_margin_right = $titan->getOption( 'header_text_right_margin' ) . 'px;';
+if ( 'right' === $plugin_settings->getOption( 'header_text_align' ) ) {
+    $header_margin_right = $plugin_settings->getOption( 'header_text_right_margin' ) . 'px;';
 }
-if ( $titan->getOption( 'logo_img_retina' ) ) {
+if ( $plugin_settings->getOption( 'logo_img_retina' ) ) {
     ?>
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
 
@@ -219,12 +220,12 @@ echo  $header_height ;
 @media screen and ( min-width: 782px ) {
 	#mobmenu-footer li:hover {
 		background-color: <?php 
-echo  $titan->getOption( 'footer_bg_color_hover' ) ;
+echo  $plugin_settings->getOption( 'footer_bg_color_hover' ) ;
 ?>;
 	}
 	#mobmenu-footer li:hover i {
 		color: <?php 
-echo  $titan->getOption( 'footer_icon_color_hover' ) ;
+echo  $plugin_settings->getOption( 'footer_icon_color_hover' ) ;
 ?>;
 	}
 }
@@ -239,7 +240,7 @@ echo  $trigger_res + 1 ;
 <?php 
 
 if ( 0 < $border_menu_size ) {
-    $border_menu_color = $titan->getOption( 'menu_items_border_color' );
+    $border_menu_color = $plugin_settings->getOption( 'menu_items_border_color' );
     $border_style = $border_menu_size . 'px solid ' . $border_menu_color;
     ?>
 
@@ -253,8 +254,8 @@ if ( 0 < $border_menu_size ) {
 }
 
 
-if ( $titan->getOption( 'left_menu_tabbed_menus', false ) ) {
-    $border_menu_color = $titan->getOption( 'menu_items_border_color' );
+if ( $plugin_settings->getOption( 'left_menu_tabbed_menus', false ) ) {
+    $border_menu_color = $plugin_settings->getOption( 'menu_items_border_color' );
     $border_style = '2px solid ' . $border_menu_color;
     ?>
 
@@ -268,8 +269,8 @@ if ( $titan->getOption( 'left_menu_tabbed_menus', false ) ) {
 }
 
 
-if ( $titan->getOption( 'right_menu_tabbed_menus', false ) ) {
-    $border_menu_color = $titan->getOption( 'menu_items_border_color' );
+if ( $plugin_settings->getOption( 'right_menu_tabbed_menus', false ) ) {
+    $border_menu_color = $plugin_settings->getOption( 'menu_items_border_color' );
     $border_style = '2px solid ' . $border_menu_color;
     ?>
 
@@ -283,14 +284,14 @@ if ( $titan->getOption( 'right_menu_tabbed_menus', false ) ) {
 }
 
 
-if ( '' !== $titan->getOption( 'hide_elements' ) ) {
+if ( '' !== $plugin_settings->getOption( 'hide_elements' ) ) {
     ?>
 /* Our css Custom Options values */
 @media only screen and (max-width:<?php 
     echo  $trigger_res ;
     ?>px){
 	<?php 
-    echo  $titan->getOption( 'hide_elements' ) ;
+    echo  $plugin_settings->getOption( 'hide_elements' ) ;
     ?> {
 		display:none !important;
 	}
@@ -310,80 +311,80 @@ echo  $trigger_res ;
 	
 	.mobmenur-container i {
 		color: <?php 
-echo  $titan->getOption( 'right_menu_icon_color' ) ;
+echo  $plugin_settings->getOption( 'right_menu_icon_color' ) ;
 ?>;
 	}
 	.mobmenul-container i {
 		color: <?php 
-echo  $titan->getOption( 'left_menu_icon_color' ) ;
+echo  $plugin_settings->getOption( 'left_menu_icon_color' ) ;
 ?>;
 	}
 	.mobmenul-container img {
 		max-height:  <?php 
-echo  $titan->getOption( 'header_height' ) ;
+echo  $plugin_settings->getOption( 'header_height' ) - $plugin_settings->getOption( 'logo_top_margin' ) * 2 - $plugin_settings->getOption( 'left_icon_top_margin' ) ;
 ?>px;
 		float: left;
 	}
 	.mobmenur-container img {
 		max-height:  <?php 
-echo  $titan->getOption( 'header_height' ) ;
+echo  $plugin_settings->getOption( 'header_height' ) - $plugin_settings->getOption( 'logo_top_margin' ) * 2 - $plugin_settings->getOption( 'right_icon_top_margin' ) ;
 ?>px;
 		float: right;
 	}
 	.mob-expand-submenu i {
 		font-size: <?php 
-echo  $titan->getOption( 'submenu_icon_font_size' ) ;
+echo  $plugin_settings->getOption( 'submenu_icon_font_size' ) ;
 ?>px;
 	}
 	#mobmenuleft li a , #mobmenuleft li a:visited, .mobmenu-content h2, .mobmenu-content h3, .show-nav-left .mob-menu-copyright, .show-nav-left .mob-expand-submenu i {
 		color: <?php 
-echo  $titan->getOption( 'left_panel_text_color' ) ;
+echo  $plugin_settings->getOption( 'left_panel_text_color' ) ;
 ?>;
 
 	}
 	.mob-cancel-button {
 		font-size: <?php 
-echo  $titan->getOption( 'close_icon_font_size' ) ;
+echo  $plugin_settings->getOption( 'close_icon_font_size' ) ;
 ?>px!important;
 	}
 
 	/* 3rd Level Left Menu Items Background color on Hover*/
 	.mobmenu-content #mobmenuleft .sub-menu  .sub-menu li a:hover {
 		color: <?php 
-echo  $titan->getOption( 'left_panel_3rd_menu_text_color_hover' ) ;
+echo  $plugin_settings->getOption( 'left_panel_3rd_menu_text_color_hover' ) ;
 ?>;
 	}
 	/* 3rd Level Left Menu Items Background color on Hover*/
 	.mobmenu-content #mobmenuleft .sub-menu .sub-menu li:hover {
 		background-color: <?php 
-echo  $titan->getOption( 'left_panel_3rd_menu_bg_color_hover' ) ;
+echo  $plugin_settings->getOption( 'left_panel_3rd_menu_bg_color_hover' ) ;
 ?>;
 	}
 	.mobmenu-content #mobmenuleft li:hover, .mobmenu-content #mobmenuright li:hover  {
 		background-color: <?php 
-echo  $titan->getOption( 'left_panel_hover_bgcolor' ) ;
+echo  $plugin_settings->getOption( 'left_panel_hover_bgcolor' ) ;
 ?>;
 	}
 	.mobmenu-content #mobmenuright li:hover  {
 		background-color: <?php 
-echo  $titan->getOption( 'right_panel_hover_bgcolor' ) ;
+echo  $plugin_settings->getOption( 'right_panel_hover_bgcolor' ) ;
 ?> ;
 	}
 	/* 3rd Level Right Menu Items Background color on Hover*/
 	.mobmenu-content #mobmenuright .sub-menu .sub-menu li:hover {
 		background-color: <?php 
-echo  $titan->getOption( 'right_panel_3rd_menu_bg_color_hover' ) ;
+echo  $plugin_settings->getOption( 'right_panel_3rd_menu_bg_color_hover' ) ;
 ?>;
 	}
 	/* 3rd Level Right Menu Items Background color on Hover*/
 	.mobmenu-content #mobmenuright .sub-menu  .sub-menu li a:hover {
 		color: <?php 
-echo  $titan->getOption( 'right_panel_3rd_menu_text_color_hover' ) ;
+echo  $plugin_settings->getOption( 'right_panel_3rd_menu_text_color_hover' ) ;
 ?>;
 	}
 
 	<?php 
-if ( $titan->getOption( 'header_shadow' ) && !$titan->getOption( 'enabled_naked_header' ) ) {
+if ( $plugin_settings->getOption( 'header_shadow' ) && !$plugin_settings->getOption( 'enabled_naked_header' ) ) {
     ?>
 		.mob-menu-header-holder {
 			box-shadow:0px 0px 8px 0px rgba(0,0,0,0.15);
@@ -393,11 +394,11 @@ if ( $titan->getOption( 'header_shadow' ) && !$titan->getOption( 'enabled_naked_
 ?>
 	.mobmenu-content #mobmenuleft .sub-menu {
 		background-color: <?php 
-echo  $titan->getOption( 'left_panel_submenu_bgcolor' ) ;
+echo  $plugin_settings->getOption( 'left_panel_submenu_bgcolor' ) ;
 ?> ;
 		margin: 0;
 		color: <?php 
-echo  $titan->getOption( 'left_panel_submenu_text_color' ) ;
+echo  $plugin_settings->getOption( 'left_panel_submenu_text_color' ) ;
 ?> ;
 		width: 100%;
 		position: initial;
@@ -416,7 +417,7 @@ if ( $left_menu_bg_image ) {
 
 ?>
 		opacity: <?php 
-echo  $titan->getOption( 'left_menu_bg_opacity' ) / 100 ;
+echo  $plugin_settings->getOption( 'left_menu_bg_opacity' ) / 100 ;
 ?>;
 		background-attachment: fixed ;
 		background-position: center top ;
@@ -433,40 +434,40 @@ echo  $left_menu_bg_image_size ;
 	.mob-menu-right-bg-holder { 
 		<?php 
 
-if ( $titan->getOption( 'right_menu_bg_image' ) ) {
+if ( $plugin_settings->getOption( 'right_menu_bg_image' ) ) {
     ?>
 			background: url(<?php 
-    echo  wp_get_attachment_url( $titan->getOption( 'right_menu_bg_image' ) ) ;
+    echo  wp_get_attachment_url( $plugin_settings->getOption( 'right_menu_bg_image' ) ) ;
     ?>);
 		<?php 
 }
 
 ?>
 		opacity: <?php 
-echo  $titan->getOption( 'right_menu_bg_opacity' ) / 100 ;
+echo  $plugin_settings->getOption( 'right_menu_bg_opacity' ) / 100 ;
 ?>;
 		background-attachment: fixed ;
 		background-position: center top ;
 		-webkit-background-size: <?php 
-echo  $titan->getOption( 'right_menu_bg_image_size' ) ;
+echo  $plugin_settings->getOption( 'right_menu_bg_image_size' ) ;
 ?>;
 		-moz-background-size: <?php 
-echo  $titan->getOption( 'right_menu_bg_image_size' ) ;
+echo  $plugin_settings->getOption( 'right_menu_bg_image_size' ) ;
 ?>;
 		background-size:  <?php 
-echo  $titan->getOption( 'right_menu_bg_image_size' ) ;
+echo  $plugin_settings->getOption( 'right_menu_bg_image_size' ) ;
 ?>;
 	}
 	<?php 
 ?>
 	.mobmenu-content #mobmenuleft .sub-menu a {
 		color: <?php 
-echo  $titan->getOption( 'left_panel_submenu_text_color' ) ;
+echo  $plugin_settings->getOption( 'left_panel_submenu_text_color' ) ;
 ?> ;
 	}
 	.mobmenu-content #mobmenuright .sub-menu  a {
 		color: <?php 
-echo  $titan->getOption( 'right_panel_submenu_text_color' ) ;
+echo  $plugin_settings->getOption( 'right_panel_submenu_text_color' ) ;
 ?> ;
 	}
 	.mobmenu-content #mobmenuright .sub-menu .sub-menu {
@@ -474,36 +475,36 @@ echo  $titan->getOption( 'right_panel_submenu_text_color' ) ;
 	}
 	.mobmenu-content #mobmenuright .sub-menu {
 		background-color: <?php 
-echo  $titan->getOption( 'right_panel_submenu_bgcolor' ) ;
+echo  $plugin_settings->getOption( 'right_panel_submenu_bgcolor' ) ;
 ?> ;
 		margin: 0;
 		color: <?php 
-echo  $titan->getOption( 'right_panel_submenu_text_color' ) ;
+echo  $plugin_settings->getOption( 'right_panel_submenu_text_color' ) ;
 ?> ;
 		position: initial;
 		width: 100%;
 	}
 	#mobmenuleft li:hover a, #mobmenuleft li:hover i {
 		color: <?php 
-echo  $titan->getOption( 'left_panel_hover_text_color' ) ;
+echo  $plugin_settings->getOption( 'left_panel_hover_text_color' ) ;
 ?>;
 	}
 	#mobmenuright li a , #mobmenuright li a:visited, .show-nav-right .mob-menu-copyright, .show-nav-right .mob-expand-submenu i {
 		color: <?php 
-echo  $titan->getOption( 'right_panel_text_color' ) ;
+echo  $plugin_settings->getOption( 'right_panel_text_color' ) ;
 ?> ;
 	}
 	#mobmenuright li a:hover {
 		color: <?php 
-echo  $titan->getOption( 'right_panel_hover_text_color' ) ;
+echo  $plugin_settings->getOption( 'right_panel_hover_text_color' ) ;
 ?> ;
 	}
 	.mobmenul-container {
 		top: <?php 
-echo  $titan->getOption( 'left_icon_top_margin' ) ;
+echo  $plugin_settings->getOption( 'left_icon_top_margin' ) ;
 ?>px;
 		margin-left: <?php 
-echo  $titan->getOption( 'left_icon_left_margin' ) ;
+echo  $plugin_settings->getOption( 'left_icon_left_margin' ) ;
 ?>px;
 		margin-top: <?php 
 echo  $header_margin_top ;
@@ -515,17 +516,17 @@ echo  $header_height ;
 	}
 	.mobmenur-container {
 		top: <?php 
-echo  $titan->getOption( 'right_icon_top_margin' ) ;
+echo  $plugin_settings->getOption( 'right_icon_top_margin' ) ;
 ?>px;
 		margin-right: <?php 
-echo  $titan->getOption( 'right_icon_right_margin' ) ;
+echo  $plugin_settings->getOption( 'right_icon_right_margin' ) ;
 ?>px;
 		margin-top: <?php 
 echo  $header_margin_top ;
 ?>;
 	}
 	<?php 
-switch ( $titan->getOption( 'header_text_align' ) ) {
+switch ( $plugin_settings->getOption( 'header_text_align' ) ) {
     case 'left':
         $header_logo_float = 'float:left;';
         break;
@@ -542,7 +543,7 @@ switch ( $titan->getOption( 'header_text_align' ) ) {
 echo  $header_margin_top ;
 ?>;
 		text-align:   <?php 
-echo  $titan->getOption( 'header_text_align' ) ;
+echo  $plugin_settings->getOption( 'header_text_align' ) ;
 ?>;
 		margin-left:  <?php 
 echo  $header_margin_left ;
@@ -578,26 +579,26 @@ echo  $wrap_padding_top ;
 	}
 	<?php 
 
-if ( '' !== $titan->getOption( 'left_menu_bg_gradient' ) ) {
-    $left_panel_bg_color = $titan->getOption( 'left_menu_bg_gradient' ) . ';';
+if ( '' !== $plugin_settings->getOption( 'left_menu_bg_gradient' ) ) {
+    $left_panel_bg_color = $plugin_settings->getOption( 'left_menu_bg_gradient' ) . ';';
 } else {
-    $left_panel_bg_color = 'background-color:' . $titan->getOption( 'left_panel_bg_color' ) . ';';
+    $left_panel_bg_color = 'background-color:' . $plugin_settings->getOption( 'left_panel_bg_color' ) . ';';
 }
 
 
-if ( '' !== $titan->getOption( 'right_menu_bg_gradient' ) ) {
-    $right_panel_bg_color = $titan->getOption( 'right_menu_bg_gradient' ) . ';';
+if ( '' !== $plugin_settings->getOption( 'right_menu_bg_gradient' ) ) {
+    $right_panel_bg_color = $plugin_settings->getOption( 'right_menu_bg_gradient' ) . ';';
 } else {
-    $right_panel_bg_color = 'background-color:' . $titan->getOption( 'right_panel_bg_color' ) . ';';
+    $right_panel_bg_color = 'background-color:' . $plugin_settings->getOption( 'right_panel_bg_color' ) . ';';
 }
 
 $mm_woo_menu_panel_bg_color = '#CCC';
-if ( $titan->getOption( 'mm_woo_menu_panel_bg_color' ) ) {
-    $mm_woo_menu_panel_bg_color = $titan->getOption( 'mm_woo_menu_panel_bg_color' );
+if ( $plugin_settings->getOption( 'mm_woo_menu_panel_bg_color' ) ) {
+    $mm_woo_menu_panel_bg_color = $plugin_settings->getOption( 'mm_woo_menu_panel_bg_color' );
 }
 
-if ( $titan->getOption( 'mm_woo_menu_bg_gradient' ) ) {
-    $cart_panel_bg_color = $titan->getOption( 'mm_woo_menu_bg_gradient' ) . ';';
+if ( $plugin_settings->getOption( 'mm_woo_menu_bg_gradient' ) ) {
+    $cart_panel_bg_color = $plugin_settings->getOption( 'mm_woo_menu_bg_gradient' ) . ';';
 } else {
     $cart_panel_bg_color = 'background-color:' . $mm_woo_menu_panel_bg_color . ';';
 }
@@ -626,7 +627,7 @@ echo  $right_menu_width ;
 	}
 	.show-nav-left .mobmenu-overlay, .show-nav-right .mobmenu-overlay, .show-mob-menu-search .mobmenu-overlay  {
 		background: <?php 
-echo  $titan->getOption( 'overlay_bg_color' ) ;
+echo  $plugin_settings->getOption( 'overlay_bg_color' ) ;
 ?>;
 	}
 	.mob-menu-slideout-top .mobmenu-overlay {
@@ -700,13 +701,13 @@ echo  $left_menu_height_translate ;
 		-ms-transform: translateY(0px);
 		-o-transform: translateY(0px);
 		transform: translateY(0px);
-		z-index: 300000;
+		z-index: 3000000;
 	}
 	.mob-menu-slideout-over.show-nav-left .mobmenu-left-panel {
 		overflow: hidden;
 	}
 	.show-nav-left .mobmenu-panel.show-panel , .show-nav-right .mobmenu-panel.show-panel {
-		z-index: 300000;
+		z-index: 3000000;
 	}
 	/* Hides everything pushed outside of it */
 	.mob-menu-slideout .mobmenu-panel, .mob-menu-slideout-over .mobmenu-panel, .mob-menu-slideout .mobmenu-cart-panel, .mob-menu-slideout-over .mobmenu-cart-panel {
@@ -721,7 +722,7 @@ echo  $left_menu_height_translate ;
 	/*End of Mobmenu Slide Over */
 	.mobmenu .headertext { 
 		color: <?php 
-echo  $titan->getOption( 'header_text_color' ) ;
+echo  $plugin_settings->getOption( 'header_text_color' ) ;
 ?> ;
 		text-decoration: none;
 	}
@@ -749,64 +750,64 @@ echo  $total_header_height ;
 	
 	.mobmenu-left-panel li a, .leftmbottom, .leftmtop{
 		padding-left: <?php 
-echo  $titan->getOption( 'left_menu_content_padding' ) ;
+echo  $plugin_settings->getOption( 'left_menu_content_padding' ) ;
 ?>%;
 		padding-right: <?php 
-echo  $titan->getOption( 'left_menu_content_padding' ) ;
+echo  $plugin_settings->getOption( 'left_menu_content_padding' ) ;
 ?>%;
 	}
 	.mobmenu-content li > .sub-menu li {
 		padding-left: calc(<?php 
-echo  $titan->getOption( 'left_menu_content_padding' ) ;
+echo  $plugin_settings->getOption( 'left_menu_content_padding' ) ;
 ?>*1%);
 	}
 
 	.mobmenu-right-panel li, .rightmbottom, .rightmtop{
 		padding-left: <?php 
-echo  $titan->getOption( 'right_menu_content_padding' ) ;
+echo  $plugin_settings->getOption( 'right_menu_content_padding' ) ;
 ?>%;
 		padding-right: <?php 
-echo  $titan->getOption( 'right_menu_content_padding' ) ;
+echo  $plugin_settings->getOption( 'right_menu_content_padding' ) ;
 ?>%;
 	}
 	.mobmenul-container i {
 		line-height: <?php 
-echo  $titan->getOption( 'left_icon_font_size' ) ;
+echo  $plugin_settings->getOption( 'left_icon_font_size' ) ;
 ?>px;
 		font-size: <?php 
-echo  $titan->getOption( 'left_icon_font_size' ) ;
+echo  $plugin_settings->getOption( 'left_icon_font_size' ) ;
 ?>px;
 		float: left;
 	}
 	.left-menu-icon-text {
 		float: left;
 		line-height: <?php 
-echo  $titan->getOption( 'left_icon_font_size' ) ;
+echo  $plugin_settings->getOption( 'left_icon_font_size' ) ;
 ?>px;
 		color: <?php 
-echo  $titan->getOption( 'header_text_after_icon' ) ;
+echo  $plugin_settings->getOption( 'header_text_after_icon' ) ;
 ?>;
 	}
 	.mobmenu-left-panel .mobmenu-display-name {
 		color: <?php 
-echo  $titan->getOption( 'left_panel_text_color' ) ;
+echo  $plugin_settings->getOption( 'left_panel_text_color' ) ;
 ?>;
 	}
 	.right-menu-icon-text {
 		float: right;
 		line-height: <?php 
-echo  $titan->getOption( 'right_icon_font_size' ) ;
+echo  $plugin_settings->getOption( 'right_icon_font_size' ) ;
 ?>px;
 		color: <?php 
-echo  $titan->getOption( 'header_text_before_icon' ) ;
+echo  $plugin_settings->getOption( 'header_text_before_icon' ) ;
 ?>;
 	}
 	.mobmenur-container i {
 		line-height: <?php 
-echo  $titan->getOption( 'right_icon_font_size' ) ;
+echo  $plugin_settings->getOption( 'right_icon_font_size' ) ;
 ?>px;
 		font-size: <?php 
-echo  $titan->getOption( 'right_icon_font_size' ) ;
+echo  $plugin_settings->getOption( 'right_icon_font_size' ) ;
 ?>px;
 		float: right;
 	}
@@ -829,36 +830,36 @@ echo  $logo_height ;
 	}
 	.mobmenu-content #mobmenuleft > li > a:hover {
 		background-color: <?php 
-echo  $titan->getOption( 'left_panel_hover_bgcolor' ) ;
+echo  $plugin_settings->getOption( 'left_panel_hover_bgcolor' ) ;
 ?>;
 	}
 
 	.mobmenu-content #mobmenuright > li > a:hover {
 		background-color: <?php 
-echo  $titan->getOption( 'right_panel_hover_bgcolor' ) ;
+echo  $plugin_settings->getOption( 'right_panel_hover_bgcolor' ) ;
 ?>;
 	}
 	.mobmenu-left-panel .mob-cancel-button {
 		color: <?php 
-echo  $titan->getOption( 'left_panel_cancel_button_color' ) ;
+echo  $plugin_settings->getOption( 'left_panel_cancel_button_color' ) ;
 ?>;
 	}
 	.mobmenu-right-panel .mob-cancel-button {
 		color: <?php 
-echo  $titan->getOption( 'right_panel_cancel_button_color' ) ;
+echo  $plugin_settings->getOption( 'right_panel_cancel_button_color' ) ;
 ?>;
 	}	
 	
 }
 
 <?php 
-$text_after_left_icon_font = $titan->getOption( 'text_after_left_icon_font' );
-$footer_text_font = $titan->getOption( 'footer_text_font' );
-$header_banner_font = $titan->getOption( 'header_banner_font' );
-$header_menu_font = $titan->getOption( 'header_menu_font' );
-$left_menu_font = $titan->getOption( 'left_menu_font' );
-$text_before_right_icon_font = $titan->getOption( 'text_before_right_icon_font' );
-$right_menu_font = $titan->getOption( 'right_menu_font' );
+$text_after_left_icon_font = $plugin_settings->getOption( 'text_after_left_icon_font' );
+$footer_text_font = $plugin_settings->getOption( 'footer_text_font' );
+$header_banner_font = $plugin_settings->getOption( 'header_banner_font' );
+$header_menu_font = $plugin_settings->getOption( 'header_menu_font' );
+$left_menu_font = $plugin_settings->getOption( 'left_menu_font' );
+$text_before_right_icon_font = $plugin_settings->getOption( 'text_before_right_icon_font' );
+$right_menu_font = $plugin_settings->getOption( 'right_menu_font' );
 ?>
 
 .mob-menu-logo-holder > .headertext span,.mobmenu input.mob-menu-search-field {

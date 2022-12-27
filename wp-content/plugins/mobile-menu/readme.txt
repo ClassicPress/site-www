@@ -1,10 +1,10 @@
 === WP Mobile Menu - The Mobile-Friendly Responsive Menu ===
-Contributors: takanakui, freemius
+Contributors: takanakui, freemius, freslightlab
 link: http://profiles.wordpress.org/takanakui
 Tags:   mobile, navigation, responsive, menu,  responsive menu, mobile menu,  tablet menu, hamburger menu, hamburger, wordpress responsive menu, wordpress mobile menu, canvas menu
 Requires at least: 4.4
-Tested up to: 5.8
-Stable tag: 2.8.2.3
+Tested up to: 6.1
+Stable tag: 2.8.3
 Requires PHP: 5.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -71,9 +71,7 @@ No coding knowledge is required. Works with all WordPress responsive themes.
 = Related Plugins =
 * [Menu Image](https://wordpress.org/plugins/menu-image/): Easily add an image or icon in a menu item. Creating a better website menu.
 
-* [Pay With Stripe](https://wordpress.org/plugins/payments-stripe-gateway/): Sell your products on your WordPress website without any other complex e-commerce plugin.
-
-###I need help or I have a doubt, check our Support
+* [Pay With Stripe](https://www.freshlightlab.com/pay-with-stripe?utm_source=wprepo-mobile-menu&utm_medium=wprepo_readme&utm_campaign=FreshlightLab+Pay+With+Stripe+Landing+Page): Sell your products on your WordPress website without any other complex e-commerce plugin.
 
 ###I need help or I have a doubt, check our Support
 * Great Support, our free support is above the average. Only the Premium support is better and faster.
@@ -137,6 +135,36 @@ Not available at the moment
 == Changelog ==
 
 
+
+= 2.8.3 =
+* New! - Possibility to open menus with enter key when got focus
+* New! - 3 new filters to replace the logo image, current menu and menu URL
+* Fix! - Remove blank space below the header in a specific theme
+* Fix! - Display normal logo if retina isn't uploaded and vice versa
+* Fix! - Only force autoplay videos on desktop
+* Improvment! - Update Freemius SDK
+
+= 2.8.2.7 =
+* Fix! - Fix image upload field
+* Improvment! - Remove background gradient from free demo content
+* Fix! - Security Fix
+
+= 2.8.2.6 =
+* Fix! - Revert the HTML of the Mobile Menu to the wp_footer hook instead wp_open_body because there are still many themes not following the guidelines
+* Fix! - Logo was disappearing in Naked Header mode
+
+= 2.8.2.5 =
+* New! - Proof of concept new Elementor widget for the Let Menu button
+* New! - Logo is now translated with WPML to use different mobile header logos per language
+* New! - Closing menu with enter is now possible when focusing on the close button
+* Fix! - Improve Onboarding
+* Fix! - Improve UX Settings in admin area making it easier
+* Fix! - Complete removal of TitanFramework
+* Fix! - Adding more acessibility practices in the menus
+* Fix! - Code refactoring for better organization
+
+= 2.8.2.4 =
+* Fix! - Fix issue that was opening all the submenus
 
 = 2.8.2.3 =
 * Fix! - Fix security issue in code from TitanFramework

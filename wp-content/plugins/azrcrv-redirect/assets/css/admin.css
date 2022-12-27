@@ -1,0 +1,63 @@
+table.azrcrv-r{
+	width: 100%;
+}
+table.azrcrv-r thead tr th {
+	background-color: #007fff;
+	color: #FFF;
+	font-weight: 900;
+	padding: 4px;
+}
+table.azrcrv-r thead tr th:nth-child(1), table.azrcrv-r tbody tr td:nth-child(1) {
+	text-align: left;
+}
+table.azrcrv-r thead tr th:nth-child(2) {
+	text-align: center;
+	padding: 0 6px;
+}
+table.azrcrv-r tbody tr td:nth-child(2) {
+	text-align: center;
+	background-color: #d7ebff;
+	padding: 0 6px;
+}
+table.azrcrv-r thead tr th:nth-child(3), table.azrcrv-r tbody tr td:nth-child(3) {
+	text-align: center;
+	width: 120px;
+}
+table.azrcrv-r thead tr th:nth-child(4) {
+	text-align: center;
+	padding: 0 6px;
+}
+table.azrcrv-r tbody tr td:nth-child(4) {
+	text-align: center;
+	background-color: #d7ebff;
+	padding: 0 6px;
+}
+table.azrcrv-r thead tr th:nth-child(5), table.azrcrv-r tbody tr td:nth-child(5) {
+	text-align: center;
+	width: 120px;
+}
+table.azrcrv-r thead tr th:nth-child(6) {
+	text-align: left;
+	padding: 0 6px;
+}
+table.azrcrv-r tbody tr td:nth-child(6) {
+	text-align: left;
+	background-color: #d7ebff;
+	padding: 0 6px;
+}
+table.azrcrv-r thead tr th:nth-child(7), table.azrcrv-r tbody tr td:nth-child(7) {
+	text-align: center;
+	width: 130px;
+}
+table.azrcrv-r tbody tr td.azrcrv-r-enabled{
+	background-color: #aae4bd;
+}
+table.azrcrv-r tbody tr td.azrcrv-r-disabled{
+	background-color: #e4aab4;
+}
+div.azrcrv-r-pagination{
+	font-size: 1.2em;
+	width: 100%;
+	text-align: center;
+	padding: 6px 0;
+}

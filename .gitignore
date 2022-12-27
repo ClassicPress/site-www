@@ -2,3 +2,4 @@
 /vendor/
 /wp-content/uploads/
 /wp-content/autoptimize_404_handler.php
+/wp-content/plugins/wp-discourse/

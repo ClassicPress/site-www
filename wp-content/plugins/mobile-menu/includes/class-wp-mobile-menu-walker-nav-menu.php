@@ -49,13 +49,14 @@ class WP_Mobile_Menu_Walker_Nav_Menu extends Walker_Nav_Menu
         $attributes .= ( !empty($item->target) ? ' target="' . esc_attr( $item->target ) . '"' : '' );
         $attributes .= ( !empty($item->xfn) ? ' rel="' . esc_attr( $item->xfn ) . '"' : '' );
         $attributes .= ( !empty($item->url) ? ' href="' . esc_attr( $item->url ) . '"' : '' );
+        $attributes .= ' role="menuitem"';
         $item_output = $args->before;
         
         if ( 'below' === $menu_position ) {
-            $item_output .= '<li ' . $class_names . '><a' . $attributes . ' class="' . $icon_class . '">';
+            $item_output .= '<li role="none" ' . $class_names . '><a' . $attributes . ' class="' . $icon_class . '">';
             $item_output .= $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $mobile_icon . $args->link_after;
         } else {
-            $item_output .= '<li ' . $class_names . '><a' . $attributes . ' class="' . $icon_class . '">' . $mobile_icon;
+            $item_output .= '<li role="none" ' . $class_names . '><a' . $attributes . ' class="' . $icon_class . '">' . $mobile_icon;
             $item_output .= $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after;
         }
         
@@ -88,7 +89,7 @@ class WP_Mobile_Menu_Walker_Nav_Menu extends Walker_Nav_Menu
     {
         global  $mm_fs ;
         $indent = str_repeat( "\t", $depth );
-        $output .= "\n{$indent}<ul class=\"sub-menu \">\n";
+        $output .= "\n{$indent}<ul  role='menu' class=\"sub-menu \">\n";
     }
 
 }

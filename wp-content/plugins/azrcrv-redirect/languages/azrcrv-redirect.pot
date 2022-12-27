@@ -1,0 +1,195 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Redirect\n"
+"POT-Creation-Date: 2021-12-27 18:11+0000\n"
+"PO-Revision-Date: 2019-02-24 18:39+0000\n"
+"Last-Translator: \n"
+"Language-Team: translate@azurecurve.co.uk\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;esc_html__;esc_html_e\n"
+"X-Poedit-SearchPath-0: azrcrv-redirect.php\n"
+
+#: azrcrv-redirect.php:189 azrcrv-redirect.php:240
+msgid "Settings"
+msgstr ""
+
+#: azrcrv-redirect.php:228 azrcrv-redirect.php:229 azrcrv-redirect.php:258
+msgid "Redirect"
+msgstr ""
+
+#: azrcrv-redirect.php:239 azrcrv-redirect.php:257
+msgid "Redirect Settings"
+msgstr ""
+
+#: azrcrv-redirect.php:248 azrcrv-redirect.php:249
+msgid "Manage Redirects"
+msgstr ""
+
+#: azrcrv-redirect.php:283 azrcrv-redirect.php:461
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: azrcrv-redirect.php:305
+msgid "Settings have been saved."
+msgstr ""
+
+#: azrcrv-redirect.php:321
+msgid "Default Redirect Type"
+msgstr ""
+
+#: azrcrv-redirect.php:331
+msgid "Type of redirect to use as default."
+msgstr ""
+
+#: azrcrv-redirect.php:340
+msgid "Redirect Permalink Changes"
+msgstr ""
+
+#: azrcrv-redirect.php:348
+msgid "Monitor for permalink changes and add redirect."
+msgstr ""
+
+#: azrcrv-redirect.php:358
+msgid "Redirect Rows"
+msgstr ""
+
+#: azrcrv-redirect.php:366
+msgid "Number of rows to show in Manage Redirects list."
+msgstr ""
+
+#: azrcrv-redirect.php:398
+msgid "Save Settings"
+msgstr ""
+
+#: azrcrv-redirect.php:413 azrcrv-redirect.php:843 azrcrv-redirect.php:971
+msgid "You do not have permissions to perform this action"
+msgstr ""
+
+#: azrcrv-redirect.php:483
+msgid "Redirect has been added."
+msgstr ""
+
+#: azrcrv-redirect.php:487
+msgid "Redirect cannot be added for the site home page."
+msgstr ""
+
+#: azrcrv-redirect.php:491
+msgid "Source or destination url is empty."
+msgstr ""
+
+#: azrcrv-redirect.php:495
+msgid "Redirect already exists for supplied source url."
+msgstr ""
+
+#: azrcrv-redirect.php:499
+msgid "Invalid redirect type specified."
+msgstr ""
+
+#: azrcrv-redirect.php:503
+msgid "Only relative urls can be redirected."
+msgstr ""
+
+#: azrcrv-redirect.php:507
+msgid "Only valid pages can be set as a destination."
+msgstr ""
+
+#: azrcrv-redirect.php:511
+msgid "Redirect has been deleted."
+msgstr ""
+
+#: azrcrv-redirect.php:515
+msgid "Redirect has been edited."
+msgstr ""
+
+#: azrcrv-redirect.php:519
+msgid "Delete of redirect failed."
+msgstr ""
+
+#: azrcrv-redirect.php:523
+msgid "Edit of redirect failed."
+msgstr ""
+
+#: azrcrv-redirect.php:527
+msgid "Add New Redirect"
+msgstr ""
+
+#: azrcrv-redirect.php:550
+msgid "Edit Redirect"
+msgstr ""
+
+#: azrcrv-redirect.php:573 azrcrv-redirect.php:645
+msgid "Source URL"
+msgstr ""
+
+#: azrcrv-redirect.php:580
+msgid "Relative URL to redirect"
+msgstr ""
+
+#: azrcrv-redirect.php:589 azrcrv-redirect.php:657
+msgid "Redirect Type"
+msgstr ""
+
+#: azrcrv-redirect.php:609 azrcrv-redirect.php:660
+msgid "Destination URL"
+msgstr ""
+
+#: azrcrv-redirect.php:616
+msgid "Destination URL for the redirect"
+msgstr ""
+
+#: azrcrv-redirect.php:640
+msgid "Current Redirects"
+msgstr ""
+
+#: azrcrv-redirect.php:648
+msgid "Redirects"
+msgstr ""
+
+#: azrcrv-redirect.php:651
+msgid "Last Redirect"
+msgstr ""
+
+#: azrcrv-redirect.php:654
+msgid "Status"
+msgstr ""
+
+#: azrcrv-redirect.php:663
+msgid "Action"
+msgstr ""
+
+#: azrcrv-redirect.php:672
+msgid "No redirects found for this page..."
+msgstr ""
+
+#: azrcrv-redirect.php:677
+msgid "Enabled"
+msgstr ""
+
+#: azrcrv-redirect.php:680
+msgid "Disabled"
+msgstr ""
+
+#: azrcrv-redirect.php:685
+#, php-format
+msgid "%d - permanent"
+msgstr ""
+
+#: azrcrv-redirect.php:687
+#, php-format
+msgid "%d - temporary"
+msgstr ""
+
+#: azrcrv-redirect.php:807
+msgid "Add redirect"
+msgstr ""
+
+#: azrcrv-redirect.php:809
+msgid "Edit redirect"
+msgstr ""

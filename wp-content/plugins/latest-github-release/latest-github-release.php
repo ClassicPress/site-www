@@ -1,13 +1,15 @@
 <?php
 /**
- * Plugin Name: Latest Github Release
- * Description: Automatically add a download link to the latest Github repo release zips with a shortcode like [latest_github_release user="github" repo="hub"]
- * Version: 2.0.0
- * Author: Laurence Bahiirwa, James Nylen
- * Author URI: https://omukiguy.com
- * Plugin URI: https://github.com/bahiirwa/latest-github-release
- * Text Domain: latest_github_release
- *
+ * Plugin Name:       Latest Github Release
+ * Description:       Automatically add a download link to the latest Github repo release zips with a shortcode like [latest_github_release user="github" repo="hub"]
+ * Version:           2.1.0
+ * Author:            Laurence Bahiirwa, James Nylen
+ * Author URI:        https://omukiguy.com
+ * Plugin URI:        https://github.com/bahiirwa/latest-github-release
+ * Text Domain:       latest-github-release
+ * Requires at least: 4.9
+ * Tested up to:      5.3.2
+ * 
  * This is free software released under the terms of the General Public License,
  * version 2, or later. It is distributed WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. Full
@@ -46,12 +48,14 @@ class LatestGithubRelease {
 	 * @return string <a href="(zip url)" class="cp-release-link">$atts[name]</a>
 	 */
 	public static function process_shortcode( $atts ) {
+
 		// Default values for when not passed in shortcode.
 		$defaults = [
 			'user'  => '',
 			'repo'  => '',
 			'name'  => 'Download Zip', // default button name
 			'class' => 'latest-github-release-link',
+			'tag' => '',
 		];
 
 		// Replace any missing shortcode arguments with defaults.
@@ -78,6 +82,7 @@ class LatestGithubRelease {
 
 		// Get the URL to a release zipfile.
 		$zip_url = self::get_zip_url_for_release( $release_data );
+
 		if ( is_wp_error( $zip_url ) ) {
 			return (
 				'<!-- [latest_github_release] '
@@ -86,11 +91,15 @@ class LatestGithubRelease {
 			);
 		}
 
+		/**
+		 * The `p` tag is added for use in the Block Editor.
+		 * Filter using `latest_github_release_link` filter hook.
+		 */
 		$html = (
-			'<a href="' . esc_attr( $zip_url ) . '"'
+			'<p><a href="' . esc_attr( $zip_url ) . '"'
 			. ' class="' . esc_attr( $atts['class'] ) . '">'
 			. esc_html( $atts['name'] )
-			. '</a>'
+			. '</a></p>'
 		);
 
 		/**
@@ -98,10 +107,12 @@ class LatestGithubRelease {
 		 *
 		 * @since 2.0.0
 		 *
-		 * @param string $html The link HTML.
+		 * @param string $html    The link HTML.
+		 * @param string $zip_url The Zip URL.
+		 * 
 		 * @param array  $atts The full array of shortcode attributes.
 		 */
-		return apply_filters( 'latest_github_release_link', $html, $atts );
+		return apply_filters( 'latest_github_release_link', $html, $atts, $zip_url );
 	}
 
 	/**

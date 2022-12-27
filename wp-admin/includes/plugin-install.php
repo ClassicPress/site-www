@@ -306,7 +306,7 @@ function install_plugins_upload() {
 	<form method="post" enctype="multipart/form-data" class="wp-upload-form" action="<?php echo self_admin_url('update.php?action=upload-plugin'); ?>">
 		<?php wp_nonce_field( 'plugin-upload' ); ?>
 		<label class="screen-reader-text" for="pluginzip"><?php _e( 'Plugin zip file' ); ?></label>
-		<input type="file" id="pluginzip" name="pluginzip" />
+		<input type="file" id="pluginzip" name="pluginzip" accept=".zip" />
 		<?php submit_button( __( 'Install Now' ), '', 'install-plugin-submit', false ); ?>
 	</form>
 </div>
@@ -624,7 +624,7 @@ function install_plugin_information() {
 				</li>
 			<?php } if ( ! empty( $api->requires ) ) { ?>
 				<li>
-					<strong><?php _e( 'Requires ClassicPress Version:' ); ?></strong>
+					<strong><?php _e( 'Requires WordPress Version:' ); ?></strong>
 					<?php
 					/* translators: %s: version number */
 					printf( __( '%s or higher' ), $api->requires );
@@ -717,10 +717,35 @@ function install_plugin_information() {
 	<?php
 	$wp_version = get_bloginfo( 'version' );
 
-	if ( ! empty( $api->tested ) && version_compare( substr( $wp_version, 0, strlen( $api->tested ) ), $api->tested, '>' ) ) {
-		echo '<div class="notice notice-warning notice-alt"><p>' . __( '<strong>Warning:</strong> This plugin has <strong>not been tested</strong> with your current version of ClassicPress.' ) . '</p></div>';
-	} elseif ( ! empty( $api->requires ) && version_compare( substr( $wp_version, 0, strlen( $api->requires ) ), $api->requires, '<' ) ) {
-		echo '<div class="notice notice-warning notice-alt"><p>' . __( '<strong>Warning:</strong> This plugin has <strong>not been marked as compatible</strong> with your version of ClassicPress.' ) . '</p></div>';
+	$compatible_php = ( empty( $api->requires_php ) || version_compare( phpversion(), $api->requires_php, '>=' ) );
+	$tested_wp      = ( empty( $api->tested ) || version_compare( $wp_version, $api->tested, '<=' ) );
+	$compatible_wp  = ( empty( $api->requires ) || version_compare( $wp_version, $api->requires, '>=' ) );
+
+	if ( ! $compatible_php ) {
+		echo '<div class="notice notice-error notice-alt"><p>';
+		_e( '<strong>Error:</strong> This plugin <strong>requires a newer version of PHP</strong>.' );
+		if ( current_user_can( 'update_php' ) ) {
+		printf(
+				/* translators: %s: "Update PHP" page URL */
+				' ' . __( '<a href="%s" target="_blank">Click here to learn more about updating PHP</a>.' ),
+				esc_url( wp_get_update_php_url() )
+		);
+			echo '</p>';
+			wp_update_php_annotation();
+		} else {
+			echo '</p>';
+		}
+		echo '</div>';
+	}
+
+	if ( ! $tested_wp ) {
+		echo '<div class="notice notice-warning notice-alt"><p>';
+		_e( '<strong>Warning:</strong> This plugin <strong>has not been tested</strong> with your current version of ClassicPress.' );
+		echo '</p></div>';
+	} elseif ( ! $compatible_wp ) {
+		echo '<div class="notice notice-error notice-alt"><p>';
+		_e( '<strong>Error:</strong> This plugin requires a newer version of WordPress and may not be compatible with ClassicPress.' );
+		echo '</p></div>';
 	}
 
 	foreach ( (array) $api->sections as $section_name => $content ) {
@@ -744,7 +769,14 @@ function install_plugin_information() {
 		switch ( $status['status'] ) {
 			case 'install':
 				if ( $status['url'] ) {
+					if ( $compatible_php && $compatible_wp ) {
 					echo '<a data-slug="' . esc_attr( $api->slug ) . '" id="plugin_install_from_iframe" class="button button-primary right" href="' . $status['url'] . '" target="_parent">' . __( 'Install Now' ) . '</a>';
+					} else {
+						printf(
+							'<button type="button" class="button button-primary button-disabled right" disabled="disabled">%s</button>',
+							_x( 'Cannot Install', 'plugin' )
+						);
+					}
 				}
 				break;
 			case 'update_available':

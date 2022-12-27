@@ -1157,7 +1157,7 @@ function retrieve_widgets( $theme_changed = false ) {
 	$sidebars_widgets = wp_map_sidebars_widgets( $sidebars_widgets );
 
 	// Find hidden/lost multi-widget instances.
-	$shown_widgets = call_user_func_array( 'array_merge', $sidebars_widgets );
+	$shown_widgets = array_merge( ...array_values( $sidebars_widgets ) );
 	$lost_widgets  = array_diff( $registered_widgets_ids, $shown_widgets );
 
 	foreach ( $lost_widgets as $key => $widget_id ) {
@@ -1396,7 +1396,7 @@ function wp_widget_rss_output( $rss, $args = array() ) {
 
 	if ( is_wp_error($rss) ) {
 		if ( is_admin() || current_user_can('manage_options') )
-			echo '<p><strong>' . __( 'RSS Error:' ) . '</strong> ' . $rss->get_error_message() . '</p>';
+			echo '<p><strong>' . __( 'RSS Error:' ) . '</strong> ' . esc_html( $rss->get_error_message() ) . '</p>';
 		return;
 	}
 
@@ -1430,7 +1430,7 @@ function wp_widget_rss_output( $rss, $args = array() ) {
 			$title = __( 'Untitled' );
 		}
 
-		$desc = @html_entity_decode( $item->get_description(), ENT_QUOTES, get_option( 'blog_charset' ) );
+		$desc = html_entity_decode( $item->get_description(), ENT_QUOTES, get_option( 'blog_charset' ) );
 		$desc = esc_attr( wp_trim_words( $desc, 55, ' [&hellip;]' ) );
 
 		$summary = '';
@@ -1505,7 +1505,7 @@ function wp_widget_rss_form( $args, $inputs = null ) {
 	$args['show_date']      = isset( $args['show_date'] ) ? (int) $args['show_date'] : (int) $inputs['show_date'];
 
 	if ( ! empty( $args['error'] ) ) {
-		echo '<p class="widget-error"><strong>' . __( 'RSS Error:' ) . '</strong> ' . $args['error'] . '</p>';
+		echo '<p class="widget-error"><strong>' . __( 'RSS Error:' ) . '</strong> ' . esc_html( $args['error'] ) . '</p>';
 	}
 
 	$esc_number = esc_attr( $args['number'] );

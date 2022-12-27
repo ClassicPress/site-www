@@ -90,7 +90,7 @@ function date_i18n( $dateformatstring, $unixtimestamp = false, $gmt = false ) {
 	global $wp_locale;
 	$i = $unixtimestamp;
 
-	if ( false === $i ) {
+	if ( ! is_numeric( $i ) ) {
 		$i = current_time( 'timestamp', $gmt );
 	}
 
@@ -134,7 +134,7 @@ function date_i18n( $dateformatstring, $unixtimestamp = false, $gmt = false ) {
 			}
 		}
 	}
-	$j = @date( $dateformatstring, $i );
+	$j = date( $dateformatstring, $i );
 
 	/**
 	 * Filters the date formatted based on the locale.
@@ -176,7 +176,7 @@ function wp_maybe_decline_date( $date ) {
 	 */
 	if ( 'on' === _x( 'off', 'decline months names: on or off' ) ) {
 		// Match a format like 'j F Y' or 'j. F'
-		if ( @preg_match( '#^\d{1,2}\.? [^\d ]+#u', $date ) ) {
+		if ( preg_match( '#^\d{1,2}\.? [^\d ]+#u', $date ) ) {
 			$months          = $wp_locale->month;
 			$months_genitive = $wp_locale->month_genitive;
 
@@ -281,7 +281,7 @@ function size_format( $bytes, $decimals = 0 ) {
 /**
  * Convert a duration to human readable format.
  *
- * @since 5.1.0
+ * @since WP-5.1.0
  *
  * @param string $duration Duration will be in string format (HH:ii:ss) OR (ii:ss),
  *                         with a possible prepended negative sign (-).
@@ -620,41 +620,59 @@ function wp_extract_urls( $content ) {
  * pingbacks and trackbacks.
  *
  * @since WP-1.5.0
+ * @since WP-5.3.0 The `$content` parameter was made optional, and the `$post` parameter was
+ *                 updated to accept a post ID or a WP_Post object.
+ * @since WP-5.6.0 The `$content` parameter is no longer optional, but passing `null` to skip it
+ *                 is still supported.
  *
  * @global wpdb $wpdb ClassicPress database abstraction object.
  *
- * @param string $content Post Content.
- * @param int    $post_ID Post ID.
+ * @param string|null $content Post content. If `null`, the `post_content` field from `$post` is used.
+ * @param int|WP_Post    $post    Post ID or post object.
+ * @return null|bool Returns false if post is not found.
  */
-function do_enclose( $content, $post_ID ) {
+function do_enclose( $content, $post ) {
 	global $wpdb;
 
-	//TODO: Tidy this ghetto code up and make the debug code optional
+	// @todo Tidy this code and make the debug code optional.
 	include_once( ABSPATH . WPINC . '/class-IXR.php' );
+
+	$post = get_post( $post );
+	if ( ! $post ) {
+		return false;
+	}
+
+	if ( null === $content ) {
+		$content = $post->post_content;
+	}
 
 	$post_links = array();
 
-	$pung = get_enclosed( $post_ID );
+	$pung = get_enclosed( $post->ID );
 
 	$post_links_temp = wp_extract_urls( $content );
 
 	foreach ( $pung as $link_test ) {
-		if ( ! in_array( $link_test, $post_links_temp ) ) { // link no longer in post
-			$mids = $wpdb->get_col( $wpdb->prepare("SELECT meta_id FROM $wpdb->postmeta WHERE post_id = %d AND meta_key = 'enclosure' AND meta_value LIKE %s", $post_ID, $wpdb->esc_like( $link_test ) . '%') );
-			foreach ( $mids as $mid )
+		// Link is no longer in post.
+		if ( ! in_array( $link_test, $post_links_temp, true ) ) {
+			$mids = $wpdb->get_col( $wpdb->prepare( "SELECT meta_id FROM $wpdb->postmeta WHERE post_id = %d AND meta_key = 'enclosure' AND meta_value LIKE %s", $post->ID, $wpdb->esc_like( $link_test ) . '%' ) );
+			foreach ( $mids as $mid ) {
 				delete_metadata_by_mid( 'post', $mid );
+			}
 		}
 	}
 
 	foreach ( (array) $post_links_temp as $link_test ) {
-		if ( !in_array( $link_test, $pung ) ) { // If we haven't pung it already
+		// If we haven't pung it already.
+		if ( ! in_array( $link_test, $pung, true ) ) {
 			$test = @parse_url( $link_test );
 			if ( false === $test )
 				continue;
-			if ( isset( $test['query'] ) )
+			if ( isset( $test['query'] ) ) {
 				$post_links[] = $link_test;
-			elseif ( isset($test['path']) && ( $test['path'] != '/' ) &&  ($test['path'] != '' ) )
+			} elseif ( isset( $test['path'] ) && ( '/' !== $test['path'] ) && ( '' !== $test['path'] ) ) {
 				$post_links[] = $link_test;
+			}
 		}
 	}
 
@@ -669,10 +687,10 @@ function do_enclose( $content, $post_ID ) {
 	 * @param array $post_links An array of enclosure links.
 	 * @param int   $post_ID    Post ID.
 	 */
-	$post_links = apply_filters( 'enclosure_links', $post_links, $post_ID );
+	$post_links = apply_filters( 'enclosure_links', $post_links, $post->ID );
 
 	foreach ( (array) $post_links as $url ) {
-		if ( $url != '' && !$wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE post_id = %d AND meta_key = 'enclosure' AND meta_value LIKE %s", $post_ID, $wpdb->esc_like( $url ) . '%' ) ) ) {
+		if ( '' !== $url && ! $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE post_id = %d AND meta_key = 'enclosure' AND meta_value LIKE %s", $post->ID, $wpdb->esc_like( $url ) . '%' ) ) ) {
 
 			if ( $headers = wp_get_http_headers( $url) ) {
 				$len = isset( $headers['content-length'] ) ? (int) $headers['content-length'] : 0;
@@ -694,8 +712,8 @@ function do_enclose( $content, $post_ID ) {
 					}
 				}
 
-				if ( in_array( substr( $type, 0, strpos( $type, "/" ) ), $allowed_types ) ) {
-					add_post_meta( $post_ID, 'enclosure', "$url\n$len\n$mime\n" );
+				if ( in_array( substr( $type, 0, strpos( $type, '/' ) ), $allowed_types, true ) ) {
+					add_post_meta( $post->ID, 'enclosure', "$url\n$len\n$mime\n" );
 				}
 			}
 		}
@@ -1158,7 +1176,9 @@ function status_header( $code, $description = '' ) {
 		 */
 		$status_header = apply_filters( 'status_header', $status_header, $code, $description, $protocol );
 
-	@header( $status_header, true, $code );
+	if ( ! headers_sent() ) {
+		header( $status_header, true, $code );
+	}
 }
 
 /**
@@ -1210,26 +1230,19 @@ function wp_get_nocache_headers() {
  * @see wp_get_nocache_headers()
  */
 function nocache_headers() {
+	if ( headers_sent() ) {
+		return;
+	}
+
 	$headers = wp_get_nocache_headers();
 
 	unset( $headers['Last-Modified'] );
 
-	// In PHP 5.3+, make sure we are not sending a Last-Modified header.
-	if ( function_exists( 'header_remove' ) ) {
-		@header_remove( 'Last-Modified' );
-	} else {
-		// In PHP 5.2, send an empty Last-Modified header, but only as a
-		// last resort to override a header already sent. #WP23021
-		foreach ( headers_list() as $header ) {
-			if ( 0 === stripos( $header, 'Last-Modified' ) ) {
-				$headers['Last-Modified'] = '';
-				break;
-			}
-		}
-	}
+	header_remove( 'Last-Modified' );
 
-	foreach ( $headers as $name => $field_value )
-		@header("{$name}: {$field_value}");
+	foreach ( $headers as $name => $field_value ) {
+		header( "{$name}: {$field_value}" );
+	}
 }
 
 /**
@@ -1709,7 +1722,7 @@ function wp_mkdir_p( $target ) {
 		if ( $dir_perms != ( $dir_perms & ~umask() ) ) {
 			$folder_parts = explode( '/', substr( $target, strlen( $target_parent ) + 1 ) );
 			for ( $i = 1, $c = count( $folder_parts ); $i <= $c; $i++ ) {
-				@chmod( $target_parent . '/' . implode( '/', array_slice( $folder_parts, 0, $i ) ), $dir_perms );
+				chmod( $target_parent . '/' . implode( '/', array_slice( $folder_parts, 0, $i ) ), $dir_perms );
 			}
 		}
 
@@ -2264,11 +2277,12 @@ function wp_upload_bits( $name, $deprecated, $bits, $time = null ) {
 		return array( 'error' => $message );
 	}
 
-	$ifp = @ fopen( $new_file, 'wb' );
-	if ( ! $ifp )
+	$ifp = @fopen( $new_file, 'wb' );
+	if ( ! $ifp ) {
 		return array( 'error' => sprintf( __( 'Could not write file %s' ), $new_file ) );
+	}
 
-	@fwrite( $ifp, $bits );
+	fwrite( $ifp, $bits );
 	fclose( $ifp );
 	clearstatcache();
 
@@ -2276,7 +2290,7 @@ function wp_upload_bits( $name, $deprecated, $bits, $time = null ) {
 	$stat = @ stat( dirname( $new_file ) );
 	$perms = $stat['mode'] & 0007777;
 	$perms = $perms & 0000666;
-	@ chmod( $new_file, $perms );
+	chmod( $new_file, $perms );
 	clearstatcache();
 
 	// Compute the URL
@@ -2473,7 +2487,7 @@ function wp_check_filetype_and_ext( $file, $filename, $mimes = null ) {
 		} else {
 			if ( $type !== $real_mime ) {
 				/*
-				 * Everything else including image/* and application/*: 
+				 * Everything else including image/* and application/*:
 				 * If the real content type doesn't match the file extension, assume it's dangerous.
 				 */
 				$type = $ext = false;
@@ -2482,7 +2496,7 @@ function wp_check_filetype_and_ext( $file, $filename, $mimes = null ) {
 		}
 	}
 
-	// The mime type must be allowed 
+	// The mime type must be allowed
 	if ( $type ) {
 		$allowed = get_allowed_mime_types();
 
@@ -2529,7 +2543,7 @@ function wp_get_image_mime( $file ) {
 			$imagetype = exif_imagetype( $file );
 			$mime = ( $imagetype ) ? image_type_to_mime_type( $imagetype ) : false;
 		} elseif ( function_exists( 'getimagesize' ) ) {
-			$imagesize = getimagesize( $file );
+			$imagesize = @getimagesize( $file );
 			$mime = ( isset( $imagesize['mime'] ) ) ? $imagesize['mime'] : false;
 		} else {
 			$mime = false;
@@ -2569,6 +2583,7 @@ function wp_get_mime_types() {
 	'bmp' => 'image/bmp',
 	'tiff|tif' => 'image/tiff',
 	'ico' => 'image/x-icon',
+	'heic' => 'image/heic',
 	// Video formats.
 	'asf|asx' => 'video/x-ms-asf',
 	'wmv' => 'video/x-ms-wmv',
@@ -2685,8 +2700,9 @@ function wp_get_ext_types() {
 	 * @param array $ext2type Multi-dimensional array with extensions for a default set
 	 *                        of file types.
 	 */
+
 	return apply_filters( 'ext2type', array(
-		'image'       => array( 'jpg', 'jpeg', 'jpe',  'gif',  'png',  'bmp',   'tif',  'tiff', 'ico' ),
+		'image'       => array( 'jpg', 'jpeg', 'jpe',  'gif',  'png',  'bmp',   'tif',  'tiff', 'ico', 'heic' ),
 		'audio'       => array( 'aac', 'ac3',  'aif',  'aiff', 'flac', 'm3a',  'm4a',   'm4b',  'mka',  'mp1',  'mp2',  'mp3', 'ogg', 'oga', 'ram', 'wav', 'wma' ),
 		'video'       => array( '3g2',  '3gp', '3gpp', 'asf', 'avi',  'divx', 'dv',   'flv',  'm4v',   'mkv',  'mov',  'mp4',  'mpeg', 'mpg', 'mpv', 'ogm', 'ogv', 'qt',  'rm', 'vob', 'wmv' ),
 		'document'    => array( 'doc', 'docx', 'docm', 'dotm', 'odt',  'pages', 'pdf',  'xps',  'oxps', 'rtf',  'wp', 'wpd', 'psd', 'xcf' ),
@@ -2758,9 +2774,12 @@ function wp_nonce_ays( $action ) {
 	} else {
 		$html = __( 'The link you followed has expired.' );
 		if ( wp_get_referer() ) {
+			$wp_http_referer = remove_query_arg( 'updated', wp_get_referer() );
+			$wp_http_referer = wp_validate_redirect( esc_url_raw( $wp_http_referer ) );
 			$html .= '</p><p>';
-			$html .= sprintf( '<a href="%s">%s</a>',
-				esc_url( remove_query_arg( 'updated', wp_get_referer() ) ),
+			$html           .= sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( $wp_http_referer ),
 				__( 'Please try again.' )
 			);
 		}
@@ -3130,6 +3149,7 @@ function wp_json_encode( $data, $options = 0, $depth = 512 ) {
 	// Prepare the data for JSON serialization.
 	$args[0] = _wp_json_prepare_data( $data );
 
+	// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- json_encode() errors are handled after this call
 	$json = @call_user_func_array( 'json_encode', $args );
 
 	// If json_encode() was successful, no need to do more sanity checking.
@@ -3302,10 +3322,13 @@ function _wp_json_prepare_data( $data ) {
  * @param int   $status_code The HTTP status code to output.
  */
 function wp_send_json( $response, $status_code = null ) {
-	@header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
-	if ( null !== $status_code ) {
-		status_header( $status_code );
+	if ( ! headers_sent() ) {
+		header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
+		if ( null !== $status_code ) {
+			status_header( $status_code );
+		}
 	}
+
 	echo wp_json_encode( $response );
 
 	if ( wp_doing_ajax() ) {
@@ -5019,7 +5042,7 @@ function get_file_data( $file, $default_headers, $context = '' ) {
  *
  * @return true True.
  */
-function __return_true() {
+function __return_true() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.FunctionDoubleUnderscore,PHPCompatibility.FunctionNameRestrictions.ReservedFunctionNames.FunctionDoubleUnderscore
 	return true;
 }
 
@@ -5034,7 +5057,7 @@ function __return_true() {
  *
  * @return false False.
  */
-function __return_false() {
+function __return_false() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.FunctionDoubleUnderscore,PHPCompatibility.FunctionNameRestrictions.ReservedFunctionNames.FunctionDoubleUnderscore
 	return false;
 }
 
@@ -5047,7 +5070,7 @@ function __return_false() {
  *
  * @return int 0.
  */
-function __return_zero() {
+function __return_zero() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.FunctionDoubleUnderscore,PHPCompatibility.FunctionNameRestrictions.ReservedFunctionNames.FunctionDoubleUnderscore
 	return 0;
 }
 
@@ -5060,7 +5083,7 @@ function __return_zero() {
  *
  * @return array Empty array.
  */
-function __return_empty_array() {
+function __return_empty_array() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.FunctionDoubleUnderscore,PHPCompatibility.FunctionNameRestrictions.ReservedFunctionNames.FunctionDoubleUnderscore
 	return array();
 }
 
@@ -5073,7 +5096,7 @@ function __return_empty_array() {
  *
  * @return null Null value.
  */
-function __return_null() {
+function __return_null() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.FunctionDoubleUnderscore,PHPCompatibility.FunctionNameRestrictions.ReservedFunctionNames.FunctionDoubleUnderscore
 	return null;
 }
 
@@ -5088,7 +5111,7 @@ function __return_null() {
  *
  * @return string Empty string.
  */
-function __return_empty_string() {
+function __return_empty_string() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.FunctionDoubleUnderscore,PHPCompatibility.FunctionNameRestrictions.ReservedFunctionNames.FunctionDoubleUnderscore
 	return '';
 }
 
@@ -5101,7 +5124,7 @@ function __return_empty_string() {
  * @see https://src.chromium.org/viewvc/chrome?view=rev&revision=6985
  */
 function send_nosniff_header() {
-	@header( 'X-Content-Type-Options: nosniff' );
+	header( 'X-Content-Type-Options: nosniff' );
 }
 
 /**
@@ -5206,7 +5229,7 @@ function wp_find_hierarchy_loop_tortoise_hare( $callback, $start, $override = ar
  * @see https://developer.mozilla.org/en/the_x-frame-options_response_header
  */
 function send_frame_options_header() {
-	@header( 'X-Frame-Options: SAMEORIGIN' );
+	header( 'X-Frame-Options: SAMEORIGIN' );
 }
 
 /**
@@ -5572,8 +5595,9 @@ function mbstring_binary_safe_encoding( $reset = false ) {
 	static $encodings = array();
 	static $overloaded = null;
 
-	if ( is_null( $overloaded ) )
-		$overloaded = function_exists( 'mb_internal_encoding' ) && ( ini_get( 'mbstring.func_overload' ) & 2 );
+	if ( is_null( $overloaded ) ) {
+		$overloaded = function_exists( 'mb_internal_encoding' ) && ( ini_get( 'mbstring.func_overload' ) & 2 ); // phpcs:ignore PHPCompatibility.IniDirectives.RemovedIniDirectives.mbstring_func_overloadDeprecated
+	}
 
 	if ( false === $overloaded )
 		return;
@@ -5739,7 +5763,7 @@ function wp_raise_memory_limit( $context = 'admin' ) {
 		return false;
 	}
 
-	$current_limit     = @ini_get( 'memory_limit' );
+	$current_limit     = ini_get( 'memory_limit' );
 	$current_limit_int = wp_convert_hr_to_bytes( $current_limit );
 
 	if ( -1 === $current_limit_int ) {
@@ -5811,13 +5835,13 @@ function wp_raise_memory_limit( $context = 'admin' ) {
 	$filtered_limit_int = wp_convert_hr_to_bytes( $filtered_limit );
 
 	if ( -1 === $filtered_limit_int || ( $filtered_limit_int > $wp_max_limit_int && $filtered_limit_int > $current_limit_int ) ) {
-		if ( false !== @ini_set( 'memory_limit', $filtered_limit ) ) {
+		if ( false !== ini_set( 'memory_limit', $filtered_limit ) ) {
 			return $filtered_limit;
 		} else {
 			return false;
 		}
 	} elseif ( -1 === $wp_max_limit_int || $wp_max_limit_int > $current_limit_int ) {
-		if ( false !== @ini_set( 'memory_limit', $wp_max_limit ) ) {
+		if ( false !== ini_set( 'memory_limit', $wp_max_limit ) ) {
 			return $wp_max_limit;
 		} else {
 			return false;
@@ -6196,4 +6220,194 @@ function wp_privacy_delete_old_export_files() {
 			unlink( $export_file );
 		}
 	}
+}
+
+/**
+ * Gets the URL to learn more about updating the PHP version the site is running on.
+ *
+ * This URL can be overridden by specifying an environment variable `WP_UPDATE_PHP_URL` or by using the
+ * {@see 'wp_update_php_url'} filter. Providing an empty string is not allowed and will result in the
+ * default URL being used. Furthermore the page the URL links to should preferably be localized in the
+ * site language.
+ *
+ * @since WP-5.1.0
+ *
+ * @return string URL to learn more about updating PHP.
+ */
+function wp_get_update_php_url() {
+	$default_url = wp_get_default_update_php_url();
+
+	$update_url = $default_url;
+	if ( false !== getenv( 'WP_UPDATE_PHP_URL' ) ) {
+		$update_url = getenv( 'WP_UPDATE_PHP_URL' );
+	}
+
+	/**
+	 * Filters the URL to learn more about updating the PHP version the site is running on.
+	 *
+	 * Providing an empty string is not allowed and will result in the default URL being used. Furthermore
+	 * the page the URL links to should preferably be localized in the site language.
+	 *
+	 * @since WP-5.1.0
+	 *
+	 * @param string $update_url URL to learn more about updating PHP.
+	 */
+	$update_url = apply_filters( 'wp_update_php_url', $update_url );
+
+	if ( empty( $update_url ) ) {
+		$update_url = $default_url;
+	}
+
+	return $update_url;
+}
+
+/**
+ * Gets the default URL to learn more about updating the PHP version the site is running on.
+ *
+ * Do not use this function to retrieve this URL. Instead, use {@see wp_get_update_php_url()} when relying on the URL.
+ * This function does not allow modifying the returned URL, and is only used to compare the actually used URL with the
+ * default one.
+ *
+ * @since WP-5.1.0
+ * @access private
+ *
+ * @return string Default URL to learn more about updating PHP.
+ */
+function wp_get_default_update_php_url() {
+	return _x( 'https://wordpress.org/support/update-php/', 'localized PHP upgrade information page' );
+}
+
+/**
+ * Prints the default annotation for the web host altering the "Update PHP" page URL.
+ *
+ * This function is to be used after {@see wp_get_update_php_url()} to display a consistent
+ * annotation if the web host has altered the default "Update PHP" page URL.
+ *
+ * @since WP-5.1.0
+ * @since WP-5.2.0 Added the `$before` and `$after` parameters.
+ *
+ * @param string $before Markup to output before the annotation. Default `<p class="description">`.
+ * @param string $after  Markup to output after the annotation. Default `</p>`.
+ */
+function wp_update_php_annotation( $before = '<p class="description">', $after = '</p>' ) {
+	$annotation = wp_get_update_php_annotation();
+
+	if ( $annotation ) {
+		echo $before . $annotation . $after;
+	}
+}
+
+/**
+ * Returns the default annotation for the web hosting altering the "Update PHP" page URL.
+ *
+ * This function is to be used after {@see wp_get_update_php_url()} to return a consistent
+ * annotation if the web host has altered the default "Update PHP" page URL.
+ *
+ * @since WP-5.2.0
+ *
+ * @return string $message Update PHP page annotation. An empty string if no custom URLs are provided.
+ */
+function wp_get_update_php_annotation() {
+	$update_url  = wp_get_update_php_url();
+	$default_url = wp_get_default_update_php_url();
+
+	if ( $update_url === $default_url ) {
+		return '';
+	}
+
+	$annotation = sprintf(
+		/* translators: %s: default Update PHP page URL */
+		__( 'This resource is provided by your web host, and is specific to your site. For more information, <a href="%s" target="_blank">see the official WordPress documentation</a>.' ),
+		esc_url( $default_url )
+	);
+
+	return $annotation;
+}
+
+/**
+ * Gets the URL for directly updating the PHP version the site is running on.
+ *
+ * A URL will only be returned if the `WP_DIRECT_UPDATE_PHP_URL` environment variable is specified or
+ * by using the {@see 'wp_direct_php_update_url'} filter. This allows hosts to send users directly to
+ * the page where they can update PHP to a newer version.
+ *
+ * @since WP-5.1.1
+ *
+ * @return string URL for directly updating PHP or empty string.
+ */
+function wp_get_direct_php_update_url() {
+	$direct_update_url = '';
+
+	if ( false !== getenv( 'WP_DIRECT_UPDATE_PHP_URL' ) ) {
+		$direct_update_url = getenv( 'WP_DIRECT_UPDATE_PHP_URL' );
+	}
+
+	/**
+	 * Filters the URL for directly updating the PHP version the site is running on from the host.
+	 *
+	 * @since WP-5.1.1
+	 *
+	 * @param string $direct_update_url URL for directly updating PHP.
+	 */
+	$direct_update_url = apply_filters( 'wp_direct_php_update_url', $direct_update_url );
+
+	return $direct_update_url;
+}
+
+/**
+ * Display a button directly linking to a PHP update process.
+ *
+ * This provides hosts with a way for users to be sent directly to their PHP update process.
+ *
+ * The button is only displayed if a URL is returned by `wp_get_direct_php_update_url()`.
+ *
+ * @since WP-5.1.1
+ */
+function wp_direct_php_update_button() {
+	$direct_update_url = wp_get_direct_php_update_url();
+
+	if ( empty( $direct_update_url ) ) {
+		return;
+	}
+
+	echo '<p class="button-container">';
+	printf(
+		'<a class="button button-primary" href="%1$s" target="_blank" rel="noopener noreferrer">%2$s <span class="screen-reader-text">%3$s</span><span aria-hidden="true" class="dashicons dashicons-external"></span></a>',
+		esc_url( $direct_update_url ),
+		__( 'Update PHP' ),
+		/* translators: accessibility text */
+		__( '(opens in a new tab)' )
+	);
+	echo '</p>';
+}
+
+/**
+ * Checks compatibility with the current WordPress version.
+ *
+ * @since WP-5.2.0
+ *
+ * @global string $wp_version WordPress version.
+ *
+ * @param string $required Minimum required WordPress version.
+ * @return bool True if required version is compatible or empty, false if not.
+ */
+function is_wp_version_compatible( $required ) {
+	global $wp_version;
+
+	// Strip off any -alpha, -RC, -beta, -src suffixes.
+	list( $version ) = explode( '-', $wp_version );
+
+	return empty( $required ) || version_compare( $version, $required, '>=' );
+}
+
+/**
+ * Checks compatibility with the current PHP version.
+ *
+ * @since WP-5.2.0
+ *
+ * @param string $required Minimum required PHP version.
+ * @return bool True if required version is compatible or empty, false if not.
+ */
+function is_php_version_compatible( $required ) {
+	return empty( $required ) || version_compare( phpversion(), $required, '>=' );
 }

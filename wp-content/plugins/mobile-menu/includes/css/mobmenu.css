@@ -146,6 +146,9 @@ body.admin-bar .mobmenu, body.admin-bar .mobmenu-panel {
     left: 15px;
     padding-left: 0px;
 }
+.rtl .mob-expand-submenu {
+    float: left;
+}
 .mob-expand-submenu {
     position: relative;
     right: 0px;
@@ -196,7 +199,7 @@ body.admin-bar .mobmenu, body.admin-bar .mobmenu-panel {
     right: 0px;
     color:#000;
     display: block;
-    z-index: 9999;
+    z-index: 10000;
 }
 /* 2nd Level Menu Items Padding */
 .mobmenu .sub-menu li > a {
@@ -216,7 +219,7 @@ body.admin-bar .mobmenu, body.admin-bar .mobmenu-panel {
     margin-top: 45px;
     padding-bottom: 120px;
     z-index: 1;
-    height: 100%;
+    height: calc( 100% - 45px);
     overflow: auto;
     padding-top: 10px;
 }
@@ -242,7 +245,7 @@ body.admin-bar .mobmenu, body.admin-bar .mobmenu-panel {
 .show-nav-left .mobmenu-overlay, .show-nav-right .mobmenu-overlay {
     width: 100%;
     height: 100%;
-    z-index: 99999;
+    z-index: 10001;
     left: 0;
     top: 0;
     opacity: 1;
@@ -358,4 +361,8 @@ h4.no-mobile-menu a {
     background: transparent;
     outline: #1dcd1d solid 3px;
     color: #000;
+}
+
+.mob-menu-slideout #page-container, .mob-menu-slideout-over #page-container {
+    padding-top: 0px!important;
 }

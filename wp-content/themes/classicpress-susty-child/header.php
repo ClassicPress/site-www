@@ -48,7 +48,7 @@
 		<div class="smenu">
 		<ul>
 			<?php
-			$donate = get_field('donate_link', 'option');
+			$donate = "https://www.classicpress.net/donate/";
 			$getcp = get_field('get_classicpress', 'option');
 			echo '<li class="switchbutton donate"><a href="'.$donate.'">Donate</a></li>';
 			echo '<li class="switchbutton download"><a href="'.$getcp.'">Get ClassicPress</a></li>';

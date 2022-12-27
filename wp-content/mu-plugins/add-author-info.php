@@ -50,7 +50,7 @@ function wpb_author_info_box( $content ) {
 		// Check if author has a website in their profile
 		if ( ! empty( $user_website ) ) {
 			// Display author website link
-			$author_details .= ' | <a href="' . $user_website .'" target="_blank" rel="noreferrer noopener">Website</a></p></div></div>';
+			$author_details .= ' | <a href="' . $user_website .'" target="_blank" rel="noreferrer noopener nofollow">Website</a></p></div></div>';
 		} else {
 			// if there is no author website then just close the paragraph
 			$author_details .= '</p></div></div>';

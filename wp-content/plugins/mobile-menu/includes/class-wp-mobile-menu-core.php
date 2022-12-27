@@ -14,7 +14,7 @@ class WP_Mobile_Menu_Core
     /**
      * @var object
      */
-    public  $titan ;
+    public  $plugin_settings ;
     /**
      * @var String
      */
@@ -57,10 +57,10 @@ class WP_Mobile_Menu_Core
      */
     public function mobmenu_add_body_class( $classes )
     {
-        $titan = TitanFramework::getInstance( 'mobmenu' );
-        $display_type = $titan->getOption( 'menu_display_type' );
-        $lpanel_elements = $titan->getOption( 'left_menu_content_position' );
-        $rpanel_elements = $titan->getOption( 'right_menu_content_position' );
+        $plugin_settings = MobileMenuOptions::getInstance( 'mobmenu' );
+        $display_type = $plugin_settings->getOption( 'menu_display_type' );
+        $lpanel_elements = $plugin_settings->getOption( 'left_menu_content_position' );
+        $rpanel_elements = $plugin_settings->getOption( 'right_menu_content_position' );
         // If the User profile is being used at the Top of the left panel.
         if ( isset( $lpanel_elements[0] ) && 'user-profile' === $lpanel_elements[0] ) {
             $classes[] = 'left-mobmenu-user-profile';
@@ -78,15 +78,15 @@ class WP_Mobile_Menu_Core
         $menu_display_type = $this->get_menu_display_type( $display_type );
         $classes[] = $menu_display_type;
         // Check if the Auto-hide Header option is on so it can be added a new class.
-        if ( $titan->getOption( 'autohide_header' ) ) {
+        if ( $plugin_settings->getOption( 'autohide_header' ) ) {
             array_push( $classes, 'mob-menu-autohide-header' );
         }
         // Check if the Auto-hide Footer option is on so it can be added a new class.
-        if ( $titan->getOption( 'autohide_footer' ) ) {
+        if ( $plugin_settings->getOption( 'autohide_footer' ) ) {
             array_push( $classes, 'mob-menu-autohide-footer' );
         }
         // Check if the Sliding Menus option is on so it can be added a new class.
-        if ( $titan->getOption( 'sliding_submenus' ) ) {
+        if ( $plugin_settings->getOption( 'sliding_submenus' ) ) {
             array_push( $classes, 'mob-menu-sliding-menus' );
         }
         return $classes;
@@ -123,17 +123,6 @@ class WP_Mobile_Menu_Core
             '',
             WP_MOBILE_MENU_VERSION
         );
-    }
-    
-    /**
-     * Dismiss the WP Mobile Menu Pro Banner.
-     */
-    public function dismiss_wp_mobile_notice()
-    {
-        if ( check_ajax_referer( 'wp-mobile-menu-security-nonce', 'security' ) ) {
-            update_option( 'wp_mobile_menu_banner_dismissed', 'yes' );
-        }
-        wp_die();
     }
     
     /**
@@ -184,16 +173,98 @@ class WP_Mobile_Menu_Core
     }
     
     /**
+     * Add the plugin page row links.
+     */
+    public function add_plugin_row_meta( $links, $file )
+    {
+        
+        if ( 'mobile-menu-premium/mobmenu.php' == $file || 'mobile-menu-premium/mobmenu.php' == $file ) {
+            $row_meta = array(
+                'docs'    => '<a href="' . esc_url( 'https://www.wpmobilemenu.com/knowledgebase/' ) . '" aria-label="' . esc_attr__( 'Documentation', 'mobile-menu' ) . '">' . esc_html__( 'Docs', 'mobile-menu' ) . '</a>',
+                'support' => '<a href="' . esc_url( 'https://www.wpmobilemenu.com/support-contact/' ) . '" aria-label="' . esc_attr__( 'Support', 'mobile-menu' ) . '">' . esc_html__( 'Support', 'mobile-menu' ) . '</a>',
+            );
+            return array_merge( $links, $row_meta );
+        } else {
+            return $links;
+        }
+    
+    }
+    
+    /**
+     * Build the WP Mobile Menu Html Markup.
+     */
+    public function load_mobile_menu_html(
+        $type,
+        $menu_text,
+        $icon_action,
+        $icon_target,
+        $icon_url,
+        $icon_font,
+        $icon,
+        $icon_new,
+        $hamburger_animation,
+        $close_icon
+    )
+    {
+        $menu_content = '';
+        //$menu_text    = '';
+        if ( '' !== $menu_text ) {
+            $menu_text = '<span class="' . $type . '-menu-icon-text">' . __( $menu_text, 'mobile-menu' ) . '</span>';
+        }
+        
+        if ( $icon_action ) {
+            $menu_content .= '<a href="#" class="mobmenu-' . $type . '-bt mobmenu-trigger-action" data-panel-target="mobmenu-' . $type . '-panel" aria-label="' . __( ucfirst( $type ) . ' Menu Button', 'mobile-menu' ) . '">';
+        } else {
+            
+            if ( $icon_target ) {
+                $icon_url_target = '_self';
+            } else {
+                $icon_url_target = '_blank';
+            }
+            
+            $menu_content .= '<a href="' . $icon_url . '" target="' . $icon_url_target . '" id="mobmenu-center">';
+        }
+        
+        $icon_image = wp_get_attachment_image_src( $icon );
+        
+        if ( $icon_image ) {
+            $icon_image = $icon_image[0];
+        } else {
+            $icon_image = '';
+        }
+        
+        $menu_icon = $icon_new;
+        switch ( $menu_icon ) {
+            case 'image':
+                $menu_content .= '<img src="' . $icon_image . '" alt="' . __( ucfirst( $type ) . ' Menu Icon', 'mobile-menu' ) . '">';
+                break;
+            case 'icon':
+                $menu_content .= '<i class="mob-icon-' . $icon_font . ' mob-menu-icon"></i>' . $this->mobmenu_close_button( $close_icon );
+                break;
+            case 'animated-icon':
+                $menu_content .= '<button class="hamburger hamburger ' . $hamburger_animation . '" type="button" aria-label="Menu" aria-controls="navigation"><span class="hamburger-box"><span class="hamburger-inner"></span></span></button>';
+                break;
+        }
+        $menu_content .= $menu_text;
+        $menu_content .= '</a>';
+        $menu_content = apply_filters( 'mm_' . $type . '_menu_filter', $menu_content );
+        return $menu_content;
+    }
+    
+    /**
      * Build the WP Mobile Menu Html Markup.
      */
     public function load_menu_html_markup()
     {
         global  $mm_fs ;
         global  $woocommerce ;
+        $upload_dir = wp_upload_dir();
+        $uploadsFolder = $upload_dir['basedir'] . '/';
+        $url = trailingslashit( $upload_dir['baseurl'] ) . 'search.svg';
         $left_logged_in_user = false;
         $right_logged_in_user = false;
-        $titan = TitanFramework::getInstance( 'mobmenu' );
-        $this->titan = $titan;
+        $plugin_settings = MobileMenuOptions::getInstance( 'mobmenu' );
+        $this->plugin_settings = $plugin_settings;
         $this->mobmenu_depth = 3;
         $this->mobmenu_parent_link = '';
         $header_search = '';
@@ -203,141 +274,96 @@ class WP_Mobile_Menu_Core
         $right_menu_content = '';
         $shop_filter = '';
         $header_ajax_search = '';
-        $close_icon = $titan->getOption( 'close_icon_font' );
+        $close_icon = $plugin_settings->getOption( 'close_icon_font' );
         $this->close_icon = $close_icon;
-        $submenu_open_icon_font = $titan->getOption( 'submenu_open_icon_font' );
-        $submenu_close_icon_font = $titan->getOption( 'submenu_close_icon_font' );
+        $submenu_open_icon_font = $plugin_settings->getOption( 'submenu_open_icon_font' );
+        $submenu_close_icon_font = $plugin_settings->getOption( 'submenu_close_icon_font' );
         $mm_open_cart_menu = '';
         $this->logo_content = '';
         $this->search_form = '<div class="mm-panel-search-form"><form action="' . esc_url( home_url( '/' ) ) . '" method="get" class="search-form">
         <input type="text" name="s" id="s" class="search" placeholder="Search for.." value="' . esc_attr( get_search_query() ) . '" required>
         <button type="submit" id="search-submit" class="search-submit"><i class="mob-icon-search-6"></i></button>
         </form></div>';
-        $menu_display_type = $this->get_menu_display_type( $titan->getOption( 'menu_display_type' ) );
+        $menu_display_type = $this->get_menu_display_type( $plugin_settings->getOption( 'menu_display_type' ) );
         $output = '';
         $output .= '<div class="mobmenu-overlay"></div>';
-        $header_text = $titan->getOption( 'header_text' );
+        $header_text = $plugin_settings->getOption( 'header_text' );
         if ( '' === $header_text ) {
             $header_text = get_bloginfo();
         }
         $sticky_el_data_detach = '';
         $autoclose_menus_el_data = '';
         // Check for Sticky elements and add them to the HTML.
-        if ( $titan->getOption( 'sticky_elements' ) ) {
-            $sticky_el_data_detach = 'data-detach-el="' . $titan->getOption( 'sticky_elements' ) . '"';
+        if ( $plugin_settings->getOption( 'sticky_elements' ) ) {
+            $sticky_el_data_detach = 'data-detach-el="' . $plugin_settings->getOption( 'sticky_elements' ) . '"';
         }
         // Check for Autoclose submenu option.
-        if ( $titan->getOption( 'autoclose_submenus' ) ) {
-            $autoclose_menus_el_data = ' data-autoclose-submenus="' . $titan->getOption( 'autoclose_submenus' ) . '"';
+        if ( $plugin_settings->getOption( 'autoclose_submenus' ) ) {
+            $autoclose_menus_el_data = ' data-autoclose-submenus="' . $plugin_settings->getOption( 'autoclose_submenus' ) . '"';
         }
-        if ( $titan->getOption( 'enable_mm_woo_open_cart_menu' ) ) {
+        if ( $plugin_settings->getOption( 'enable_mm_woo_open_cart_menu' ) ) {
             $mm_open_cart_menu = ' data-open-cart="true"';
         }
         $menu_display_class = ' data-menu-display="' . $menu_display_type . '"';
         $output .= '<div class="mob-menu-header-holder mobmenu" ' . $menu_display_class . $sticky_el_data_detach . $autoclose_menus_el_data . $mm_open_cart_menu . ' data-open-icon="' . $submenu_open_icon_font . '" data-close-icon="' . $submenu_close_icon_font . '">';
         // Left Menu Content.
         
-        if ( $titan->getOption( 'enable_left_menu' ) && !$left_logged_in_user ) {
-            $left_menu_text = '';
-            if ( '' !== $titan->getOption( 'left_menu_text' ) ) {
-                $left_menu_text .= '<span class="left-menu-icon-text">' . __( $titan->getOption( 'left_menu_text' ), 'mobile-menu' ) . '</span>';
-            }
-            
-            if ( $titan->getOption( 'left_menu_icon_action' ) ) {
-                $left_menu_content .= '<a href="#" class="mobmenu-left-bt mobmenu-trigger-action" data-panel-target="mobmenu-left-panel" aria-label="' . __( 'Left Menu Button', 'mobile-menu' ) . '">';
-            } else {
-                
-                if ( $titan->getOption( 'left_icon_url_target' ) ) {
-                    $left_icon_url_target = '_self';
-                } else {
-                    $left_icon_url_target = '_blank';
-                }
-                
-                $left_menu_content .= '<a href="' . $titan->getOption( 'left_icon_url' ) . '" target="' . $left_icon_url_target . '" id="mobmenu-center">';
-            }
-            
-            $left_icon_image = wp_get_attachment_image_src( $titan->getOption( 'left_menu_icon' ) );
-            
-            if ( $left_icon_image ) {
-                $left_icon_image = $left_icon_image[0];
-            } else {
-                $left_icon_image = '';
-            }
-            
-            $left_menu_icon = $titan->getOption( 'left_menu_icon_new' );
-            switch ( $left_menu_icon ) {
-                case 'image':
-                    $left_menu_content .= '<img src="' . $left_icon_image . '" alt="' . __( 'Left Menu Icon', 'mobile-menu' ) . '">';
-                    break;
-                case 'icon':
-                    $left_menu_content .= '<i class="mob-icon-' . $titan->getOption( 'left_menu_icon_font' ) . ' mob-menu-icon"></i>' . $this->mobmenu_close_button( $close_icon );
-                    break;
-                case 'animated-icon':
-                    $hamburger_animation = $titan->getOption( 'left_menu_icon_animation' );
-                    $left_menu_content .= '<button class="hamburger hamburger ' . $hamburger_animation . '" type="button" aria-label="Menu" aria-controls="navigation"><span class="hamburger-box"><span class="hamburger-inner"></span></span></button>';
-                    break;
-            }
-            $left_menu_content .= $left_menu_text;
-            $left_menu_content .= '</a>';
-            $left_menu_content = apply_filters( 'mm_left_menu_filter', $left_menu_content );
+        if ( $plugin_settings->getOption( 'enable_left_menu' ) && !$left_logged_in_user ) {
+            $menu_text = $plugin_settings->getOption( 'left_menu_text' );
+            $icon_action = $plugin_settings->getOption( 'left_menu_icon_action' );
+            $icon_target = $plugin_settings->getOption( 'left_icon_url_target' );
+            $icon_url = $plugin_settings->getOption( 'left_icon_url' );
+            $icon_font = $plugin_settings->getOption( 'left_menu_icon_font' );
+            $icon = $plugin_settings->getOption( 'left_menu_icon' );
+            $icon_new = $plugin_settings->getOption( 'left_menu_icon_new' );
+            $animation = $plugin_settings->getOption( 'left_menu_icon_animation' );
+            $left_menu_content = $this->load_mobile_menu_html(
+                'left',
+                $menu_text,
+                $icon_action,
+                $icon_target,
+                $icon_url,
+                $icon_font,
+                $icon,
+                $icon_new,
+                $animation,
+                $close_icon
+            );
         }
         
-        if ( !$titan->getOption( 'disabled_logo_text' ) ) {
+        if ( !$plugin_settings->getOption( 'disabled_logo_text' ) ) {
             // Format the Header Branding.
-            $this->logo_content = $this->format_header_branding( $titan, $header_text );
+            $this->logo_content = $this->format_header_branding( $plugin_settings, $header_text );
         }
         // Right Menu Content.
         
-        if ( $titan->getOption( 'enable_right_menu' ) && !$right_logged_in_user ) {
-            $right_menu_text = '';
-            $right_menu_content = apply_filters( 'mm_before_right_menu_filter', $right_menu_content );
-            if ( '' !== $titan->getOption( 'right_menu_text' ) ) {
-                $right_menu_text .= '<span class="right-menu-icon-text">' . __( $titan->getOption( 'right_menu_text' ), 'mobile-menu' ) . '</span>';
-            }
-            
-            if ( $titan->getOption( 'right_menu_icon_action' ) ) {
-                $right_menu_content .= '<a href="#" class="mobmenu-right-bt  mobmenu-trigger-action" data-panel-target="mobmenu-right-panel" aria-label="' . __( 'Right Menu Button', 'mobile-menu' ) . '">';
-            } else {
-                
-                if ( $titan->getOption( 'right_icon_url_target' ) ) {
-                    $right_icon_url_target = '_self';
-                } else {
-                    $right_icon_url_target = '_blank';
-                }
-                
-                $right_menu_content .= '<a href="' . $titan->getOption( 'right_icon_url' ) . '" target="' . $right_icon_url_target . '">';
-            }
-            
-            $right_icon_image = wp_get_attachment_image_src( $titan->getOption( 'right_menu_icon' ) );
-            
-            if ( $right_icon_image ) {
-                $right_icon_image = $right_icon_image[0];
-            } else {
-                $right_icon_image = '';
-            }
-            
-            $right_menu_icon = $titan->getOption( 'right_menu_icon_new' );
-            switch ( $right_menu_icon ) {
-                case 'image':
-                    $right_menu_content .= '<img src="' . $right_icon_image . '" alt="' . __( 'Right Menu Icon', 'mobile-menu' ) . '">';
-                    break;
-                case 'icon':
-                    $right_menu_content .= '<i class="mob-icon-' . $titan->getOption( 'right_menu_icon_font' ) . ' mob-menu-icon"></i>' . $this->mobmenu_close_button( $close_icon );
-                    break;
-                case 'animated-icon':
-                    $hamburger_animation = $titan->getOption( 'right_menu_icon_animation' );
-                    $right_menu_content .= '<button class="hamburger hamburger ' . $hamburger_animation . '" type="button" aria-label="Menu" aria-controls="navigation"><span class="hamburger-box"><span class="hamburger-inner"></span></span></button>';
-                    break;
-            }
-            $right_menu_content .= $right_menu_text;
-            $right_menu_content .= '</a>';
-            $right_menu_content = apply_filters( 'mm_right_menu_filter', $right_menu_content );
+        if ( $plugin_settings->getOption( 'enable_right_menu' ) && !$right_logged_in_user ) {
+            $menu_text = $plugin_settings->getOption( 'right_menu_text' );
+            $icon_action = $plugin_settings->getOption( 'right_menu_icon_action' );
+            $icon_target = $plugin_settings->getOption( 'right_icon_url_target' );
+            $icon_url = $plugin_settings->getOption( 'right_icon_url' );
+            $icon_font = $plugin_settings->getOption( 'right_menu_icon_font' );
+            $icon = $plugin_settings->getOption( 'right_menu_icon' );
+            $icon_new = $plugin_settings->getOption( 'right_menu_icon_new' );
+            $animation = $plugin_settings->getOption( 'right_menu_icon_animation' );
+            $right_menu_content = $this->load_mobile_menu_html(
+                'right',
+                $menu_text,
+                $icon_action,
+                $icon_target,
+                $icon_url,
+                $icon_font,
+                $icon,
+                $icon_new,
+                $animation,
+                $close_icon
+            );
         }
         
         $language_selector = '';
         $header_elements_order = array( 'left-menu', 'logo', 'right-menu' );
         $header_output = '';
-        if ( $titan->getOption( 'enable_left_menu' ) ) {
+        if ( $plugin_settings->getOption( 'enable_left_menu' ) ) {
             $header_output = '<div  class="mobmenul-container">';
         }
         if ( !empty($header_elements_order) ) {
@@ -357,7 +383,7 @@ class WP_Mobile_Menu_Core
                         break;
                     case 'logo':
                         
-                        if ( $titan->getOption( 'enable_left_menu' ) ) {
+                        if ( $plugin_settings->getOption( 'enable_left_menu' ) ) {
                             $header_output .= '</div>' . $this->logo_content . '<div class="mobmenur-container">';
                         } else {
                             $header_output .= $this->logo_content . '<div class="mobmenur-container">';
@@ -379,13 +405,13 @@ class WP_Mobile_Menu_Core
         // Echo the Header HTML.
         echo  $output ;
         // Build the left menu panel.
-        if ( $titan->getOption( 'enable_left_menu' ) && !$left_logged_in_user ) {
+        if ( $plugin_settings->getOption( 'enable_left_menu' ) && !$left_logged_in_user ) {
             $this->build_left_menu_content();
         }
         
-        if ( $titan->getOption( 'enable_right_menu' ) && !$right_logged_in_user ) {
+        if ( $plugin_settings->getOption( 'enable_right_menu' ) && !$right_logged_in_user ) {
             $this->mobmenu_parent_link = '';
-            if ( $titan->getOption( 'right_menu_parent_link_submenu' ) ) {
+            if ( $plugin_settings->getOption( 'right_menu_parent_link_submenu' ) ) {
                 $this->mobmenu_parent_link = 'mobmenu-parent-link';
             }
             ?>
@@ -419,7 +445,7 @@ class WP_Mobile_Menu_Core
                     switch ( $element ) {
                         case 'right-menu':
                             
-                            if ( $this->titan->getOption( 'right_menu_tabbed_menus', false ) ) {
+                            if ( $this->plugin_settings->getOption( 'right_menu_tabbed_menus', false ) ) {
                                 $right_menu = $this->display_tabbed_menu( 'right' );
                             } else {
                                 $right_menu = $this->display_menu( 'right' );
@@ -469,7 +495,7 @@ class WP_Mobile_Menu_Core
         global  $mm_fs ;
         // Build the left menu panel.
         $this->mobmenu_parent_link = '';
-        if ( $this->titan->getOption( 'left_menu_parent_link_submenu' ) ) {
+        if ( $this->plugin_settings->getOption( 'left_menu_parent_link_submenu' ) ) {
             $this->mobmenu_parent_link = 'mobmenu-parent-link';
         }
         ?>
@@ -504,7 +530,7 @@ class WP_Mobile_Menu_Core
                 switch ( $element ) {
                     case 'left-menu':
                         
-                        if ( $this->titan->getOption( 'left_menu_tabbed_menus', false ) ) {
+                        if ( $this->plugin_settings->getOption( 'left_menu_tabbed_menus', false ) ) {
                             $left_menu = $this->display_tabbed_menu( 'left' );
                         } else {
                             $left_menu = $this->display_menu( 'left' );
@@ -550,8 +576,8 @@ class WP_Mobile_Menu_Core
     public function display_menu( $menu )
     {
         global  $mm_fs ;
-        $titan = TitanFramework::getInstance( 'mobmenu' );
-        $current_menu = $titan->getOption( $menu . '_menu' );
+        $plugin_settings = MobileMenuOptions::getInstance( 'mobmenu' );
+        $current_menu = $plugin_settings->getOption( $menu . '_menu' );
         if ( !is_nav_menu( $current_menu ) ) {
             $current_menu = '';
         }
@@ -567,10 +593,11 @@ class WP_Mobile_Menu_Core
         // Only build the menu it there is a menu assigned to it.
         
         if ( '' !== $current_menu ) {
+            $current_menu = apply_filters( 'wp_mobile_menu_current_menu', $current_menu, $menu );
             // Display the menu.
             $output = wp_nav_menu( array(
                 $menu_param   => $current_menu,
-                'items_wrap'  => '<ul id="mobmenu' . $menu . '" role="navigation" aria-label="' . __( 'Main navigation for mobile devices', 'mobile-menu' ) . '">%3$s</ul>',
+                'items_wrap'  => '<ul id="mobmenu' . $menu . '" class="wp-mobile-menu" role="menubar" aria-label="' . __( 'Main navigation for mobile devices', 'mobile-menu' ) . '">%3$s</ul>',
                 'fallback_cb' => false,
                 'depth'       => $this->mobmenu_depth,
                 'walker'      => new WP_Mobile_Menu_Walker_Nav_Menu( $menu, '' ),
@@ -599,24 +626,24 @@ class WP_Mobile_Menu_Core
     public function display_tabbed_menu( $menu )
     {
         global  $mm_fs ;
-        $tab_title_1 = $this->titan->getOption( $menu . '_tab_title_1' );
-        $tab_title_2 = $this->titan->getOption( $menu . '_tab_title_2' );
+        $tab_title_1 = $this->plugin_settings->getOption( $menu . '_tab_title_1' );
+        $tab_title_2 = $this->plugin_settings->getOption( $menu . '_tab_title_2' );
         $output = '<div class="mobmenu-tabs-container"><ul class="mobmenu-tabs-header"><li class="active-tab" data-tab-id="mobmenu-tab-1">' . $tab_title_1 . '</li><li data-tab-id="mobmenu-tab-2">' . $tab_title_2 . '</li></ul>';
         $output .= '<div class="mobmenu-tab mobmenu-tab-1 active-tab">';
-        $current_menu = $this->titan->getOption( $menu . '_menu_tab_1' );
+        $current_menu = $this->plugin_settings->getOption( $menu . '_menu_tab_1' );
         $output .= wp_nav_menu( array(
             'menu'        => $current_menu,
-            'items_wrap'  => '<ul id="mobmenu' . $menu . '" role="navigation" aria-label="' . __( 'Main navigation for mobile devices', 'mobile-menu' ) . '">%3$s</ul>',
+            'items_wrap'  => '<ul id="mobmenu' . $menu . '" class="wp-mobile-menu" role="menubar" aria-label="' . __( 'Main navigation for mobile devices', 'mobile-menu' ) . '">%3$s</ul>',
             'fallback_cb' => false,
             'depth'       => $this->mobmenu_depth,
             'walker'      => new WP_Mobile_Menu_Walker_Nav_Menu( $menu, '' ),
             'echo'        => false,
         ) );
-        $current_menu = $this->titan->getOption( $menu . '_menu_tab_2' );
+        $current_menu = $this->plugin_settings->getOption( $menu . '_menu_tab_2' );
         $output .= '</div><div class="mobmenu-tab mobmenu-tab-2">';
         $output .= wp_nav_menu( array(
             'menu'        => $current_menu,
-            'items_wrap'  => '<ul id="mobmenu' . $menu . '" role="navigation" aria-label="' . __( 'Main navigation for mobile devices', 'mobile-menu' ) . '">%3$s</ul>',
+            'items_wrap'  => '<ul id="mobmenu' . $menu . '" class="wp-mobile-menu" role="menubar" aria-label="' . __( 'Main navigation for mobile devices', 'mobile-menu' ) . '">%3$s</ul>',
             'fallback_cb' => false,
             'depth'       => $this->mobmenu_depth,
             'walker'      => new WP_Mobile_Menu_Walker_Nav_Menu( $menu, '' ),
@@ -624,7 +651,7 @@ class WP_Mobile_Menu_Core
         ) );
         $output .= "</div></div>";
         return $output;
-        $current_menu = $titan->getOption( $menu . '_menu' );
+        $current_menu = $plugin_settings->getOption( $menu . '_menu' );
         if ( !is_nav_menu( $current_menu ) ) {
             $current_menu = '';
         }
@@ -643,7 +670,7 @@ class WP_Mobile_Menu_Core
             // Display the menu.
             $output = wp_nav_menu( array(
                 $menu_param   => $current_menu,
-                'items_wrap'  => '<ul id="mobmenu' . $menu . '" role="navigation" aria-label="' . __( 'Main navigation for mobile devices', 'mobile-menu' ) . '">%3$s</ul>',
+                'items_wrap'  => '<ul id="mobmenu' . $menu . '" class="wp-mobile-menu" role="menubar" aria-label="' . __( 'Main navigation for mobile devices', 'mobile-menu' ) . '">%3$s</ul>',
                 'fallback_cb' => false,
                 'depth'       => $this->mobmenu_depth,
                 'walker'      => new WP_Mobile_Menu_Walker_Nav_Menu( $menu, '' ),
@@ -681,6 +708,7 @@ class WP_Mobile_Menu_Core
     
     }
     
+    
     /**
      * Register the Mobile Menus.
      */
@@ -699,13 +727,27 @@ class WP_Mobile_Menu_Core
      * Format Header Branding (Logo + Text).
      *
      * @since 2.6
-     * @var $titan
+     * @var $plugin_settings
      * @var $header_text
      */
-    public function format_header_branding( $titan, $header_text )
+    public function format_header_branding( $plugin_settings, $header_text )
     {
         global  $mm_fs ;
-        $logo_img = wp_get_attachment_image_src( $titan->getOption( 'logo_img' ), 'full' );
+        $logo = $plugin_settings->getOption( 'logo_img' );
+        // Translate Logo with WPML.
+        
+        if ( class_exists( 'SitePress' ) ) {
+            $current_language = apply_filters( 'wpml_current_language', NULL );
+            $logo = apply_filters(
+                'wpml_object_id',
+                $logo,
+                'attachment',
+                FALSE,
+                $current_language
+            );
+        }
+        
+        $logo_img = wp_get_attachment_image_src( $logo, 'full' );
         
         if ( $logo_img == null ) {
             $logo_img = '';
@@ -713,31 +755,36 @@ class WP_Mobile_Menu_Core
             $logo_img = $logo_img[0];
         }
         
+        $logo_img = apply_filters( 'wp_mobile_menu_logo_img', $logo_img );
         $logo_output = '';
         $logo_url = '';
         $logo_url_end = '';
-        $logo_alt = get_post_meta( intval( $titan->getOption( 'logo_img' ) ), '_wp_attachment_image_alt', true );
+        $logo_alt = get_post_meta( intval( $plugin_settings->getOption( 'logo_img' ) ), '_wp_attachment_image_alt', true );
         // Retina Logo.
         
-        if ( $titan->getOption( 'logo_img_retina' ) ) {
-            $logo_img_retina = wp_get_attachment_image_src( $titan->getOption( 'logo_img_retina' ), 'full' );
+        if ( $plugin_settings->getOption( 'logo_img_retina' ) ) {
+            $logo_img_retina = wp_get_attachment_image_src( $plugin_settings->getOption( 'logo_img_retina' ), 'full' );
             
-            if ( $logo_img_retina == null ) {
-                $logo_img_retina = '';
+            if ( $logo_img_retina == null || !$logo_img_retina ) {
+                $logo_img_retina = $logo_img;
             } else {
                 $logo_img_retina = $logo_img_retina[0];
+                // Double-check line below
+                $logo_img_retina_metadata = wp_get_attachment_metadata( $plugin_settings->getOption( 'logo_img_retina' ) );
+                if ( $logo_img == "" ) {
+                    $logo_img = $logo_img_retina;
+                }
             }
-            
-            $logo_img_retina_metadata = wp_get_attachment_metadata( $titan->getOption( 'logo_img_retina' ) );
+        
         }
         
         
-        if ( $titan->getOption( 'disabled_logo_url' ) ) {
+        if ( $plugin_settings->getOption( 'disabled_logo_url' ) ) {
             $logo_url = '<h3 class="headertext">';
             $logo_url_end = '</h3>';
         } else {
             
-            if ( '' === $titan->getOption( 'logo_url' ) ) {
+            if ( '' === $plugin_settings->getOption( 'logo_url' ) ) {
                 
                 if ( function_exists( 'pll_home_url' ) ) {
                     $logo_url = pll_home_url();
@@ -746,15 +793,16 @@ class WP_Mobile_Menu_Core
                 }
             
             } else {
-                $logo_url = $titan->getOption( 'logo_url' );
+                $logo_url = $plugin_settings->getOption( 'logo_url' );
             }
             
             $logo_url_end = '</a>';
+            $logo_url = apply_filters( 'wp_mobile_menu_logo_url', $logo_url );
             $logo_url = '<a href="' . $logo_url . '" class="headertext">';
         }
         
         $output = '<div class="mob-menu-logo-holder">' . $logo_url;
-        $header_branding = $titan->getOption( 'header_branding' );
+        $header_branding = $plugin_settings->getOption( 'header_branding' );
         // Assign the image alt valude with the blog title in case it's not provided on the image. It the blog title also doesn't exist default it to Organization Logo.
         if ( '' === $logo_alt ) {
             
@@ -770,7 +818,7 @@ class WP_Mobile_Menu_Core
             $logo_output .= '<img class="mob-standard-logo" src="' . $logo_img . '"  alt="' . $logo_alt . '">';
             // If there is a retina logo.
             if ( isset( $logo_img_retina ) ) {
-                $logo_output .= '<img class="mob-retina-logo" src="' . $logo_img_retina . '"  alt=" ' . __( 'Logo Header Menu', 'mobile-menu' ) . '">';
+                $logo_output .= '<img class="mob-retina-logo" src="' . $logo_img_retina . '"  alt="' . __( 'Logo Header Menu', 'mobile-menu' ) . '">';
             }
         }
         
@@ -975,10 +1023,12 @@ class WP_Mobile_Menu_Core
     public function mobile_menu_import_settings( $settings_id )
     {
         global  $mm_fs ;
+        global  $message ;
+        global  $message_code ;
         $message = '';
         $message_code = '';
-        $titan = TitanFramework::getInstance( 'mobmenu' );
-        $left_menu = $titan->getOption( 'left_menu' );
+        $plugin_settings = MobileMenuOptions::getInstance( 'mobmenu' );
+        $left_menu = $plugin_settings->getOption( 'left_menu' );
         // If we are importing an oficial demo.
         
         if ( isset( $_REQUEST['demo'] ) ) {
@@ -1009,7 +1059,7 @@ class WP_Mobile_Menu_Core
                     if ( $result ) {
                         $message = __( 'Settings Imported successfully.', 'mobile-menu' );
                         $message_code = 'success';
-                        $titan->cssInstance->generateSaveCSS();
+                        $plugin_settings->cssInstance->generateSaveCSS();
                     } else {
                         $message = __( 'Something went wrong. Upload a new file and try again.', 'mobile-menu' );
                         $message_code = 'error';
@@ -1143,7 +1193,7 @@ class WP_Mobile_Menu_Core
 
 			<?php 
         // Security Nonce.
-        wp_nonce_field( $settings_id, TF . '_nonce' );
+        wp_nonce_field( $settings_id, 'mobmenu_settings_nonce' );
         ?>
 
 			<header>
@@ -1170,7 +1220,7 @@ class WP_Mobile_Menu_Core
         
         ?>
 			<section>
-				<table class="form-table">
+				<table class="mm-form-table">
 					<tbody>
 						<tr>
 							<th scope="row">

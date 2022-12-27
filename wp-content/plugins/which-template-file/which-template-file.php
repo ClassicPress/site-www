@@ -2,9 +2,9 @@
 /*
 Plugin Name: Which Template File
 Description: Plugin for developers. Display in the admin bar, the name of the template (PHP file) for this page. Display with different colors if the template owns to the current theme, the theme parent, or a plugin. An option page allows to chose if every logged user car see the template file in the admin-bar, or just the admnistrators of the website. (with "administrator" role)
-Version: 4.5.0
+Version: 4.6.0
 Author: Gilles Dumas
-Author URI: http://gillesdumas.com
+Author URI: https://gillesdumas.com
 */
 
 define('_WTF_OPTION_1', 'wtf_tpl_name_visibility');

@@ -53,7 +53,7 @@ function classicpress_asset_version( $type = 'script', $handle = null ) {
 	static $default_version;
 
 	if ( empty( $default_version ) ) {
-		$default_version = 'cp_fe6ecd04';
+		$default_version = 'cp_09e31658';
 	}
 
 	/**
@@ -288,7 +288,7 @@ function wp_default_scripts( &$scripts ) {
 	// jQuery plugins
 	$scripts->add( 'jquery-color', "/wp-includes/js/jquery/jquery.color.min.js", array('jquery'), '2.1.1', 1 );
 	$scripts->add( 'schedule', '/wp-includes/js/jquery/jquery.schedule.js', array('jquery'), '20m', 1 );
-	$scripts->add( 'jquery-query', "/wp-includes/js/jquery/jquery.query.js", array('jquery'), '2.1.7', 1 );
+	$scripts->add( 'jquery-query', "/wp-includes/js/jquery/jquery.query.js", array('jquery'), '2.2.3', 1 );
 	$scripts->add( 'jquery-serialize-object', "/wp-includes/js/jquery/jquery.serialize-object.js", array('jquery'), '0.2', 1 );
 	$scripts->add( 'jquery-hotkeys', "/wp-includes/js/jquery/jquery.hotkeys$suffix.js", array('jquery'), '0.0.2m', 1 );
 	$scripts->add( 'jquery-table-hotkeys', "/wp-includes/js/jquery/jquery.table-hotkeys$suffix.js", array('jquery', 'jquery-hotkeys'), false, 1 );
@@ -342,7 +342,8 @@ function wp_default_scripts( &$scripts ) {
 		'dismiss' => __('Dismiss'),
 		'crunching' => __('Crunching&hellip;'),
 		'deleted' => __('moved to the trash.'),
-		'error_uploading' => __('&#8220;%s&#8221; has failed to upload.')
+		'error_uploading' => __('&#8220;%s&#8221; has failed to upload.'),
+		'unsupported_image' => __( 'This image cannot be displayed in a web browser. For best results convert it to JPEG before uploading.' ),
 	);
 
 	$scripts->add( 'moxiejs', "/wp-includes/js/plupload/moxie$suffix.js", array(), '1.3.5' );

@@ -2635,13 +2635,13 @@ function wp_footer() {
  *
  * * See {@see 'wp_body_open'}.
  *
- * @since 5.2.0
+ * @since WP-5.2.0
  */
 function wp_body_open() {
 	/**
 	 * Triggered after the opening <body> tag.
 	 *
-	 * @since 5.2.0
+	 * @since WP-5.2.0
 	 */
 	do_action( 'wp_body_open' );
 }
@@ -4277,11 +4277,12 @@ function readonly( $readonly, $current = true, $echo = true ) {
  * @param string $type    The type of checked|selected|disabled|readonly we are doing
  * @return string html attribute or empty string
  */
-function __checked_selected_helper( $helper, $current, $echo, $type ) {
-	if ( (string) $helper === (string) $current )
+function __checked_selected_helper( $helper, $current, $echo, $type ) { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.FunctionDoubleUnderscore,PHPCompatibility.FunctionNameRestrictions.ReservedFunctionNames.FunctionDoubleUnderscore
+	if ( (string) $helper === (string) $current ) {
 		$result = " $type='$type'";
-	else
+	} else {
 		$result = '';
+	}
 
 	if ( $echo )
 		echo $result;

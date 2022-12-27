@@ -447,7 +447,7 @@ class WP_Upgrader {
 		$destination = $args['destination'];
 		$clear_destination = $args['clear_destination'];
 
-		@set_time_limit( 300 );
+		set_time_limit( 300 );
 
 		if ( empty( $source ) || empty( $destination ) ) {
 			return new WP_Error( 'bad_request', $this->strings['bad_request'] );
@@ -750,7 +750,10 @@ class WP_Upgrader {
 		$this->skin->set_result($result);
 		if ( is_wp_error($result) ) {
 			$this->skin->error($result);
-			$this->skin->feedback('process_failed');
+
+			if ( ! method_exists( $this->skin, 'hide_process_failed' ) || ! $this->skin->hide_process_failed( $result ) ) {
+				$this->skin->feedback( 'process_failed' );
+			}
 		} else {
 			// Installation succeeded.
 			$this->skin->feedback('process_success');

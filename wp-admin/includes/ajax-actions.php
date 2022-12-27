@@ -2424,7 +2424,7 @@ function wp_ajax_query_attachments() {
 
 	// Filter query clauses to include filenames.
 	if ( isset( $query['s'] ) ) {
-		add_filter( 'posts_clauses', '_filter_query_attachment_filenames' );
+		add_filter( 'wp_allow_query_attachment_by_filename', '__return_true' );
 	}
 
 	/**
@@ -2824,7 +2824,7 @@ function wp_ajax_get_revision_diffs() {
 		wp_send_json_error();
 
 	$return = array();
-	@set_time_limit( 0 );
+	set_time_limit( 0 );
 
 	foreach ( $_REQUEST['compare'] as $compare_key ) {
 		list( $compare_from, $compare_to ) = explode( ':', $compare_key ); // from:to
@@ -2939,6 +2939,8 @@ function wp_ajax_query_themes() {
 		$theme->stars       = wp_star_rating( array( 'rating' => $theme->rating, 'type' => 'percent', 'number' => $theme->num_ratings, 'echo' => false ) );
 		$theme->num_ratings = number_format_i18n( $theme->num_ratings );
 		$theme->preview_url = set_url_scheme( $theme->preview_url );
+ 		$theme->compatible_wp  = is_wp_version_compatible( $theme->requires );
+ 		$theme->compatible_php = is_php_version_compatible( $theme->requires_php );
 	}
 
 	wp_send_json_success( $api );

@@ -174,7 +174,7 @@ function get_approved_comments( $post_id, $args = array() ) {
  *                                       a WP_Comment object, an associative array, or a numeric array, respectively. Default OBJECT.
  * @return WP_Comment|array|null Depends on $output value.
  */
-function get_comment( &$comment = null, $output = OBJECT ) {
+function get_comment( $comment = null, $output = OBJECT ) {
 	if ( empty( $comment ) && isset( $GLOBALS['comment'] ) ) {
 		$comment = $GLOBALS['comment'];
 	}
@@ -977,13 +977,14 @@ function get_comment_pages_count( $comments = null, $per_page = null, $threaded 
  * @param int   $comment_ID Comment ID.
  * @param array $args {
  *      Array of optional arguments.
- *      @type string     $type      Limit paginated comments to those matching a given type. Accepts 'comment',
- *                                  'trackback', 'pingback', 'pings' (trackbacks and pingbacks), or 'all'.
- *                                  Default is 'all'.
- *      @type int        $per_page  Per-page count to use when calculating pagination. Defaults to the value of the
- *                                  'comments_per_page' option.
- *      @type int|string $max_depth If greater than 1, comment page will be determined for the top-level parent of
- *                                  `$comment_ID`. Defaults to the value of the 'thread_comments_depth' option.
+ *      @type string     $type      Limit paginated comments to those matching a given type.
+ *                                  Accepts 'comment', 'trackback', 'pingback', 'pings'
+ *                                  (trackbacks and pingbacks), or 'all'. Default 'all'.
+ *      @type int        $per_page  Per-page count to use when calculating pagination.
+ *                                  Defaults to the value of the 'comments_per_page' option.
+ *      @type int|string $max_depth If greater than 1, comment page will be determined
+ *                                  for the top-level parent `$comment_ID`.
+ *                                  Defaults to the value of the 'thread_comments_depth' option.
  * } *
  * @return int|null Comment page number or null on error.
  */
@@ -1045,6 +1046,42 @@ function get_page_of_comment( $comment_ID, $args = array() ) {
 				)
 			),
 		);
+
+		if ( is_user_logged_in() ) {
+			$comment_args['include_unapproved'] = array( get_current_user_id() );
+		} else {
+			$commenter       = wp_get_current_commenter();
+			$commenter_email = $commenter['comment_author_email'];
+			if ( ! empty( $commenter_email ) ) {
+				$comment_args['include_unapproved'] = array( $commenter_email );
+			}
+		}
+
+		/**
+		 * Filters the arguments used to query comments in get_page_of_comment().
+		 *
+		 * @since WP-5.5.0
+		 *
+		 * @see WP_Comment_Query::__construct()
+		 *
+		 * @param array $comment_args {
+		 *     Array of WP_Comment_Query arguments.
+		 *
+		 *     @type string $type               Limit paginated comments to those matching a given type.
+		 *                                      Accepts 'comment', 'trackback', 'pingback', 'pings'
+		 *                                      (trackbacks and pingbacks), or 'all'. Default 'all'.
+		 *     @type int    $post_id            ID of the post.
+		 *     @type string $fields             Comment fields to return.
+		 *     @type bool   $count              Whether to return a comment count (true) or array
+		 *                                      of comment objects (false).
+		 *     @type string $status             Comment status.
+		 *     @type int    $parent             Parent ID of comment to retrieve children of.
+		 *     @type array  $date_query         Date query clauses to limit comments by. See WP_Date_Query.
+		 *     @type array  $include_unapproved Array of IDs or email addresses whose unapproved comments
+		 *                                      will be included in paginated comments.
+		 * }
+		 */
+		$comment_args = apply_filters( 'get_page_of_comment_query_args', $comment_args );
 
 		$comment_query = new WP_Comment_Query();
 		$older_comment_count = $comment_query->query( $comment_args );
@@ -2195,6 +2232,15 @@ function wp_update_comment($commentarr) {
 		return 0;
 	}
 
+	$filter_comment = false;
+	if ( ! has_filter( 'pre_comment_content', 'wp_filter_kses' ) ) {
+		$filter_comment = ! user_can( isset( $comment['user_id'] ) ? $comment['user_id'] : 0, 'unfiltered_html' );
+	}
+
+	if ( $filter_comment ) {
+		add_filter( 'pre_comment_content', 'wp_filter_kses' );
+	}
+
 	// Escape data pulled from DB.
 	$comment = wp_slash($comment);
 
@@ -2204,6 +2250,10 @@ function wp_update_comment($commentarr) {
 	$commentarr = array_merge($comment, $commentarr);
 
 	$commentarr = wp_filter_comment( $commentarr );
+
+	if ( $filter_comment ) {
+		remove_filter( 'pre_comment_content', 'wp_filter_kses' );
+	}
 
 	// Now extract the merged array.
 	$data = wp_unslash( $commentarr );
@@ -2467,11 +2517,11 @@ function discover_pingback_server_uri( $url, $deprecated = '' ) {
 	$pingback_link_offset_dquote = strpos($contents, $pingback_str_dquote);
 	$pingback_link_offset_squote = strpos($contents, $pingback_str_squote);
 	if ( $pingback_link_offset_dquote || $pingback_link_offset_squote ) {
-		$quote = ($pingback_link_offset_dquote) ? '"' : '\'';
-		$pingback_link_offset = ($quote=='"') ? $pingback_link_offset_dquote : $pingback_link_offset_squote;
-		$pingback_href_pos = @strpos($contents, 'href=', $pingback_link_offset);
-		$pingback_href_start = $pingback_href_pos+6;
-		$pingback_href_end = @strpos($contents, $quote, $pingback_href_start);
+		$quote                   = ( $pingback_link_offset_dquote ) ? '"' : '\'';
+		$pingback_link_offset    = ( $quote == '"' ) ? $pingback_link_offset_dquote : $pingback_link_offset_squote;
+		$pingback_href_pos       = strpos( $contents, 'href=', $pingback_link_offset );
+		$pingback_href_start     = $pingback_href_pos + 6;
+		$pingback_href_end       = strpos( $contents, $quote, $pingback_href_start );
 		$pingback_server_url_len = $pingback_href_end - $pingback_href_start;
 		$pingback_server_url = substr($contents, $pingback_href_start, $pingback_server_url_len);
 
@@ -2494,25 +2544,55 @@ function discover_pingback_server_uri( $url, $deprecated = '' ) {
 function do_all_pings() {
 	global $wpdb;
 
-	// Do pingbacks
-	while ($ping = $wpdb->get_row("SELECT ID, post_content, meta_id FROM {$wpdb->posts}, {$wpdb->postmeta} WHERE {$wpdb->posts}.ID = {$wpdb->postmeta}.post_id AND {$wpdb->postmeta}.meta_key = '_pingme' LIMIT 1")) {
-		delete_metadata_by_mid( 'post', $ping->meta_id );
-		pingback( $ping->post_content, $ping->ID );
+	// Do pingbacks.
+	$pings = get_posts(
+		array(
+			'post_type'        => get_post_types(),
+			'suppress_filters' => false,
+			'nopaging'         => true,
+			'meta_key'         => '_pingme',
+			'fields'           => 'ids',
+		)
+	);
+
+	foreach ( $pings as $ping ) {
+		delete_post_meta( $ping, '_pingme' );
+		pingback( null, $ping );
 	}
 
-	// Do Enclosures
-	while ($enclosure = $wpdb->get_row("SELECT ID, post_content, meta_id FROM {$wpdb->posts}, {$wpdb->postmeta} WHERE {$wpdb->posts}.ID = {$wpdb->postmeta}.post_id AND {$wpdb->postmeta}.meta_key = '_encloseme' LIMIT 1")) {
-		delete_metadata_by_mid( 'post', $enclosure->meta_id );
-		do_enclose( $enclosure->post_content, $enclosure->ID );
+	// Do enclosures.
+	$enclosures = get_posts(
+		array(
+			'post_type'        => get_post_types(),
+			'suppress_filters' => false,
+			'nopaging'         => true,
+			'meta_key'         => '_encloseme',
+			'fields'           => 'ids',
+		)
+	);
+
+	foreach ( $enclosures as $enclosure ) {
+		delete_post_meta( $enclosure, '_encloseme' );
+		do_enclose( null, $enclosure );
 	}
 
-	// Do Trackbacks
-	$trackbacks = $wpdb->get_col("SELECT ID FROM $wpdb->posts WHERE to_ping <> '' AND post_status = 'publish'");
-	if ( is_array($trackbacks) )
-		foreach ( $trackbacks as $trackback )
-			do_trackbacks($trackback);
+	// Do trackbacks.
+	$trackbacks = get_posts(
+		array(
+			'post_type'        => get_post_types(),
+			'suppress_filters' => false,
+			'nopaging'         => true,
+			'meta_key'         => '_trackbackme',
+			'fields'           => 'ids',
+		)
+	);
 
-	//Do Update Services/Generic Pings
+	foreach ( $trackbacks as $trackback ) {
+		delete_post_meta( $trackback, '_trackbackme' );
+		do_trackbacks( $trackback );
+	}
+
+	// Do Update Services/Generic Pings.
 	generic_ping();
 }
 
@@ -2658,7 +2738,7 @@ function pingback( $content, $post_id ) {
 		$pingback_server_url = discover_pingback_server_uri( $pagelinkedto );
 
 		if ( $pingback_server_url ) {
-			@ set_time_limit( 60 );
+			set_time_limit( 60 );
 			// Now, the RPC call
 			$pagelinkedfrom = get_permalink( $post );
 
@@ -3061,7 +3141,7 @@ function wp_handle_comment_submission( $comment_data ) {
 		 * @param int $comment_post_ID Post ID.
 		 */
 		do_action( 'comment_on_draft', $comment_post_ID );
-		
+
 		if ( current_user_can( 'read_post', $comment_post_ID ) ) {
 			return new WP_Error( 'comment_on_draft', __( 'Sorry, comments are not allowed for this item.' ), 403 );
 		} else {

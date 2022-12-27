@@ -136,14 +136,14 @@ class WP_Upgrader_Skin {
 	/**
 	 *
 	 * @param string $string
+	 * @param mixed  ...$args Optional text replacements.
 	 */
-	public function feedback($string) {
-		if ( isset( $this->upgrader->strings[$string] ) )
-			$string = $this->upgrader->strings[$string];
+	public function feedback( $string, ...$args ) {
+		if ( isset( $this->upgrader->strings[ $string ] ) ) {
+			$string = $this->upgrader->strings[ $string ];
+		}
 
-		if ( strpos($string, '%') !== false ) {
-			$args = func_get_args();
-			$args = array_splice($args, 1);
+		if ( strpos( $string, '%' ) !== false ) {
 			if ( $args ) {
 				$args = array_map( 'strip_tags', $args );
 				$args = array_map( 'esc_html', $args );
@@ -200,4 +200,16 @@ class WP_Upgrader_Skin {
 	/**
 	 */
 	public function bulk_footer() {}
+
+	/**
+	 * Hides the `process_failed` error message when updating by uploading a zip file.
+	 *
+	 * @since WP-5.5.0
+	 *
+	 * @param $wp_error WP_Error
+	 * @return bool
+	 */
+	public function hide_process_failed( $wp_error ) {
+		return false;
+	}
 }

@@ -438,6 +438,13 @@ class WP_Query {
 	private $compat_methods = array( 'init_query_flags', 'parse_tax_query' );
 
 	/**
+	 * Controls whether an attachment query should include filenames or not.
+	 *
+	 * @since 6.0.3
+	 * @var bool
+	 */
+	protected $allow_query_attachment_by_filename = false;
+	/**
 	 * Resets query flags to false.
 	 *
 	 * The query flags are what page info ClassicPress was able to figure out.
@@ -715,8 +722,8 @@ class WP_Query {
 		if ( ! empty($qv['robots']) )
 			$this->is_robots = true;
 
-		if ( ! is_scalar( $qv['p'] ) || $qv['p'] < 0 ) {
-			$qv['p'] = 0;
+		if ( ! is_scalar( $qv['p'] ) || (int) $qv['p'] < 0 ) {
+			$qv['p']     = 0;
 			$qv['error'] = '404';
 		} else {
 			$qv['p'] = intval( $qv['p'] );
@@ -1298,7 +1305,12 @@ class WP_Query {
 			}
 
 			$like = $n . $wpdb->esc_like( $term ) . $n;
+
+			if ( ! empty( $this->allow_query_attachment_by_filename ) ) {
+				$search .= $wpdb->prepare( "{$searchand}(({$wpdb->posts}.post_title $like_op %s) $andor_op ({$wpdb->posts}.post_excerpt $like_op %s) $andor_op ({$wpdb->posts}.post_content $like_op %s) $andor_op (sq1.meta_value $like_op %s))", $like, $like, $like, $like );
+			} else {
 			$search .= $wpdb->prepare( "{$searchand}(({$wpdb->posts}.post_title $like_op %s) $andor_op ({$wpdb->posts}.post_excerpt $like_op %s) $andor_op ({$wpdb->posts}.post_content $like_op %s))", $like, $like, $like );
+			}
 			$searchand = ' AND ';
 		}
 
@@ -1633,6 +1645,16 @@ class WP_Query {
 
 		// Fill again in case pre_get_posts unset some vars.
 		$q = $this->fill_query_vars($q);
+
+		/**
+		 * Filters whether an attachment query should include filenames or not.
+		 *
+		 * @since 6.0.3
+		 *
+		 * @param bool $allow_query_attachment_by_filename Whether or not to include filenames.
+		 */
+		$this->allow_query_attachment_by_filename = apply_filters( 'wp_allow_query_attachment_by_filename', false );
+		remove_all_filters( 'wp_allow_query_attachment_by_filename' );
 
 		// Parse meta query
 		$this->meta_query = new WP_Meta_Query();
@@ -2038,7 +2060,7 @@ class WP_Query {
 			}
 		}
 
-		if ( !empty( $this->tax_query->queries ) || !empty( $this->meta_query->queries ) ) {
+		if ( ! empty( $this->tax_query->queries ) || ! empty( $this->meta_query->queries ) || ! empty( $this->allow_query_attachment_by_filename ) ) {
 			$groupby = "{$wpdb->posts}.ID";
 		}
 
@@ -2110,6 +2132,10 @@ class WP_Query {
 			$whichmimetype = wp_post_mime_type_where( $q['post_mime_type'], $wpdb->posts );
 		}
 		$where .= $search . $whichauthor . $whichmimetype;
+
+		if ( ! empty( $this->allow_query_attachment_by_filename ) ) {
+			$join .= " LEFT JOIN {$wpdb->postmeta} AS sq1 ON ( {$wpdb->posts}.ID = sq1.post_id AND sq1.meta_key = '_wp_attached_file' )";
+		}
 
 		if ( ! empty( $this->meta_query->queries ) ) {
 			$clauses = $this->meta_query->get_sql( 'post', $wpdb->posts, 'ID', $this );
@@ -3022,10 +3048,12 @@ class WP_Query {
 			 *
 			 * @since WP-2.1.0
 			 *
-			 * @param string   $found_posts The query to run to find the found posts.
-			 * @param WP_Query $this        The WP_Query instance (passed by reference).
+			 * @param string   $found_posts_query The query to run to find the found posts.
+			 * @param WP_Query $this              The WP_Query instance (passed by reference).
 			 */
-			$this->found_posts = $wpdb->get_var( apply_filters_ref_array( 'found_posts_query', array( 'SELECT FOUND_ROWS()', &$this ) ) );
+			$found_posts_query = apply_filters_ref_array( 'found_posts_query', array( 'SELECT FOUND_ROWS()', &$this ) );
+
+			$this->found_posts = (int) $wpdb->get_var( $found_posts_query );
 		} else {
 			if ( is_array( $this->posts ) ) {
 				$this->found_posts = count( $this->posts );
@@ -3046,7 +3074,7 @@ class WP_Query {
 		 * @param int      $found_posts The number of posts found.
 		 * @param WP_Query $this        The WP_Query instance (passed by reference).
 		 */
-		$this->found_posts = apply_filters_ref_array( 'found_posts', array( $this->found_posts, &$this ) );
+		$this->found_posts = (int) apply_filters_ref_array( 'found_posts', array( $this->found_posts, &$this ) );
 
 		if ( ! empty( $limits ) )
 			$this->max_num_pages = ceil( $this->found_posts / $q['posts_per_page'] );
