@@ -893,6 +893,7 @@ p.text-rightcol,
 
 .blog-list .hentry {
 	margin: 0;
+	border-bottom: 1px solid rgb(235 243 246 / 46%);
 }
 
 .blog-list .blog-post img {
@@ -1658,7 +1659,7 @@ footer#legal {
 
 #legal p {
 	color: #fff;
-	margin-bottom: 0.6em;
+	margin-bottom: 0;
 	font-size: .8em;
 	line-height: 1.3;
 }
@@ -1705,7 +1706,6 @@ footer#legal {
 
 .home-hero-container {
 	background-image: linear-gradient(-135deg, #3ebca6 0, #057f99 50%, #006b81 100%);
-	background-image: url("images/cp-translucent-feather.svg"), linear-gradient(-135deg, #3ebca6 0, #057f99 50%, #006b81 100%);
 	background-size: auto;
 	background-position: 50% 50%;
 	background-repeat: no-repeat;
@@ -1714,15 +1714,17 @@ footer#legal {
 
 .home-hero {
 	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	max-width: 72rem;
-	margin: 0 auto;
-	padding: 3rem 1.5rem;
+    align-items: center;
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 4rem 1.5rem;
+    justify-content: space-between;
+    flex-direction: row;
 }
 
 .home-hero-container:first-child {
 	border-bottom: 15px solid #692478;
+	padding: 3rem 0;
 }
 
 .home-hero-text {
@@ -1737,25 +1739,26 @@ footer#legal {
 
 #content .home-hero-text h1 {
 	margin: 0;
-	font-size: 3.8em;
+	font-size: 3em;
 	line-height: 1.05;
+	padding-top: 0;
 }
 
 .home-hero-text h2 {
-	font-size: 2em;
+	font-size: 1.4em;
 	margin-top: 0;
-	margin-bottom: 2rem;
+	margin-bottom: 1rem;
 }
 
 .home-hero-text h3 {
 	margin-top: 0;
-	font-size: 1.5em;
+	font-size: 1.2em;
+	margin-bottom: 2rem;
+	max-width: 90%;
 }
 
 .home-hero-image {
-	margin-right: auto;
-	margin-left: 0;
-	max-width: 40rem;
+	max-width: 36rem;
 	-webkit-transition: max-width 150ms ease-out;
 	-moz-transition: max-width 150ms ease-out;
 	-o-transition: max-width 150ms ease-out;
@@ -1766,7 +1769,23 @@ footer#legal {
 	max-width: 100%
 }
 
-
+.cta-btns{
+	display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1em;
+}
+#content .cta-btns p{
+	margin: 0;
+}
+#content .cta-btns p a{
+	color: #fff;
+	text-decoration: none;
+}
+#content .cta-btns p a:hover{
+	text-decoration: underline;
+}
 @media screen and (max-width:1100px) {
 	.home-hero-image {
 		max-width: 55%;
@@ -1782,6 +1801,7 @@ footer#legal {
 @media screen and (max-width:900px) {
 	.home-hero {
 		padding-bottom: 2em;
+		flex-direction: column;
 	}
 	.home-hero-text {
 		width: 100%;
@@ -1796,6 +1816,13 @@ footer#legal {
 		margin: 0 auto 1em;
 		max-width: 600px;
 	}
+	.cta-btns{
+		justify-content: center;
+		margin-bottom: 2rem;
+	}
+	.home-hero-text h3{
+		margin: 0 auto 2rem;
+	}
 }
 
 @media screen and (max-width:360px) {
@@ -1805,7 +1832,8 @@ footer#legal {
 }
 
 .homepanel1 {
-	padding: 2.5rem 1.5em;
+	padding: 4rem 1.5em;
+	background-color: #fff;
 }
 
 .community-home {
@@ -1848,23 +1876,20 @@ footer#legal {
 .feature {
 	width: 31%;
 	padding: 10px 23px 18px 28px;
-	background-image: linear-gradient(to right, #eeeef1, #d1e1e5);
-	border-radius: 12px;
+	background-color: rgb(235 243 246 / 46%);
+	border-radius: 5px;
 }
 
 .ficon {
 	text-align: center;
-	padding-top: .1em;
-	font-size: 50px;
-	color: #057f99;
-	margin-bottom: -.2em;
+    padding: 1.5rem 0;
 }
 
 .feature h2 {
 	font-size: 1.8em;
-	text-align: center;
-	color: #4b2063;
-	margin-left: -5px;
+    text-align: center;
+    color: #4b2063;
+    padding-top: 0;
 }
 
 .feature p {
@@ -1925,7 +1950,8 @@ footer#legal {
 }
 
 .homepanel4 {
-	padding: 2.5rem 1.5em;
+	padding: 4rem 1.5em;
+	background-color: rgb(235 243 246 / 46%);
 }
 
 .involve-home {
@@ -1951,7 +1977,7 @@ footer#legal {
 	display: flex;
 	justify-content: space-between;
 	margin: 0 auto;
-	padding: .75em 0 1.75em;
+	padding: .75em 0 0;
 }
 
 .getinvolved p {
@@ -1971,7 +1997,33 @@ footer#legal {
 	vertical-align: middle;
 	display: table-cell;
 }
-
+.sponsors{
+	text-align: center;
+	padding: 4rem 0 3rem;
+}
+.sponsors-inner{
+	display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.inf_sponsor img{
+	width: auto;
+	height: 55px;
+}
+.inf_sponsor a:hover{
+	text-decoration: none;
+	border: 0;
+}
+.footersponsor h3{
+	color: #fff;
+	padding-top: 0;
+}
+img.ft-icon{
+	height: 50px;
+	width: auto;
+	display: inline;
+}
 @media screen and (max-width:900px) {
 	.petitions-home,
 	.getinvolved,
@@ -2009,7 +2061,9 @@ footer#legal {
 	.getinvolved p.button a,
 	.col2-3 p.button a,
 	.community-home p.button a {
-		width: 270px;
+		width: 100%;
+		display: block;
+		height: auto;
 	}
 	.homepanel1,
 	.homepanel2,
@@ -2047,11 +2101,14 @@ footer#legal {
 	color: #89288f;
 }
 
+.blog #main p.entry-meta {
+    margin: 0em 0 1.5em;
+}
+
 @media screen and (min-width:40rem) {
 	.blog-list {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, 47.25%);
-		/*30% if no sidebar*/
+		grid-template-columns: 100%;
 		grid-gap: 1rem;
 		justify-content: space-between;
 		align-content: flex-start;
@@ -2066,8 +2123,7 @@ footer#legal {
 
 @media screen and (min-width:52rem) {
 	.blog-list {
-		grid-template-columns: repeat(auto-fit, 47.25%);
-		/*30% if no sidebar*/
+		grid-template-columns: 100%;
 	}
 }
 
@@ -2110,7 +2166,8 @@ footer#legal {
 	.footerleft,
 	.footerright,
 	.cpcopyright,
-	.cppolicy {
+	.cppolicy,
+	.footersponsor {
 		width: 100%;
 		max-width: 100%;
 		text-align: center;
@@ -2118,6 +2175,17 @@ footer#legal {
 	.footerleft img {
 		float: none;
 		margin: 0 0 .3em 0;
+	}
+	footer .classic{
+		display: flex;
+    	flex-direction: column;
+    	gap: 2em;
+	}
+	.sponsors-inner{
+		flex-direction: column;
+	}
+	.cta-btns{
+		flex-direction: column;
 	}
 }
 

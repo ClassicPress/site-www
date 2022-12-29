@@ -8,7 +8,7 @@
  */
 ?>
 <!doctype html>
-<html <?php language_attributes(); ?>>
+<html <?php language_attributes(); if (is_page_template('page_faq.php')) { ?> itemscope itemtype="https://schema.org/FAQPage"<?php } ?>>
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -67,12 +67,7 @@
 			</span>
 
 			<nav id="site-navigation" class="main-navigation nav--toggle-sub nav--toggle-small" aria-label="<?php esc_attr_e('Main menu', 'susty'); ?>">
-				<?php
-				/*wp_nav_menu( array(
-					'theme_location' => 'Primary',
-					'menu_id'        => 'primary-menu',
-				) ); broke this when renamed menu-1 in menu admin; renaming it back did not fix*/
-				?>
+
 				<?php
 				$navcheck = '' ;
 				$navcheck = wp_nav_menu( array(
@@ -90,8 +85,6 @@
 				}
 				?>
 			</nav><!-- #site-navigation -->
-
-			<!--a href="<?php //echo home_url( '/download/' ); ?>" class="button get-started"><?php //esc_html_e( 'Get Started', 'susty' ); ?></a-->
 
 		</div>
 	</header>

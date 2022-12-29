@@ -20,14 +20,6 @@ get_header();
 		echo '<div class="home-hero-container">';
 		echo '<div class="home-hero">';
 
-		echo '<div class="home-hero-image">';
-		if (($imgvid == 'Video') && ($video)) {
-			echo '<div class="embed-container">'.$video.'</div>';
-		} elseif (($imgvid == 'Image') && ($heroimage)) {
-			echo '<img src="'.$heroimage.'" alt="'.$heroalt.'">';
-		}
-		echo '</div>';
-
 		echo '<div class="home-hero-text">';
 			echo '<h1>'.$herotitle.'</h1>';
 			if ($herosubtitle) {
@@ -36,9 +28,28 @@ get_header();
 			if ($herotext) {
 			echo '<h3>'.$herotext.'</h3>';
 			}
+		
+		?>
+		<div class="cta-btns">
+		<?php
+				$featurelink = get_field('feature_link');
+				$featurelinktext = get_field('feature_link_text');
+				if (($featurelink) && ($featurelinktext)) {
+				echo '<p class="button purple migrate"><a href="'.$featurelink.'">'.$featurelinktext.'</a></p>';
+				}
+			?>
+			<p><a href="/get-classicpress/#switch-to-classicpress">Switch From WordPress</a></p>
+		</div>
+		<?php echo '</div>';
+		
+		echo '<div class="home-hero-image">';
+		if (($imgvid == 'Video') && ($video)) {
+			echo '<div class="embed-container">'.$video.'</div>';
+		} elseif (($imgvid == 'Image') && ($heroimage)) {
+			echo '<img src="'.$heroimage.'" alt="'.$heroalt.'">';
+		}
 		echo '</div>';
-
-		echo '</div><!-- .home-hero -->';
+		;echo '</div><!-- .home-hero -->';
 		echo '</div><!-- .home-hero-container -->';
 	}
 	// (conditional opening <section> tag in header.php template)
@@ -102,18 +113,8 @@ get_header();
 		?>
 		</div>
 	</article>
-	<div class="getcp">
-		<?php
-			$featurelink = get_field('feature_link');
-			$featurelinktext = get_field('feature_link_text');
-			if (($featurelink) && ($featurelinktext)) {
-			echo '<p class="button purple migrate"><a href="'.$featurelink.'">'.$featurelinktext.'</a></p>';
-			}
-		?>
-	</div>
 </section>
 
-<!-- Changed to second position so as first we have the features/download section-->
 <section class="homepanel1">
 	<article class="community-home">
 	<?php echo get_post_field('post_content'); ?>
@@ -121,39 +122,9 @@ get_header();
 		$commlink = get_field('main_buttonlink');
 		$commlinktext = get_field('main_buttonlinktext');
 		if (($commlink) && ($commlinktext)) {
-			echo '<p class="button blue center"><a href="'.$commlink.'" target="_blank" rel="noreferrer noopener">'.$commlinktext.'</a></p>';
+			echo '<p class="button purple center"><a href="'.$commlink.'" target="_blank" rel="noreferrer noopener">'.$commlinktext.'</a></p>';
 		}
 	?>
-	</article>
-</section>
-
-<section class="homepanel3">
-	<article class="petitions-home">
-		<?php
-		$petimg = get_field('petitions_image');
-		$pethead = get_field('petitions_head');
-		$pettext = get_field('petitions_text');
-		$petlink = get_field('petitions_link');
-		$petbutn = get_field('petitions_linktext');
-		if ($petimg) {
-			echo '<div class="petimg">';
-			echo '<img src="'.$petimg.'" alt="'.$pethead.'" />';
-			echo '</div>';
-		}
-		if (($pethead) || ($pettext)) {
-			echo '<div class="col2-3">';
-			if ($pethead) {
-				echo '<h2>'.$pethead.'</h2>';
-			}
-			if ($pettext) {
-				echo $pettext;
-			}
-			if (($petlink) && ($petbutn)) {
-				echo '<p class="button white center"><a href="'.$petlink.'" target="_blank" rel="noreferrer noopener">'.$petbutn.'</a></p>';
-			}
-			echo '</div>';
-		}
-		?>
 	</article>
 </section>
 
@@ -189,7 +160,18 @@ get_header();
 	</div>
 </section>
 
-
+<section class="sponsors involve-home">
+	<h2>Sponsors</h2>
+		<div class="sponsors-inner">
+			<div class="sponsor">
+				<a href="https://www.brinkhost.nl/" target="_blank" rel="external nofollow sponsored" title="ClassicPress Sponsor"><img src="/wp-content/uploads/2022/07/brinkman-it-sponsor.png" alt="Brinkhost logo"></a>
+			</div>
+			<div class="sponsor">
+				<a href="https://www.tukutoi.com/" target="_blank" rel="external nofollow sponsored" title="ClassicPress Sponsor"><img src="/wp-content/uploads/2022/07/tukutoi-sponsor.png" alt="TukuToi logo"></a>
+			</div>
+		</div>
+		<a href="https://opencollective.com/classicpress/contribute" target="_blank" title="Become a ClassicPress sponsor">Become a Sponsor</a>
+</section>
 
 <?php
 

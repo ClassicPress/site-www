@@ -3,5 +3,6 @@
 /wp-content/uploads/
 /wp-content/autoptimize_404_handler.php
 /wp-content/plugins/wp-discourse/
+/wp-content/ClassicPress-Design/
 *.log
 wp-config.php

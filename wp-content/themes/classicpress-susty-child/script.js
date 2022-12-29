@@ -5,7 +5,7 @@ jQuery( document ).ready( function( $ ) {
 	// append show/hide links to the element directly preceding the element
 	// with a class of "toggle"
 	$( '.toggle' ).prev().append(
-		' <a href="#" class="toggleLink">' + hideText + '</a>'
+		' <a href="#" class="toggleLink">' + showText + '</a>'
 	);
 
 	$( 'a.toggleLink' ).click( function() {
