@@ -118,13 +118,6 @@ get_header();
 <section class="homepanel1">
 	<article class="community-home">
 	<?php echo get_post_field('post_content'); ?>
-	<?php
-		$commlink = get_field('main_buttonlink');
-		$commlinktext = get_field('main_buttonlinktext');
-		if (($commlink) && ($commlinktext)) {
-			echo '<p class="button purple center"><a href="'.$commlink.'" target="_blank" rel="noreferrer noopener">'.$commlinktext.'</a></p>';
-		}
-	?>
 	</article>
 </section>
 

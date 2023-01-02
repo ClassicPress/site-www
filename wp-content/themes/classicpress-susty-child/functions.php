@@ -39,7 +39,7 @@ register_nav_menus( array(
 
 
 /****Add widgets to blog sidebar***/
-if ( function_exists('register_sidebar') )
+if ( function_exists('register_sidebar') ){
   register_sidebar(array(
     'id' => 'blog-sidebar',
     'name' => 'Blog Sidebar',
@@ -47,8 +47,17 @@ if ( function_exists('register_sidebar') )
     'after_widget' => '</div>',
     'before_title' => '<h3>',
     'after_title' => '</h3>',
-  )
-);
+  ));
+  register_sidebar(array(
+    'id' => 'main-sidebar',
+    'name' => 'Main Sidebar',
+    'before_widget' => '<div class = "widget-container">',
+    'after_widget' => '</div>',
+    'before_title' => '<h3>',
+    'after_title' => '</h3>',
+  ));
+};
+
 
 
 /** Modify Featured Image Text **/

@@ -10,19 +10,13 @@
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-<?php if ( ! is_singular() ) : ?>
-	<header class="blog">
+<?php if ( is_singular() ) : ?>
+	<header>
 		<?php the_title(
-			'<h2><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">',
-			'</a></h2>'
+			'<h1>',
+			'</h1>'
 		); ?>
-	</header>
-<?php endif; ?>
-	
-	<?php susty_wp_post_thumbnail(); ?>
-
-	<div>
-		<?php
+			<?php
 		if ( 'post' === get_post_type() ) :
 		?>
 			<p class="entry-meta">
@@ -37,6 +31,21 @@
 				</span>
 			</p><!-- .entry-meta -->
 		<?php endif; ?>
+	</header>
+
+<?php else : ?>
+	<header class="blog">
+		<?php the_title(
+			'<h2><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">',
+			'</a></h2>'
+		); ?>
+	</header>
+<?php endif; ?>
+	
+	<?php susty_wp_post_thumbnail(); ?>
+
+	<div>
+
 		<?php
 		the_content( sprintf(
 			wp_kses(

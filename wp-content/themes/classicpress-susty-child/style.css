@@ -927,7 +927,7 @@ p.text-rightcol,
 .author_bio_section {
 	margin: 1.8em 0 0;
 	padding: 1em;
-	background-image: linear-gradient(to right, #eeeef1, #d1e1e5);
+	background-color: rgb(235 243 246 / 46%);
 	border-radius: 8px;
 }
 
@@ -1181,7 +1181,7 @@ p.question {
 	margin-top: -5px;
 	margin-bottom: 1.2em;
 	padding: .4em .6em .4em .75em;
-	background: #f6f6f6;
+	background: rgb(235 243 246 / 46%);
 	border-radius: 6px;
 }
 
@@ -1252,6 +1252,18 @@ p.question {
 	}
 }
 
+.top-download-buttons{
+	display: flex;
+	justify-content: space-around;
+}
+
+@media screen and (max-width: 512px) {
+  .top-download-buttons {
+    flex-direction: column;
+		align-items: center;
+  }
+}
+
 .edit-link a {
 	font-weight: 400;
 	text-transform: uppercase;
@@ -1273,7 +1285,24 @@ nav a {
 body.home #content {
 	border-bottom: none;
 }
+body.single-post #content{
+	margin-top: 4rem;
+}
 
+.single-post article header{
+	display: flex;
+    flex-direction: column;
+    justify-content: center;
+	gap: 0.5em;
+}
+.single-post article header h1{
+	font-size: 3em;
+	line-height: 1.1;
+	font-weight: 400;
+	max-width: 90%;
+	margin: 0;
+	color: #333;
+}
 /****CRAYON CODE HILITES******/
 
 .crayon-theme-classic {
@@ -1297,7 +1326,9 @@ article a {
 	border-bottom: none;
 	line-height: inherit;
 }
-
+.comment-content pre code{
+	background: transparent;
+}
 ol.comment-list {
 	list-style-type: none;
 	padding-left: 0;
@@ -1473,7 +1504,7 @@ table.cp-logo-list .cp-logo-description {
 
 .sidebar-note {
 	padding: 10px 9px 12px 15px;
-	background-image: linear-gradient(to right, #eeeef1, #d1e1e5);
+	background-color: rgb(235 243 246 / 46%);
 	border-radius: 8px;
 	margin: .3em 0 1.5em 0;
 }
@@ -1837,7 +1868,7 @@ footer#legal {
 }
 
 .community-home {
-	max-width: 56rem;
+	max-width: 70rem;
 	margin: 0 auto;
 	padding: 1rem 0;
 }
@@ -1861,7 +1892,37 @@ footer#legal {
 	font-size: 1.2em;
 	margin-top: 1.5em;
 }
-
+.commun{
+	display: flex;
+}
+.commun .comm-txt{
+	max-width: 60%;
+}
+.comm-numbers ul{
+	list-style: none;
+	margin-top: 0;
+}
+.home #content .comm-numbers ul li{
+	display: flex;
+    flex-direction: column;
+	padding-bottom: 0.5rem;
+}
+.home #content .comm-numbers ul li:first-child{
+	padding-top: 0;
+}
+.comm-numbers ul li small:not(.update-txt){
+	font-size: 1.2em;
+    color: #666;
+}
+.comm-numbers ul li small.update-txt{
+	font-size: 12px;
+	color: #666;
+}
+.comm-numbers ul li span{
+	font-size: 3rem;
+    font-weight: bold;
+    line-height: 1;
+}
 .homepanel2 {
 	padding: 2.5rem 1.5em;
 }
@@ -2186,6 +2247,12 @@ img.ft-icon{
 	}
 	.cta-btns{
 		flex-direction: column;
+	}
+	.commun{
+		flex-direction: column;
+	}
+	.commun .comm-txt{
+		max-width: 100%;
 	}
 }
 

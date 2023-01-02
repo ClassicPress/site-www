@@ -14,9 +14,7 @@
 
 get_header();
 ?>
-	<!--header id="page-title">
-		<?php //the_title( '<h1>', '</h1>' ); ?>
-	</header><!-- .entry-header -->
+
 	<div id="primary">
 		<main id="main" class="page-main">
 		<?php susty_wp_post_thumbnail(); ?>

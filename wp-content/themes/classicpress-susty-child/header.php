@@ -92,7 +92,7 @@
 		echo '</section><!-- .home-hero-container -->';
 	} ?>
 
-	<?php if(!is_front_page()) {
+	<?php if(!is_front_page() && !is_single()) {
 			$category = single_cat_title("", false);
 			echo '<header id="page-title">';
 			if (is_blog()) {
@@ -103,8 +103,6 @@
 					echo esc_html( ucwords( $category ) );
 				}
 				echo '</h1>';
-			} elseif (is_single()) {
-				the_title( '<h1>', '</h1>' );
 			} elseif (is_search()) {
 				echo '<h1>';
 				esc_html_e( 'Search Results', 'susty' );

@@ -1,15 +1,5 @@
 <?php
-$sidebarsearch = get_field('search_sidebar');
 echo '<div id="sidebar" class="sidebar-page">';
-	if ($sidebarsearch !== 'No') {
-	echo '<div class = "widget-container"><form role="search" method="get" class="search-form" action="/">';
-		echo '<label>';
-			echo '<span class="screen-reader-text">Search for:</span>';
-			echo '<input type="search" class="search-field" placeholder="Search &hellip;" value="" name="s" />';
-		echo ' </label>';
-		echo '<input type="submit" class="search-submit" value="Search" />';
-	echo '</form></div>';
-	}
 	echo '<div class="sidebar-internal">';
 		$sbquote = get_field('sb_quote');
 		$sbquoteauth = get_field('sbquote_author');
@@ -61,5 +51,11 @@ echo '<div id="sidebar" class="sidebar-page">';
 		echo '</div>';
 		}
 	echo '</div>';/*sidebar-internal*/
+
+	$is_hidden = get_field('hide_global_sidebar');
+	if ( empty($is_hidden) ){
+		if ( is_active_sidebar( 'main-sidebar' ) ) : 
+				dynamic_sidebar( 'main-sidebar' );
+		endif;
+	}
 echo '</div>';/*sidebar-page*/
-?>
