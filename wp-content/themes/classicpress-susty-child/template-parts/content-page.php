@@ -23,8 +23,8 @@
 				$question = get_sub_field('question');
 				$answer = get_sub_field('answer');
 					if (($question) && ($answer)) {
-					echo '<p class="question" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question"><span itemprop="name">'.$question.'</span></p>';
-					echo '<div class="toggle" style="display: none;" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><span itemprop="text">'.$answer.'</span></div>';
+					echo '<div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question"><p class="question"><span itemprop="name">'.$question.'</span></p>';
+					echo '<div class="toggle" style="display: none;" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><span itemprop="text">'.$answer.'</span></div></div>';
 					}	
 				}
 			}
